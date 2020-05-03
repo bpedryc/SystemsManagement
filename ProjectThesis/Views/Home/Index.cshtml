@@ -1,0 +1,36 @@
+﻿@model IEnumerable<ProjectThesis.Models.User>
+
+@{
+    ViewData["Title"] = "Home Page";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Wanted</h1>
+    <p>Lista poszukiwanych. Wpisz się!</p>
+    
+    <table class="table">
+        <thead>
+        <tr>
+            <th scope="col">UserID</th>
+            <th scope="col">Username</th>
+            <th scope="col">Password</th>
+        </tr>
+        </thead>
+        <tbody>
+            @foreach (var user in Model)
+            {
+                <tr>
+                    <th scope="row">
+                        @Html.DisplayFor(modelItem => user.UserID)
+                    </th>
+                    <td>
+                        @Html.DisplayFor(modelItem => user.Username)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => user.Password)
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

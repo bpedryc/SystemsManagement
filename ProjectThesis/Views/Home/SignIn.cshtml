@@ -1,0 +1,21 @@
+﻿@model ProjectThesis.Models.User
+@{
+    ViewData["Title"] = "Zarejestruj się";
+}
+<h1>@ViewData["Title"]</h1>
+
+<p>Tutaj możesz wpisać się na listę</p>
+
+<form asp-action="SignIn" asp-controller="Home">
+    <div class="form-group">
+        <label asp-for="Username"></label>
+        <input asp-for="Username" class="form-control" placeholder="Wpisz nazwę">
+    </div>
+    <div class="form-group">
+        <label asp-for="Password">Hasło</label>
+        <input asp-for="Password" type="password" class="form-control" aria-describedby="passwordHelp" placeholder="Wpisz hasło">
+        <small id="passwordHelp" class="form-text text-muted">Ej ale nie wpisuj prawdziwego przez przypadek xD</small>
+    </div>
+    <button type="submit" class="btn btn-primary">Zatwierdź</button>
+</form>
+
