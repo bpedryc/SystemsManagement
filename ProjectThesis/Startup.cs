@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -10,6 +11,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using ProjectThesis.Models;
+using ProjectThesis.ViewModels;
 
 namespace ProjectThesis
 {
@@ -26,7 +28,7 @@ namespace ProjectThesis
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllersWithViews();
-            services.AddDbContext<ModelContext>(options =>
+            services.AddDbContext<ThesisDbContext>(options =>
                 options.UseOracle(Configuration.GetConnectionString("DefaultConnection")));
         }
 
@@ -54,7 +56,7 @@ namespace ProjectThesis
             {
                 endpoints.MapControllerRoute(
                     name: "default",
-                    pattern: "{controller=Home}/{action=Index}/{id?}");
+                    pattern: "{controller=Login}/{action=Index}/{id?}");
             });
         }
     }
