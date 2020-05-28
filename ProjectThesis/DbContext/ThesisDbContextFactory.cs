@@ -3,24 +3,22 @@ using System.IO;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
 using Microsoft.Extensions.Configuration;
-using ProjectThesis.Models;
+using ProjectThesis.ViewModels;
 
 namespace ProjectThesis
 {
-    public class ModelContextFactory : IDesignTimeDbContextFactory<ModelContext>
+    public class ThesisDbContextFactory: IDesignTimeDbContextFactory<ThesisDbContext>
     {
-        public ModelContext CreateDbContext(string[] args)
+        public ThesisDbContext CreateDbContext(string[] args)
         {
-            Console.WriteLine(Directory.GetCurrentDirectory());
-
             IConfiguration config = new ConfigurationBuilder()
                 .AddJsonFile("appsettings.json")
                 .Build();
 
-            var optionsBuilder = new DbContextOptionsBuilder<ModelContext>();
+            var optionsBuilder = new DbContextOptionsBuilder<ThesisDbContext>();
             var connectionString = config.GetConnectionString("DefaultConnection");
             optionsBuilder.UseOracle(connectionString);
-            return new ModelContext(optionsBuilder.Options);
+            return new ThesisDbContext(optionsBuilder.Options);
         }
     }
 }
