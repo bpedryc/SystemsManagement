@@ -6,9 +6,10 @@ namespace ProjectThesis.ViewModels
 {
     public class ThesisDbContext : DbContext
     {
+        public DbSet<User> Users { get; set; }
         public DbSet<Student> Students { get; set; }
         public DbSet<Supervisor> Supervisors { get; set; }
-
+        
         public ThesisDbContext(DbContextOptions<ThesisDbContext> options) : base(options)
         {
 
