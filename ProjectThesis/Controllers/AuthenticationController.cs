@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Drawing.Printing;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Security.Policy;
@@ -37,7 +38,7 @@ namespace ProjectThesis.Controllers
             // then check hashed provided password against queried password
             if (user.Password == null || user.Email == null)
             {
-                ViewData["Message"] = "You need to enter your credentials!";
+                ViewData["Message"] = "Nale¿y wpisaæ swoje dane!";
                 return View();
             }
 
@@ -48,17 +49,22 @@ namespace ProjectThesis.Controllers
 
             if (matchedUser != null)
             {
-                HttpContext.Session.SetString("UserId", matchedUser.UserId.ToString());
+                HttpContext.Session.SetString("UserId", matchedUser.Id.ToString());
                 return RedirectToAction("Index", "Home");
             }
 
-            ViewData["Message"] = "Error! Wrong credentials!";
+            ViewData["Message"] = "Niepoprawny email lub has³o. Spróbuj ponownie.";
             return View();
         }
 
         public IActionResult Register()
         {
-            return View();
+            var model = new RegisterStudentViewModel();
+            model.Faculties = _context.Faculties.ToList();
+
+            //TODO: Implement register logic here
+
+            return View(model);
         }
 
         private static string GetSha256FromString(string strData)

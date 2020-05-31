@@ -8,7 +8,7 @@ namespace ProjectThesis.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "Faculty",
+                name: "Faculties",
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
@@ -17,24 +17,11 @@ namespace ProjectThesis.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Faculty", x => x.Id);
+                    table.PrimaryKey("PK_Faculties", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
-                name: "FieldOfStudy",
-                columns: table => new
-                {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("Oracle:ValueGenerationStrategy", OracleValueGenerationStrategy.IdentityColumn),
-                    Name = table.Column<string>(nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_FieldOfStudy", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "User",
+                name: "Users",
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
@@ -42,78 +29,91 @@ namespace ProjectThesis.Migrations
                     FirstName = table.Column<string>(nullable: true),
                     LastName = table.Column<string>(nullable: true),
                     Email = table.Column<string>(nullable: true),
-                    Password = table.Column<string>(nullable: true),
-                    FacultyID = table.Column<int>(nullable: false)
+                    Password = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_User", x => x.Id);
+                    table.PrimaryKey("PK_Users", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Specials",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("Oracle:ValueGenerationStrategy", OracleValueGenerationStrategy.IdentityColumn),
+                    Name = table.Column<string>(nullable: true),
+                    FacId = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Specials", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_User_Faculty_FacultyID",
-                        column: x => x.FacultyID,
-                        principalTable: "Faculty",
+                        name: "FK_Specials_Faculties_FacId",
+                        column: x => x.FacId,
+                        principalTable: "Faculties",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "Supervisors",
+                name: "Supers",
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("Oracle:ValueGenerationStrategy", OracleValueGenerationStrategy.IdentityColumn),
                     StudentLimit = table.Column<int>(nullable: false),
-                    UserID = table.Column<int>(nullable: false),
-                    FacID = table.Column<int>(nullable: false)
+                    UserId = table.Column<int>(nullable: false),
+                    FacultyId = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Supervisors", x => x.Id);
+                    table.PrimaryKey("PK_Supers", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Supervisors_Faculty_FacID",
-                        column: x => x.FacID,
-                        principalTable: "Faculty",
+                        name: "FK_Supers_Faculties_FacultyId",
+                        column: x => x.FacultyId,
+                        principalTable: "Faculties",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Supervisors_User_UserID",
-                        column: x => x.UserID,
-                        principalTable: "User",
+                        name: "FK_Supers_Users_UserId",
+                        column: x => x.UserId,
+                        principalTable: "Users",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "Students",
+                name: "Studs",
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("Oracle:ValueGenerationStrategy", OracleValueGenerationStrategy.IdentityColumn),
                     StudentNo = table.Column<int>(nullable: false),
                     DegreeCycle = table.Column<int>(nullable: false),
-                    UserID = table.Column<int>(nullable: false),
-                    FacultyID = table.Column<int>(nullable: false),
-                    SupID = table.Column<int>(nullable: false)
+                    UserId = table.Column<int>(nullable: false),
+                    FacultyId = table.Column<int>(nullable: false),
+                    SuperId = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Students", x => x.Id);
+                    table.PrimaryKey("PK_Studs", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Students_Faculty_FacultyID",
-                        column: x => x.FacultyID,
-                        principalTable: "Faculty",
+                        name: "FK_Studs_Faculties_FacultyId",
+                        column: x => x.FacultyId,
+                        principalTable: "Faculties",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Students_Supervisors_SupID",
-                        column: x => x.SupID,
-                        principalTable: "Supervisors",
+                        name: "FK_Studs_Supers_SuperId",
+                        column: x => x.SuperId,
+                        principalTable: "Supers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Students_User_UserID",
-                        column: x => x.UserID,
-                        principalTable: "User",
+                        name: "FK_Studs_Users_UserId",
+                        column: x => x.UserId,
+                        principalTable: "Users",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -122,82 +122,82 @@ namespace ProjectThesis.Migrations
                 name: "Thesis",
                 columns: table => new
                 {
-                    Id = table.Column<int>(nullable: false)
+                    ThesisId = table.Column<int>(nullable: false)
                         .Annotation("Oracle:ValueGenerationStrategy", OracleValueGenerationStrategy.IdentityColumn),
                     Subject = table.Column<string>(nullable: true),
                     DegreeCycle = table.Column<int>(nullable: false),
-                    FosID = table.Column<int>(nullable: false),
-                    SupID = table.Column<int>(nullable: false),
-                    StudentID = table.Column<int>(nullable: false)
+                    SpecId = table.Column<int>(nullable: false),
+                    SuperId = table.Column<int>(nullable: false),
+                    StudentId = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Thesis", x => x.Id);
+                    table.PrimaryKey("PK_Thesis", x => x.ThesisId);
                     table.ForeignKey(
-                        name: "FK_Thesis_FieldOfStudy_FosID",
-                        column: x => x.FosID,
-                        principalTable: "FieldOfStudy",
+                        name: "FK_Thesis_Specials_SpecId",
+                        column: x => x.SpecId,
+                        principalTable: "Specials",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Thesis_Students_StudentID",
-                        column: x => x.StudentID,
-                        principalTable: "Students",
+                        name: "FK_Thesis_Studs_StudentId",
+                        column: x => x.StudentId,
+                        principalTable: "Studs",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Thesis_Supervisors_SupID",
-                        column: x => x.SupID,
-                        principalTable: "Supervisors",
+                        name: "FK_Thesis_Supers_SuperId",
+                        column: x => x.SuperId,
+                        principalTable: "Supers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Students_FacultyID",
-                table: "Students",
-                column: "FacultyID");
+                name: "IX_Specials_FacId",
+                table: "Specials",
+                column: "FacId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Students_SupID",
-                table: "Students",
-                column: "SupID");
+                name: "IX_Studs_FacultyId",
+                table: "Studs",
+                column: "FacultyId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Students_UserID",
-                table: "Students",
-                column: "UserID");
+                name: "IX_Studs_SuperId",
+                table: "Studs",
+                column: "SuperId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Supervisors_FacID",
-                table: "Supervisors",
-                column: "FacID");
+                name: "IX_Studs_UserId",
+                table: "Studs",
+                column: "UserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Supervisors_UserID",
-                table: "Supervisors",
-                column: "UserID");
+                name: "IX_Supers_FacultyId",
+                table: "Supers",
+                column: "FacultyId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Thesis_FosID",
+                name: "IX_Supers_UserId",
+                table: "Supers",
+                column: "UserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Thesis_SpecId",
                 table: "Thesis",
-                column: "FosID");
+                column: "SpecId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Thesis_StudentID",
+                name: "IX_Thesis_StudentId",
                 table: "Thesis",
-                column: "StudentID",
+                column: "StudentId",
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_Thesis_SupID",
+                name: "IX_Thesis_SuperId",
                 table: "Thesis",
-                column: "SupID");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_User_FacultyID",
-                table: "User",
-                column: "FacultyID");
+                column: "SuperId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -206,19 +206,19 @@ namespace ProjectThesis.Migrations
                 name: "Thesis");
 
             migrationBuilder.DropTable(
-                name: "FieldOfStudy");
+                name: "Specials");
 
             migrationBuilder.DropTable(
-                name: "Students");
+                name: "Studs");
 
             migrationBuilder.DropTable(
-                name: "Supervisors");
+                name: "Supers");
 
             migrationBuilder.DropTable(
-                name: "User");
+                name: "Faculties");
 
             migrationBuilder.DropTable(
-                name: "Faculty");
+                name: "Users");
         }
     }
 }

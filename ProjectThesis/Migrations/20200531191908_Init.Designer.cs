@@ -9,8 +9,8 @@ using ProjectThesis.ViewModels;
 namespace ProjectThesis.Migrations
 {
     [DbContext(typeof(ThesisDbContext))]
-    [Migration("20200530194145_UsersInContext")]
-    partial class UsersInContext
+    [Migration("20200531191908_Init")]
+    partial class Init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -22,31 +22,35 @@ namespace ProjectThesis.Migrations
 
             modelBuilder.Entity("ProjectThesis.Models.Faculty", b =>
                 {
-                    b.Property<int>("FacultyId")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
                     b.Property<string>("Name");
 
-                    b.HasKey("FacultyId");
+                    b.HasKey("Id");
 
-                    b.ToTable("Faculty");
+                    b.ToTable("Faculties");
                 });
 
-            modelBuilder.Entity("ProjectThesis.Models.FieldOfStudy", b =>
+            modelBuilder.Entity("ProjectThesis.Models.Specialty", b =>
                 {
-                    b.Property<int>("FieldOfStudyId")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
+
+                    b.Property<int>("FacId");
 
                     b.Property<string>("Name");
 
-                    b.HasKey("FieldOfStudyId");
+                    b.HasKey("Id");
 
-                    b.ToTable("FieldOfStudy");
+                    b.HasIndex("FacId");
+
+                    b.ToTable("Specials");
                 });
 
             modelBuilder.Entity("ProjectThesis.Models.Student", b =>
                 {
-                    b.Property<int>("StudentId")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
                     b.Property<int>("DegreeCycle");
@@ -55,39 +59,39 @@ namespace ProjectThesis.Migrations
 
                     b.Property<int>("StudentNo");
 
-                    b.Property<int>("SupId");
+                    b.Property<int>("SuperId");
 
                     b.Property<int>("UserId");
 
-                    b.HasKey("StudentId");
+                    b.HasKey("Id");
 
                     b.HasIndex("FacultyId");
 
-                    b.HasIndex("SupId");
+                    b.HasIndex("SuperId");
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Students");
+                    b.ToTable("Studs");
                 });
 
             modelBuilder.Entity("ProjectThesis.Models.Supervisor", b =>
                 {
-                    b.Property<int>("SupervisorId")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<int>("FacId");
+                    b.Property<int>("FacultyId");
 
                     b.Property<int>("StudentLimit");
 
                     b.Property<int>("UserId");
 
-                    b.HasKey("SupervisorId");
+                    b.HasKey("Id");
 
-                    b.HasIndex("FacId");
+                    b.HasIndex("FacultyId");
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Supervisors");
+                    b.ToTable("Supers");
                 });
 
             modelBuilder.Entity("ProjectThesis.Models.Thesis", b =>
@@ -97,29 +101,29 @@ namespace ProjectThesis.Migrations
 
                     b.Property<int>("DegreeCycle");
 
-                    b.Property<int>("FosId");
+                    b.Property<int>("SpecId");
 
                     b.Property<int>("StudentId");
 
                     b.Property<string>("Subject");
 
-                    b.Property<int>("SupId");
+                    b.Property<int>("SuperId");
 
                     b.HasKey("ThesisId");
 
-                    b.HasIndex("FosId");
+                    b.HasIndex("SpecId");
 
                     b.HasIndex("StudentId")
                         .IsUnique();
 
-                    b.HasIndex("SupId");
+                    b.HasIndex("SuperId");
 
                     b.ToTable("Thesis");
                 });
 
             modelBuilder.Entity("ProjectThesis.Models.User", b =>
                 {
-                    b.Property<int>("UserId")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
                     b.Property<string>("Email");
@@ -130,9 +134,17 @@ namespace ProjectThesis.Migrations
 
                     b.Property<string>("Password");
 
-                    b.HasKey("UserId");
+                    b.HasKey("Id");
 
                     b.ToTable("Users");
+                });
+
+            modelBuilder.Entity("ProjectThesis.Models.Specialty", b =>
+                {
+                    b.HasOne("ProjectThesis.Models.Faculty", "Fac")
+                        .WithMany()
+                        .HasForeignKey("FacId")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("ProjectThesis.Models.Student", b =>
@@ -142,9 +154,9 @@ namespace ProjectThesis.Migrations
                         .HasForeignKey("FacultyId")
                         .OnDelete(DeleteBehavior.Cascade);
 
-                    b.HasOne("ProjectThesis.Models.Supervisor", "Sup")
+                    b.HasOne("ProjectThesis.Models.Supervisor", "Super")
                         .WithMany("Students")
-                        .HasForeignKey("SupId")
+                        .HasForeignKey("SuperId")
                         .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("ProjectThesis.Models.User", "User")
@@ -155,9 +167,9 @@ namespace ProjectThesis.Migrations
 
             modelBuilder.Entity("ProjectThesis.Models.Supervisor", b =>
                 {
-                    b.HasOne("ProjectThesis.Models.Faculty", "Fac")
+                    b.HasOne("ProjectThesis.Models.Faculty", "Faculty")
                         .WithMany()
-                        .HasForeignKey("FacId")
+                        .HasForeignKey("FacultyId")
                         .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("ProjectThesis.Models.User", "User")
@@ -168,9 +180,9 @@ namespace ProjectThesis.Migrations
 
             modelBuilder.Entity("ProjectThesis.Models.Thesis", b =>
                 {
-                    b.HasOne("ProjectThesis.Models.FieldOfStudy", "Fos")
+                    b.HasOne("ProjectThesis.Models.Specialty", "Spec")
                         .WithMany()
-                        .HasForeignKey("FosId")
+                        .HasForeignKey("SpecId")
                         .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("ProjectThesis.Models.Student", "Student")
@@ -178,9 +190,9 @@ namespace ProjectThesis.Migrations
                         .HasForeignKey("ProjectThesis.Models.Thesis", "StudentId")
                         .OnDelete(DeleteBehavior.Cascade);
 
-                    b.HasOne("ProjectThesis.Models.Supervisor", "Sup")
+                    b.HasOne("ProjectThesis.Models.Supervisor", "Super")
                         .WithMany("Theses")
-                        .HasForeignKey("SupId")
+                        .HasForeignKey("SuperId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 #pragma warning restore 612, 618

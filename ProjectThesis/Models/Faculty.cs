@@ -10,7 +10,7 @@ namespace ProjectThesis.Models
     public class Faculty
     {
         [DatabaseGenerated(DatabaseGeneratedOption.Identity), Key]
-        public int FacultyId { get; set; }
+        public int Id { get; set; }
         public string Name { get; set; }
     }
 }
