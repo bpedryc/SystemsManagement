@@ -13,19 +13,23 @@ namespace ProjectThesis.Models
     {
         [DatabaseGenerated(DatabaseGeneratedOption.Identity), Key]
         public int Id { get; set; }
+
+        [Required]
         public int StudentNo { get; set; }
+
+        [Required]
         public int DegreeCycle { get; set; }
 
+        [Required]
         public int UserId { get; set; }
         public User User { get; set; }
 
-        public int FacultyId { get; set; }
-        public Faculty Faculty { get; set; }
-        
+        [Required]
+        public int SpecialtyId { get; set; }
+        public Specialty Specialty { get; set; }
 
-        [AllowNull]
-        public int SuperId { get; set; }
-        public Supervisor Super { get; set; }
+        public int? SuperId { get; set; }
+        public virtual Supervisor Super { get; set; }
 
         public Thesis ChosenThesis { get; set; }
     }

@@ -14,8 +14,7 @@ namespace ProjectThesis.ViewModels
         
         public ThesisDbContext(DbContextOptions<ThesisDbContext> options) : base(options)
         {
-
+            
         }
-
     }
 }

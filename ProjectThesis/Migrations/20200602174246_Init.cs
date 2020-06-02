@@ -26,10 +26,10 @@ namespace ProjectThesis.Migrations
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("Oracle:ValueGenerationStrategy", OracleValueGenerationStrategy.IdentityColumn),
-                    FirstName = table.Column<string>(nullable: true),
-                    LastName = table.Column<string>(nullable: true),
-                    Email = table.Column<string>(nullable: true),
-                    Password = table.Column<string>(nullable: true)
+                    FirstName = table.Column<string>(nullable: false),
+                    LastName = table.Column<string>(nullable: false),
+                    Email = table.Column<string>(nullable: false),
+                    Password = table.Column<string>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -92,16 +92,16 @@ namespace ProjectThesis.Migrations
                     StudentNo = table.Column<int>(nullable: false),
                     DegreeCycle = table.Column<int>(nullable: false),
                     UserId = table.Column<int>(nullable: false),
-                    FacultyId = table.Column<int>(nullable: false),
-                    SuperId = table.Column<int>(nullable: false)
+                    SpecialtyId = table.Column<int>(nullable: false),
+                    SuperId = table.Column<int>(nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Studs", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Studs_Faculties_FacultyId",
-                        column: x => x.FacultyId,
-                        principalTable: "Faculties",
+                        name: "FK_Studs_Specials_SpecialtyId",
+                        column: x => x.SpecialtyId,
+                        principalTable: "Specials",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
@@ -109,7 +109,7 @@ namespace ProjectThesis.Migrations
                         column: x => x.SuperId,
                         principalTable: "Supers",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_Studs_Users_UserId",
                         column: x => x.UserId,
@@ -159,9 +159,9 @@ namespace ProjectThesis.Migrations
                 column: "FacId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Studs_FacultyId",
+                name: "IX_Studs_SpecialtyId",
                 table: "Studs",
-                column: "FacultyId");
+                column: "SpecialtyId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Studs_SuperId",
@@ -206,10 +206,10 @@ namespace ProjectThesis.Migrations
                 name: "Thesis");
 
             migrationBuilder.DropTable(
-                name: "Specials");
+                name: "Studs");
 
             migrationBuilder.DropTable(
-                name: "Studs");
+                name: "Specials");
 
             migrationBuilder.DropTable(
                 name: "Supers");
