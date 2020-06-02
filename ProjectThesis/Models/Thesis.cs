@@ -14,11 +14,11 @@ namespace ProjectThesis.Models
         public string Subject { get; set; }
         public int DegreeCycle { get; set; }
 
-        public int FosId { get; set; }
-        public FieldOfStudy Fos { get; set; }
+        public int SpecId { get; set; }
+        public Specialty Spec { get; set; }
         
-        public int SupId { get; set; }
-        public Supervisor Sup { get; set; }
+        public int SuperId { get; set; }
+        public Supervisor Super { get; set; }
 
         public int StudentId { get; set; }
         public Student Student { get; set; }

@@ -7,10 +7,14 @@ using System.Threading.Tasks;
 
 namespace ProjectThesis.Models
 {
-    public class FieldOfStudy
+    [Table("Specials")]
+    public class Specialty
     {
         [DatabaseGenerated(DatabaseGeneratedOption.Identity), Key]
-        public int FieldOfStudyId { get; set; }
+        public int Id { get; set; }
         public string Name { get; set; }
+
+        public int FacId { get; set; }
+        public Faculty Fac { get; set; }
     }
 }
