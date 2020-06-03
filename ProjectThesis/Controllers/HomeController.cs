@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ProjectThesis.Models;
@@ -18,23 +20,37 @@ namespace ProjectThesis.Controllers
             _context = context;
         }
 
-        public async Task<IActionResult> Index()
+        public IActionResult Index()
         {
-            return View(await _context.Students.ToListAsync());
+            var uId = HttpContext.Session.GetString("UserId");
+            var matchedUser = _context.Users
+                                .Where(u => (u.Id == Int64.Parse(uId)))
+                                .FirstOrDefault<User>();
+            //var model = new RegisterStudentViewModel().User;
+            //model = matchedUser;
+            Debug.WriteLine(matchedUser.FirstName + " " + matchedUser.Id);
+            return View(matchedUser);
+            //return View(await _context.Students.ToListAsync());
         }
 
         [HttpGet]
-        public IActionResult SignIn()
+        public IActionResult Thesis()
         {
             return View();
         }
 
         [HttpPost, ValidateAntiForgeryToken]
-        public IActionResult SignIn(User model)
+        public IActionResult Thesis(Thesis model)
         {
             /*_context.Users.Add(new User { Username = model.Username, Password = model.Password});
             _context.SaveChanges();*/
             return View();
+        }
+
+        public IActionResult SignOut()
+        {
+            HttpContext.Session.SetString("UserId", "");
+            return RedirectToAction("Login", "Authentication");
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

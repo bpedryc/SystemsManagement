@@ -1,16 +1,16 @@
-﻿<div class="text-center">
-    <h1 class="display-4">The List</h1>
-    <p>Use the other tab to enter data</p>
-    
-    <table class="table">
-        <thead>
-        <tr>
-            <th scope="col">UserID</th>
-            <th scope="col">Username</th>
-            <th scope="col">Password</th>
-        </tr>
-        </thead>
-        <tbody>
-        </tbody>
-    </table>
-</div>
+﻿@model ProjectThesis.Models.User;
+@{
+    ViewData["Title"] = "Home";
+    Layout = "_Layout";
+}
+
+    <div class="text-center">
+        <h1>Imie</h1>
+        <p>@Html.DisplayFor(model => model.FirstName)<p>
+        <h1>Nazwisko</h1>
+        <p>@Html.DisplayFor(model => model.LastName)</p>
+        <h1>Hasło</h1>
+        <p>@Html.DisplayFor(model => model.Password)</p>
+        <h1>Id</h1>
+        <p>@Html.DisplayFor(model => model.Id)</p>
+    </div>
