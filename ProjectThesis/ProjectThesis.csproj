@@ -23,10 +23,27 @@
     <Compile Remove="Migrations\20200528221231_Init.Designer.cs" />
     <Compile Remove="Migrations\20200528221403_Init.cs" />
     <Compile Remove="Migrations\20200528221403_Init.Designer.cs" />
+    <Compile Remove="Migrations\20200531175950_FacultiesContext.cs" />
+    <Compile Remove="Migrations\20200531175950_FacultiesContext.Designer.cs" />
+    <Compile Remove="Migrations\20200531182005_Namechanges.cs" />
+    <Compile Remove="Migrations\20200531182005_Namechanges.Designer.cs" />
+    <Compile Remove="Migrations\20200531182521_Init.cs" />
+    <Compile Remove="Migrations\20200531182521_Init.Designer.cs" />
+    <Compile Remove="Migrations\20200531182707_Init.cs" />
+    <Compile Remove="Migrations\20200531182707_Init.Designer.cs" />
+    <Compile Remove="Migrations\20200531183259_Init.cs" />
+    <Compile Remove="Migrations\20200531183259_Init.Designer.cs" />
+    <Compile Remove="Migrations\20200531183441_Init.cs" />
+    <Compile Remove="Migrations\20200531183441_Init.Designer.cs" />
+    <Compile Remove="Migrations\20200531190430_SpecialtyFacultyRel.cs" />
+    <Compile Remove="Migrations\20200531190430_SpecialtyFacultyRel.Designer.cs" />
+    <Compile Remove="Migrations\20200531191749_Init.cs" />
+    <Compile Remove="Migrations\20200531191749_Init.Designer.cs" />
     <Compile Remove="Models\UsersContext.cs" />
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Session" Version="2.2.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="2.2.6" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="2.2.6" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="2.2.6" />

@@ -8,23 +8,28 @@ using System.Threading.Tasks;
 
 namespace ProjectThesis.Models
 {
+    [Table("Studs")]
     public class Student
     {
         [DatabaseGenerated(DatabaseGeneratedOption.Identity), Key]
-        public int StudentId { get; set; }
+        public int Id { get; set; }
+
+        [Required]
         public int StudentNo { get; set; }
+
+        [Required]
         public int DegreeCycle { get; set; }
 
+        [Required]
         public int UserId { get; set; }
         public User User { get; set; }
 
-        public int FacultyId { get; set; }
-        public Faculty Faculty { get; set; }
-        
+        [Required]
+        public int SpecialtyId { get; set; }
+        public Specialty Specialty { get; set; }
 
-        [AllowNull]
-        public int SupId { get; set; }
-        public Supervisor Sup { get; set; }
+        public int? SuperId { get; set; }
+        public virtual Supervisor Super { get; set; }
 
         public Thesis ChosenThesis { get; set; }
     }
