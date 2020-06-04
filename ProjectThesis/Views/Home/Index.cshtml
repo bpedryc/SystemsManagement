@@ -3,14 +3,27 @@
     ViewData["Title"] = "Home";
     Layout = "_Layout";
 }
-
-    <div class="text-center">
-        <h1>Imie</h1>
-        <p>@Html.DisplayFor(model => model.FirstName)<p>
-        <h1>Nazwisko</h1>
-        <p>@Html.DisplayFor(model => model.LastName)</p>
-        <h1>Hasło</h1>
-        <p>@Html.DisplayFor(model => model.Password)</p>
-        <h1>Id</h1>
-        <p>@Html.DisplayFor(model => model.Id)</p>
+<div class="row">
+    <div class="col-sm-3">
+        <h4>Imie</h4>
+        <h4>Nazwisko</h4>
+        <h4>E-mail</h4>
+        <h4>Nralbumu</h4>
     </div>
+    <div class="col-sm">
+        <p>@Html.DisplayFor(model => model.FirstName)<p>
+        <p>@Html.DisplayFor(model => model.LastName)</p>
+        <p>@Html.DisplayFor(model => model.Email)</p>
+        <p>12232</p>
+    </div>
+    <div class="col-sm">
+        <h4>Temat mojej pracy</h4>
+        <p>Mechanika płynów</p>
+        <h4>Moj promotor</h4>
+        <p>Andrzej Piaseczny</p>
+    </div>
+    <div id="change-buttons">
+        <button type="submit" class="btn btn-primary" id="change-password">Zmień hasło</button>
+        <button type="submit" class="btn btn-primary" id="change-email">Zmień e-mail</button>
+    </div>
+</div>

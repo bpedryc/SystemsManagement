@@ -22,7 +22,8 @@ namespace ProjectThesis.Controllers
 
         public IActionResult Index()
         {
-            var uId = HttpContext.Session.GetString("UserId");
+            //var uId = HttpContext.Session.GetString("UserId");
+            var uId = "41";
             var matchedUser = _context.Users
                                 .Where(u => (u.Id == Int64.Parse(uId)))
                                 .FirstOrDefault<User>();

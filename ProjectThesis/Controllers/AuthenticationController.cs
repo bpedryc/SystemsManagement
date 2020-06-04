@@ -34,6 +34,7 @@ namespace ProjectThesis.Controllers
         [HttpGet]
         public IActionResult Login()
         {
+            //return RedirectToAction("Index", "Home");
             return View();
         }
 
