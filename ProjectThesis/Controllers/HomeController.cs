@@ -22,8 +22,7 @@ namespace ProjectThesis.Controllers
 
         public IActionResult Index()
         {
-            //var uId = HttpContext.Session.GetString("UserId");
-            var uId = "41";
+            var uId = HttpContext.Session.GetString("UserId");
             var matchedUser = _context.Users
                                 .Where(u => (u.Id == Int64.Parse(uId)))
                                 .FirstOrDefault<User>();
@@ -37,7 +36,19 @@ namespace ProjectThesis.Controllers
         [HttpGet]
         public IActionResult Thesis()
         {
-            return View();
+            var supers = _context.Supervisors
+                            .Where(s => (s.FacultyId == 1));
+
+            List<string> superData = new List<string>();
+            foreach(var super in supers)
+            {
+                var user = _context.Users
+                            .Where(u => (u.Id == super.UserId))
+                            .FirstOrDefault<User>();
+                Debug.WriteLine(super.Id);
+                superData.Add(super.Id + " " + user.FirstName + " " + user.LastName);
+            }
+            return View(superData);
         }
 
         [HttpPost, ValidateAntiForgeryToken]

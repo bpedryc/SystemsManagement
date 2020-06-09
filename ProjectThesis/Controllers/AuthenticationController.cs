@@ -57,7 +57,9 @@ namespace ProjectThesis.Controllers
          
             if (matchedUser != null)
             {
+                Debug.WriteLine(matchedUser.Id);
                 HttpContext.Session.SetString("UserId", matchedUser.Id.ToString());
+                //HttpContext.Session.SetString("UserId", "29");
                 return RedirectToAction("Index", "Home");
             }
 

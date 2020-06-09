@@ -1,20 +1,37 @@
-﻿@{
+﻿@model List<string>
+@{
     ViewData["Title"] = "Thesis";
     Layout = "_Layout";
 }
-<h1>@ViewData["Title"]</h1>
 
-<p>Here you can make new entries for the list</p>
 
-@*<form asp-action="SignIn" asp-controller="Home">
-    <div class="form-group">
-        <label asp-for="Username"></label>
-        <input asp-for="Username" class="form-control" placeholder="Enter your name">
-    </div>
-    <div class="form-group">
-        <label asp-for="Password">Password</label>
-        <input asp-for="Password" type="password" class="form-control" aria-describedby="passwordHelp" placeholder="Enter password">
-        <small id="passwordHelp" class="form-text text-muted">Don't enter your true password though</small>
-    <button type="submit" class="btn btn-primary">Submit</button>
-</form>*@
+<div id="supers-div" style="width: 50%; left: 35%; position: relative;">
+    @foreach (string item in Model)
+    {
+        var supId = item.Substring(0, item.IndexOf(" "));
+        var FullName = item.Substring(item.IndexOf(" "));
+        var supDivId = supId + "_div";
+        <div class="form-group" style="display: flex; padding-top: 0.5em;" id=@supDivId>
+            <h5 style="width:50%">@FullName</h5>
+            <button class="btn btn-primary" onclick="showThesisList(this.id)" id=@supId style="width: 2em; height: 2em; padding: 0;">+</button>
+        </div>
+    }
+</div>
 
+<script type="text/javascript">
+    function showThesisList(super_id) {
+        var item = "#" + super_id + "_div";
+        var butt = "#" + super_id;
+        if ($(butt).html() === "+") {
+            $(butt).html("-");
+            var idthesislist = super_id + "_thes";
+            var thesisList = '<div id="' + idthesislist + '">';
+            $(item).after(thesisList + "<p>test1</p><p>test2</p><p>test3</p></div>");
+        }
+        else {
+            var idthesislist = "#" + super_id + "_thes";
+            $(idthesislist).remove();
+            $(butt).html("+");
+        }
+    }
+</script>
