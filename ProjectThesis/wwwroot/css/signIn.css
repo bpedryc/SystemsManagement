@@ -10,3 +10,8 @@ p {
     margin-left: 30%;
     width: 40%;
 }
+
+.field-validation-error {
+    color: crimson;
+    font: bold;
+}

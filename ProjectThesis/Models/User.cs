@@ -8,13 +8,17 @@ namespace ProjectThesis.Models
     {
         [DatabaseGenerated(DatabaseGeneratedOption.Identity), Key] 
         public int Id { get; set; }
-        [Required]
+        [Required(ErrorMessage = "Imię jest wymagane")]
+        [RegularExpression(@"^[a-zA-Z]+$", ErrorMessage = "To imię nie jest poprawne")]
         public string FirstName { get; set; }
-        [Required]
+        [Required(ErrorMessage = "Nazwisko jest wymagane")]
+        [RegularExpression(@"^[a-zA-Z]+$", ErrorMessage = "To nazwisko nie jest poprawne")]
         public string LastName { get; set; }
-        [Required]
+        [Required(ErrorMessage = "Adres email jest wymagany")]
+        [DataType(DataType.EmailAddress, ErrorMessage = "Ten adres email nie jest poprawny")]
         public string Email { get; set; }
-        [Required]
+        [Required(ErrorMessage = "Hasło jest wymagane")]
+        //TODO: regex for password
         public string Password { get; set; }
     }
 }

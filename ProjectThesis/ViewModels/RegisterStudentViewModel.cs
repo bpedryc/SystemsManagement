@@ -15,8 +15,7 @@ namespace ProjectThesis.ViewModels
         public IEnumerable<Specialty> Specialties { get; set; }
         public string UserPassword { get { return User.Password; } }
 
-        //[DataType(DataType.Password)]
-        [Compare("UserPassword")]
+        [Compare("UserPassword", ErrorMessage = "Wpisane zostało inne hasło")]
         public string ConfirmPassword { get; set; }
     }
 }

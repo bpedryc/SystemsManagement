@@ -87,52 +87,51 @@ namespace ProjectThesis.Controllers
 
             using (var transaction = _context.Database.BeginTransaction())
             {
-                try
-                {
-                    MailAddress m = new MailAddress(model.User.Email);
-                }
-                catch (FormatException)
-                {
-                    Debug.WriteLine("email");
-                    return View(model);
-                }
+                //try
+                //{
+                //    MailAddress m = new MailAddress(model.User.Email);
+                //}
+                //catch (FormatException)
+                //{
+                //    Debug.WriteLine("email");
+                //    return View(model);
+                //}
+
+                //TODO: check if StudetNO is only numeric signs
+                //if(!Regex.IsMatch(model.User.FirstName, @"^[0-9]+$"))
+
+                //if (!Regex.IsMatch(model.User.FirstName, @"^[a-zA-Z]+$"))
+                //{
+                //    Debug.WriteLine("uncorrect name");
+                //    return View(model);
+                //}
+                //if (!Regex.IsMatch(model.User.LastName, @"^[a-zA-Z]+$"))
+                //{
+                //    Debug.WriteLine("uncorrect lastname");
+                //    return View(model);
+                //}
 
                 var matchedUser = _context.Users
                                 .Where(u => (u.Email == model.User.Email))
                                 .FirstOrDefault<User>();
                 if (matchedUser != null)
                 {
-                    Debug.WriteLine("email exists");
-                    return View(model); //dodac blad
-                }
-
-                //TODO: check if StudetNO is only numeric signs
-                //if(!Regex.IsMatch(model.User.FirstName, @"^[0-9]+$"))
-
-                if (!Regex.IsMatch(model.User.FirstName, @"^[a-zA-Z]+$"))
-                {
-                    Debug.WriteLine("uncorrect name");
-                    return View(model);
-                }
-                if (!Regex.IsMatch(model.User.LastName, @"^[a-zA-Z]+$"))
-                {
-                    Debug.WriteLine("uncorrect lastname");
+                    ViewData["Message"] = "Taki u¿ytkownik istnieje ju¿ w systemie!";
                     return View(model);
                 }
 
-                var ps = GetSha256FromString(model.User.Password);
-                model.User.Password = ps;
+                model.User.Password = GetSha256FromString(model.User.Password);
+
                 _context.Users.Add(model.User);
                 _context.SaveChanges();
+
                 model.Student.UserId = model.User.Id;
                 _context.Students.Add(model.Student);
-                
                 _context.SaveChanges();
 
                 transaction.Commit();
             }
-            
-            return RedirectToAction("Login", "Authentication"); //TODO: redirect to view telling you that registration was successful    
+            return RedirectToAction("Login", "Authentication"); //TODO: redirect to a special view telling you that registration was successful    
         }
         
         [HttpGet]

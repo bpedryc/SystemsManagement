@@ -10,6 +10,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Localization;
 using ProjectThesis.Models;
 using ProjectThesis.ViewModels;
 
@@ -31,8 +32,6 @@ namespace ProjectThesis
             services.AddControllersWithViews();
             services.AddDbContext<ThesisDbContext>(options =>
                 options.UseOracle(Configuration.GetConnectionString("DefaultConnection")));
-
-
             services.AddDistributedMemoryCache();
         }
 
