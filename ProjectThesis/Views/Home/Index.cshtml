@@ -1,4 +1,4 @@
-﻿@model ProjectThesis.Models.User;
+﻿@model ProjectThesis.ViewModels.StudentPanelViewModel;
 @{
     ViewData["Title"] = "Home";
     Layout = "_Layout";
@@ -11,16 +11,19 @@
         <h4>Nralbumu</h4>
     </div>
     <div class="col-sm">
-        <p>@Html.DisplayFor(model => model.FirstName)<p>
-        <p>@Html.DisplayFor(model => model.LastName)</p>
-        <p>@Html.DisplayFor(model => model.Email)</p>
-        <p>12232</p>
+        <p>@Html.DisplayFor(model => model.User.FirstName)<p>
+        <p>@Html.DisplayFor(model => model.User.LastName)</p>
+        <p>@Html.DisplayFor(model => model.User.Email)</p>
+        <p>@Html.DisplayFor(model => model.Student.StudentNo)</p>
     </div>
     <div class="col-sm">
         <h4>Temat mojej pracy</h4>
-        <p>Mechanika płynów</p>
+        <p>@Html.DisplayFor(model => model.Thesis.Subject)</p>
         <h4>Moj promotor</h4>
-        <p>Andrzej Piaseczny</p>
+        <p>
+            @Html.DisplayFor(model => model.Supervisor.FirstName) 
+            @Html.DisplayFor(model => model.Supervisor.LastName)
+        </p>
     </div>
     <div id="change-buttons">
         <button type="submit" class="btn btn-primary" id="change-password">Zmień hasło</button>

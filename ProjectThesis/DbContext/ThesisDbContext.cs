@@ -11,6 +11,7 @@ namespace ProjectThesis.ViewModels
         public DbSet<Supervisor> Supervisors { get; set; }
         public DbSet<Faculty> Faculties { get; set; }
         public DbSet<Specialty> Specialties { get; set; }
+        public DbSet<Thesis> Theses { get; set; }
         
         public ThesisDbContext(DbContextOptions<ThesisDbContext> options) : base(options)
         {

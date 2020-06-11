@@ -22,22 +22,48 @@ namespace ProjectThesis.Controllers
 
         public IActionResult Index()
         {
-            var uId = HttpContext.Session.GetString("UserId");
-            var matchedUser = _context.Users
-                                .Where(u => (u.Id == Int64.Parse(uId)))
-                                .FirstOrDefault<User>();
-            //var model = new RegisterStudentViewModel().User;
-            //model = matchedUser;
-            Debug.WriteLine(matchedUser.FirstName + " " + matchedUser.Id);
-            return View(matchedUser);
-            //return View(await _context.Students.ToListAsync());
+            int userId = int.Parse(HttpContext.Session.GetString("UserId"));
+            var user = _context.Users
+                                .Where(u => (u.Id == userId))
+                                .FirstOrDefault();
+            var student = _context.Students
+                                .Where(s => (s.UserId == userId))
+                                .FirstOrDefault();
+
+            var thesis = _context.Theses
+                                .Where(t => (t.StudentId == student.Id))
+                                .FirstOrDefault();
+            if (thesis == null){
+                thesis = new Thesis { Subject = "Brak Wybranej Pracy" };
+            }
+
+            var supervisor = _context.Supervisors
+                                .Where(s => (s.Id == student.SuperId))
+                                .FirstOrDefault();
+            var supervisorUser = new User { FirstName = "Brak", LastName = "Promotora" };
+            if (supervisor != null){
+                supervisorUser = _context.Users
+                                        .Where(u => (u.Id == supervisor.UserId))
+                                        .FirstOrDefault();
+            }
+            
+            return View(new StudentPanelViewModel { User = user, Student = student, Thesis = thesis, Supervisor = supervisorUser });
         }
 
         [HttpGet]
         public IActionResult Thesis()
         {
+            int userId = int.Parse(HttpContext.Session.GetString("UserId"));
+            var specialtyId = _context.Students
+                                .Where(s => s.UserId == userId)
+                                .Select(s => s.SpecialtyId)
+                                .FirstOrDefault();
+            var facultyId = _context.Specialties
+                                .Where(s => s.Id == specialtyId)
+                                .Select(s => s.FacId)
+                                .FirstOrDefault();
             var supers = _context.Supervisors
-                            .Where(s => (s.FacultyId == 1));
+                            .Where(s => (s.FacultyId == facultyId));
 
             List<string> superData = new List<string>();
             foreach(var super in supers)
@@ -45,7 +71,6 @@ namespace ProjectThesis.Controllers
                 var user = _context.Users
                             .Where(u => (u.Id == super.UserId))
                             .FirstOrDefault<User>();
-                Debug.WriteLine(super.Id);
                 superData.Add(super.Id + " " + user.FirstName + " " + user.LastName);
             }
             return View(superData);
