@@ -1,0 +1,14 @@
+﻿@model List<string>
+@{
+    ViewData["Title"] = "HomeSupervisor";
+    Layout = "HomeSupervisorLayout";
+}
+
+@foreach (var row in Model)
+{
+    var subject = row.Substring(0, row.IndexOf(","));
+    var stud = row.Substring(row.IndexOf(",") + 1);
+    <h3>@subject</h3>
+    <p>@stud</p>
+}
+
