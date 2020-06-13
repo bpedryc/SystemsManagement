@@ -1,16 +1,32 @@
-﻿<div class="text-center">
-    <h1 class="display-4">The List</h1>
-    <p>Use the other tab to enter data</p>
-    
-    <table class="table">
-        <thead>
-        <tr>
-            <th scope="col">UserID</th>
-            <th scope="col">Username</th>
-            <th scope="col">Password</th>
-        </tr>
-        </thead>
-        <tbody>
-        </tbody>
-    </table>
+﻿@model ProjectThesis.ViewModels.StudentPanelViewModel;
+@{
+    ViewData["Title"] = "Home";
+    Layout = "_Layout";
+}
+<div class="row">
+    <div class="col-sm-3">
+        <h4>Imie</h4>
+        <h4>Nazwisko</h4>
+        <h4>E-mail</h4>
+        <h4>Nralbumu</h4>
+    </div>
+    <div class="col-sm">
+        <p>@Html.DisplayFor(model => model.User.FirstName)<p>
+        <p>@Html.DisplayFor(model => model.User.LastName)</p>
+        <p>@Html.DisplayFor(model => model.User.Email)</p>
+        <p>@Html.DisplayFor(model => model.Student.StudentNo)</p>
+    </div>
+    <div class="col-sm">
+        <h4>Temat mojej pracy</h4>
+        <p>@Html.DisplayFor(model => model.Thesis.Subject)</p>
+        <h4>Moj promotor</h4>
+        <p>
+            @Html.DisplayFor(model => model.Supervisor.FirstName) 
+            @Html.DisplayFor(model => model.Supervisor.LastName)
+        </p>
+    </div>
+    <div id="change-buttons">
+        <button type="submit" class="btn btn-primary" id="change-password">Zmień hasło</button>
+        <button type="submit" class="btn btn-primary" id="change-email">Zmień e-mail</button>
+    </div>
 </div>

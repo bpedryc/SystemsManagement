@@ -39,10 +39,13 @@
     <Compile Remove="Migrations\20200531190430_SpecialtyFacultyRel.Designer.cs" />
     <Compile Remove="Migrations\20200531191749_Init.cs" />
     <Compile Remove="Migrations\20200531191749_Init.Designer.cs" />
+    <Compile Remove="Migrations\20200613095707_ThesisStudentOptional.cs" />
+    <Compile Remove="Migrations\20200613095707_ThesisStudentOptional.Designer.cs" />
     <Compile Remove="Models\UsersContext.cs" />
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="DataAnnotationsExtensions" Version="5.0.1.27" />
     <PackageReference Include="Microsoft.AspNetCore.Session" Version="2.2.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="2.2.6" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="2.2.6" />
@@ -56,5 +59,7 @@
     <PackageReference Include="Oracle.EntityFrameworkCore" Version="2.19.60" />
     <PackageReference Include="Oracle.ManagedDataAccess.Core" Version="2.19.60" />
   </ItemGroup>
+
+  <ProjectExtensions><VisualStudio><UserProperties appsettings_1json__JsonSchema="" /></VisualStudio></ProjectExtensions>
 
 </Project>

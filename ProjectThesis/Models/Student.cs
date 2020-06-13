@@ -13,19 +13,21 @@ namespace ProjectThesis.Models
     {
         [DatabaseGenerated(DatabaseGeneratedOption.Identity), Key]
         public int Id { get; set; }
+        [DataAnnotationsExtensions.Integer(ErrorMessage = "Ten numer albumu jest niepoprawny")]
+        //[Required(ErrorMessage = "Numer albumu jest wymagany")]
+        //[Range(100000, 999999, ErrorMessage = "Ten numer albumu jest niepoprawny")]
         public int StudentNo { get; set; }
+
+        [Required(ErrorMessage = "Rok studiów jest wymagany")]
         public int DegreeCycle { get; set; }
 
+        [Required]
         public int UserId { get; set; }
         public User User { get; set; }
 
-        public int FacultyId { get; set; }
-        public Faculty Faculty { get; set; }
-        
-
-        [AllowNull]
-        public int SuperId { get; set; }
-        public Supervisor Super { get; set; }
+        [Required(ErrorMessage = "Kierunek jest wymagany")]
+        public int SpecialtyId { get; set; }
+        public Specialty Specialty { get; set; }
 
         public Thesis ChosenThesis { get; set; }
     }

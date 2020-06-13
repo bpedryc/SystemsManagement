@@ -10,6 +10,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Localization;
 using ProjectThesis.Models;
 using ProjectThesis.ViewModels;
 
@@ -27,9 +28,11 @@ namespace ProjectThesis
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddSession();
             services.AddControllersWithViews();
             services.AddDbContext<ThesisDbContext>(options =>
                 options.UseOracle(Configuration.GetConnectionString("DefaultConnection")));
+            services.AddDistributedMemoryCache();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -52,12 +55,15 @@ namespace ProjectThesis
 
             app.UseAuthorization();
 
+            app.UseSession();
+
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller=Authentication}/{action=Login}/{id?}");
             });
+
         }
     }
 }

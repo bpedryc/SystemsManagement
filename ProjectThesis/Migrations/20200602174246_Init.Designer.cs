@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Oracle.EntityFrameworkCore.Metadata;
 using ProjectThesis.ViewModels;
@@ -9,9 +10,10 @@ using ProjectThesis.ViewModels;
 namespace ProjectThesis.Migrations
 {
     [DbContext(typeof(ThesisDbContext))]
-    partial class ThesisDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200602174246_Init")]
+    partial class Init
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -58,7 +60,7 @@ namespace ProjectThesis.Migrations
 
                     b.Property<int>("StudentNo");
 
-                    b.Property<int?>("SupervisorId");
+                    b.Property<int?>("SuperId");
 
                     b.Property<int>("UserId");
 
@@ -66,7 +68,7 @@ namespace ProjectThesis.Migrations
 
                     b.HasIndex("SpecialtyId");
 
-                    b.HasIndex("SupervisorId");
+                    b.HasIndex("SuperId");
 
                     b.HasIndex("UserId");
 
@@ -95,20 +97,20 @@ namespace ProjectThesis.Migrations
 
             modelBuilder.Entity("ProjectThesis.Models.Thesis", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<int>("ThesisId")
                         .ValueGeneratedOnAdd();
 
                     b.Property<int>("DegreeCycle");
 
                     b.Property<int>("SpecId");
 
-                    b.Property<int?>("StudentId");
+                    b.Property<int>("StudentId");
 
                     b.Property<string>("Subject");
 
                     b.Property<int>("SuperId");
 
-                    b.HasKey("Id");
+                    b.HasKey("ThesisId");
 
                     b.HasIndex("SpecId");
 
@@ -117,7 +119,7 @@ namespace ProjectThesis.Migrations
 
                     b.HasIndex("SuperId");
 
-                    b.ToTable("Theses");
+                    b.ToTable("Thesis");
                 });
 
             modelBuilder.Entity("ProjectThesis.Models.User", b =>
@@ -157,9 +159,9 @@ namespace ProjectThesis.Migrations
                         .HasForeignKey("SpecialtyId")
                         .OnDelete(DeleteBehavior.Cascade);
 
-                    b.HasOne("ProjectThesis.Models.Supervisor")
+                    b.HasOne("ProjectThesis.Models.Supervisor", "Super")
                         .WithMany("Students")
-                        .HasForeignKey("SupervisorId");
+                        .HasForeignKey("SuperId");
 
                     b.HasOne("ProjectThesis.Models.User", "User")
                         .WithMany()
@@ -189,7 +191,8 @@ namespace ProjectThesis.Migrations
 
                     b.HasOne("ProjectThesis.Models.Student", "Student")
                         .WithOne("ChosenThesis")
-                        .HasForeignKey("ProjectThesis.Models.Thesis", "StudentId");
+                        .HasForeignKey("ProjectThesis.Models.Thesis", "StudentId")
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("ProjectThesis.Models.Supervisor", "Super")
                         .WithMany("Theses")

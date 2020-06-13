@@ -10,7 +10,7 @@ namespace ProjectThesis.Models
     public class Thesis
     {
         [DatabaseGenerated(DatabaseGeneratedOption.Identity), Key]
-        public int ThesisId { get; set; }
+        public int Id { get; set; }
         public string Subject { get; set; }
         public int DegreeCycle { get; set; }
 
@@ -20,7 +20,7 @@ namespace ProjectThesis.Models
         public int SuperId { get; set; }
         public Supervisor Super { get; set; }
 
-        public int StudentId { get; set; }
+        public int? StudentId { get; set; }
         public Student Student { get; set; }
     }
 }

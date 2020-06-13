@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Oracle.EntityFrameworkCore.Metadata;
 using ProjectThesis.ViewModels;
@@ -9,9 +10,10 @@ using ProjectThesis.ViewModels;
 namespace ProjectThesis.Migrations
 {
     [DbContext(typeof(ThesisDbContext))]
-    partial class ThesisDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200613105037_ThesisStudentOptional")]
+    partial class ThesisStudentOptional
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

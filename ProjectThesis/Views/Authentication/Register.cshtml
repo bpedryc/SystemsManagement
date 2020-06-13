@@ -6,47 +6,58 @@
 <p>Utwórz konto, by mieć możliwość rezerwacji tematu pracy</p>
 
 <form asp-controller="Authentication" asp-action="Register">
-    <div class="form-group">
-        <label asp-for="User.Email">E-mail</label>
-        <input asp-for="User.Email" class="form-control">
+
+    <p style="color: crimson">@ViewData["Message"]</p>
+    <div class="row">
+        <div class="col">
+            <label asp-for="User.Email">E-mail</label>
+            <input required type="text" asp-for="User.Email" class="form-control">
+            <div class="text-danger">@Html.ValidationMessage("User.Email")</div>
+
+            <label asp-for="User.Password">Hasło</label>
+            <input required type="password" asp-for="User.Password" class="form-control" aria-describedby="passwordHelp">
+            <div class="text-danger">@Html.ValidationMessage("User.Password")</div>
+
+            <label>Powtórz hasło</label>
+            <input required type="password" name="ConfirmPassword" class="form-control" aria-describedby="passwordHelp">
+            <div class="text-danger">@Html.ValidationMessage("ConfirmPassword")</div>
+
+            <label asp-for="User.FirstName">Imię</label>
+            <input required type="text" asp-for="User.FirstName" class="form-control">
+            <div class="text-danger">@Html.ValidationMessage("User.FirstName")</div>
+
+            <label asp-for="User.LastName">Nazwisko</label>
+            <input required type="text" asp-for="User.LastName" class="form-control">
+            <div class="text-danger">@Html.ValidationMessage("User.LastName")</div>
+        </div>
+        <div class="col">
+            <label asp-for="Student.StudentNo">Nr albumu</label>
+            <input required type="text" asp-for="Student.StudentNo" class="form-control">
+            <div class="text-danger">@Html.ValidationMessage("Student.StudentNo")</div>
+
+            <label asp-for="Student.DegreeCycle">Stopień studiów</label>
+            <select required asp-for="Student.DegreeCycle" class="form-control">
+                <option value="0">I</option>
+                <option value="1">II</option>
+            </select>
+            <div class="text-danger">@Html.ValidationMessage("Student.DegreeCycle")</div>
+
+            <label asp-for="Faculties">Wydział</label>
+            @Html.DropDownListFor(
+                model => model.Faculties,
+                new SelectList(Model.Faculties, "Id", "Name"),
+                "-- Wybierz wydział --",
+                new { @class = "form-control", @onchange = "javascript:GetSpecialties(this.value);" }
+            )
+
+            <label asp-for="Student.SpecialtyId">Kierunek</label>
+            <select required asp-for="Student.SpecialtyId" class="form-control">
+            </select>
+            <div class="text-danger">@Html.ValidationMessage("Student.Specialty")</div>
+
+            <button type="submit" style="width: 100%; margin-left: 0; margin-top: 2.05em;" class="btn btn-primary">Dokończ rejestrację</button>
+        </div>
     </div>
-    <div class="form-group">
-        <label asp-for="User.Password">Hasło</label>
-        <input asp-for="User.Password" type="password" class="form-control" aria-describedby="passwordHelp">
-    </div>
-    <div class="form-group">
-        <label>Powtórz hasło</label>
-        <input name="PasswordRepeat" type="password" class="form-control" aria-describedby="passwordHelp">
-    </div>
-    <div class="form-group">
-        <label asp-for="User.FirstName">Imię</label>
-        <input asp-for="User.FirstName" class="form-control">
-    </div>
-    <div class="form-group">
-        <label asp-for="User.LastName">Nazwisko</label>
-        <input asp-for="User.LastName" class="form-control">
-    </div>
-    <div class="form-group">
-        <label asp-for="Student.StudentNo">Nr albumu</label>
-        <input asp-for="Student.StudentNo" class="form-control">
-    </div>
-    <div class="form-group">
-        <label asp-for="Student.DegreeCycle">Stopień studiów</label>
-        <select asp-for="Student.DegreeCycle" class="form-control">
-            <option value="0">I</option>
-            <option value="1">II</option>
-        </select>
-    </div>
-    <div class="form-group">
-        <label asp-for="Student.DegreeCycle">Wydział</label>
-        @Html.DropDownListFor(model => model.Student.FacultyId, new SelectList(Model.Faculties.Select(f => f.Name).ToList()))
-    </div>
-    <div class="form-group">
-        <label asp-for="Student.DegreeCycle">Kierunek</label>
-        <!-- TODO: display dropdown based on chosen faculty*> -->
-    </div>
-    
-    <button type="submit" class="btn btn-primary">Dokończ rejestrację</button>
 </form>
 
 <p>
@@ -54,3 +65,28 @@
     <a asp-controller="Authentication" asp-action="Login"> Zaloguj się</a>
 </p>
 
+<script type="text/javascript">
+
+    function GetSpecialties(faculty)
+    {
+        $.ajax({
+            type: "GET",
+            url: "@Url.Action("GetSpecialties", "Authentication")",
+            data: { "facultyId": faculty },
+            contentType: 'application/json; charset=utf-8',
+            dataType: 'json',
+            error: function (XMLHttpRequest, textStatus, errorThrown) {
+                alert("Request: " + XMLHttpRequest.toString() + "\n\nStatus: " + textStatus + "\n\nError: " + errorThrown);
+            },
+            success: function (specialties) {
+                var dropdown = $('#Student_SpecialtyId');
+                dropdown.empty();
+                specialties.forEach(function (s) {
+                    dropdown.append(
+                        $('<option></option>').val(s.id).html(s.name)
+                    );
+                });
+            }
+        });
+    }
+</script>
