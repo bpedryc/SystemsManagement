@@ -1,7 +1,7 @@
 ﻿@model ProjectThesis.ViewModels.ThesesListViewModel
 @{
-    ViewData["Title"] = "Thesis";
-    Layout = "_Layout";
+    ViewData["Title"] = "Prace dyplomowe";
+    Layout = "_StudentHomeLayout";
 }
 
     <div id="supers-div" style="width: 50%; left: 35%; position: relative;">
@@ -31,7 +31,7 @@
 
             $.ajax({
                 method: "GET",
-                url: "@Url.Action("GetSupervisorTheses", "Home")",
+                url: "@Url.Action("GetSupervisorTheses", "StudentHome")",
                 data: { "supervisorId": supervisorId, "specialtyId": "@Model.FacultyId", "degreeCycle": "@Model.DegreeCycle" },
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",

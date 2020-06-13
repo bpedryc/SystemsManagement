@@ -11,11 +11,11 @@ using ProjectThesis.ViewModels;
 
 namespace ProjectThesis.Controllers
 {
-    public class HomeController : Controller
+    public class StudentHomeController : Controller
     {
         private readonly ThesisDbContext _context;
 
-        public HomeController(ThesisDbContext context)
+        public StudentHomeController(ThesisDbContext context)
         {
             _context = context;
         }
@@ -46,7 +46,7 @@ namespace ProjectThesis.Controllers
         }
 
         [HttpGet]
-        public IActionResult Thesis()
+        public IActionResult Theses()
         {
             int userId = int.Parse(HttpContext.Session.GetString("UserId")); //TODO: what if he's not logged in?
             var loggedStudent = _context.Students
@@ -104,13 +104,6 @@ namespace ProjectThesis.Controllers
         //    _context.SaveChanges();*/
         //    return View();
         //}
-
-        public IActionResult SignOut()
-        {
-            HttpContext.Session.SetString("UserId", "");
-            return RedirectToAction("Login", "Authentication");
-        }
-
 
         public JsonResult GetSupervisorTheses(int supervisorId, int specialtyId, int degreeCycle)
         {

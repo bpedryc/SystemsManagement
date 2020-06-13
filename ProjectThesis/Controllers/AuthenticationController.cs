@@ -34,8 +34,7 @@ namespace ProjectThesis.Controllers
         [HttpGet]
         public IActionResult Login()
         {
-            return RedirectToAction("Index", "HomeSupervisor");
-            //return View();
+            return View();
         }
 
         [HttpPost, ValidateAntiForgeryToken]
@@ -51,14 +50,28 @@ namespace ProjectThesis.Controllers
 
             var hashedPassword = GetSha256FromString(user.Password);
             var matchedUser = _context.Users
-                                .Where(u => (u.Email == user.Email && u.Password == hashedPassword))
-                                .FirstOrDefault<User>();
+                .FirstOrDefault(u => (u.Email == user.Email && u.Password == hashedPassword));
 
             if (matchedUser != null)
             {
-                HttpContext.Session.SetString("UserId", matchedUser.Id.ToString());
-                //return RedirectToAction("Index", "Home");
-                return RedirectToAction("Index", "HomeSupervisor");
+                var matchedStudent = _context.Students
+                    .FirstOrDefault(s => s.UserId == matchedUser.Id);
+                if (matchedStudent != null)
+                {
+                    HttpContext.Session.SetString("UserId", matchedUser.Id.ToString());
+                    return RedirectToAction("Index", "StudentHome");
+                }
+
+                var matchedSupervisor = _context.Supervisors
+                    .FirstOrDefault(s => s.UserId == matchedUser.Id);
+                if (matchedSupervisor != null)
+                {
+                    HttpContext.Session.SetString("UserId", matchedUser.Id.ToString());
+                    return RedirectToAction("Index", "SupervisorHome");
+                }
+
+                ViewData["Message"] = "Twoje konto nie zosta³o poprawnie aktywowane. Skontaktuj siê z administratorem";
+                return View();
             }
 
             ViewData["Message"] = "Niepoprawny email lub has³o. Spróbuj ponownie.";
@@ -86,8 +99,7 @@ namespace ProjectThesis.Controllers
             using (var transaction = _context.Database.BeginTransaction())
             {
                 var matchedUser = _context.Users
-                                .Where(u => (u.Email == model.User.Email))
-                                .FirstOrDefault<User>();
+                    .FirstOrDefault(u => (u.Email == model.User.Email));
                 if (matchedUser != null)
                 {
                     ViewData["Message"] = "Taki u¿ytkownik istnieje ju¿ w systemie!";
@@ -107,7 +119,13 @@ namespace ProjectThesis.Controllers
             }
             return RedirectToAction("Login", "Authentication"); //TODO: redirect to a special view telling you that registration was successful    
         }
-        
+        public IActionResult SignOut()
+        {
+            //HttpContext.Session.SetString("UserId", "");
+            HttpContext.Session.Remove("UserId");
+            return RedirectToAction("Login", "Authentication");
+        }
+
         [HttpGet]
         public JsonResult GetSpecialties(int facultyId)
         {
@@ -127,7 +145,7 @@ namespace ProjectThesis.Controllers
             byte[] hashBytes = sha.ComputeHash(strBytes);
             foreach (byte hashByte in hashBytes)
             {
-                hash.Append(String.Format("{0:x2}", hashByte));
+                hash.Append($"{hashByte:x2}");
             }
             return hash.ToString();
         }

@@ -12,11 +12,11 @@ using System.Runtime.InteropServices.ComTypes;
 
 namespace ProjectThesis.Controllers
 {
-    public class HomeSupervisorController : Controller
+    public class SupervisorHomeController : Controller
     {
         private readonly ThesisDbContext _context;
 
-        public HomeSupervisorController(ThesisDbContext context)
+        public SupervisorHomeController(ThesisDbContext context)
         {
             _context = context;
         }
@@ -24,13 +24,12 @@ namespace ProjectThesis.Controllers
         {
             int userId = 63;//int.Parse(HttpContext.Session.GetString("UserId"));
             var super = _context.Supervisors
-                                 .Where(s => s.UserId == userId)
-                                 .FirstOrDefault<Supervisor>();
+                .FirstOrDefault(s => s.UserId == userId);
 
 
             //It's not the best option, but it works
 
-            var thesesWithStudentes = (from st in _context.Students
+            var thesesWithStudents = (from st in _context.Students
                               from th in _context.Theses
                               from sp in _context.Supervisors
                               from us in _context.Users
@@ -53,7 +52,7 @@ namespace ProjectThesis.Controllers
 
             List<string> allTheses = new List<string>();
 
-            foreach (var thes in thesesWithStudentes)
+            foreach (var thes in thesesWithStudents)
             {
                 allTheses.Add(thes.sub + "," + thes.name + " " + thes.lname + " " + thes.number + " " + thes.email);
             }
@@ -64,12 +63,6 @@ namespace ProjectThesis.Controllers
             }
 
             return View(allTheses);
-        }
-
-        public IActionResult SignOut()
-        {
-            HttpContext.Session.SetString("UserId", "");
-            return RedirectToAction("Login", "Authentication");
         }
     }
 }
