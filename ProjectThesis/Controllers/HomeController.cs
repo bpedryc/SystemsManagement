@@ -25,32 +25,23 @@ namespace ProjectThesis.Controllers
             //TODO: What if there is no session variable?? Also we need to check on every action that requires authentication
             int userId = int.Parse(HttpContext.Session.GetString("UserId"));
             
-
             var user = _context.Users
-                                .Where(u => (u.Id == userId))
-                                .FirstOrDefault();
+                .FirstOrDefault(u => (u.Id == userId));
             var student = _context.Students
-                                .Where(s => (s.UserId == userId))
-                                .FirstOrDefault();
+                .FirstOrDefault(s => (s.UserId == userId));
 
             var thesis = _context.Theses
-                                .Where(t => (t.StudentId == student.Id))
-                                .FirstOrDefault();
-            if (thesis == null){
-                thesis = new Thesis { Subject = "Brak Wybranej Pracy" };
+                .FirstOrDefault(t => (t.StudentId == student.Id)) ?? new Thesis { Id = 0, Subject = "Brak Wybranej Pracy" };
+            var supervisorUser = new User {FirstName = "Brak", LastName = "Promotora"};
+            if (thesis.Id != 0)
+            {
+                supervisorUser = _context.Supervisors
+                    .Where(s => s.Id == thesis.SuperId)
+                    .Include(s => s.User)
+                    .Select(s => s.User)
+                    .FirstOrDefault();
             }
 
-            /*var supervisor = _context.Supervisors
-                                .Where(s => (s.Id == student.SuperId))
-                                .FirstOrDefault();*/
-            Supervisor supervisor = null;
-            var supervisorUser = new User { FirstName = "Brak", LastName = "Promotora" };
-            if (supervisor != null){
-                supervisorUser = _context.Users
-                                        .Where(u => (u.Id == supervisor.UserId))
-                                        .FirstOrDefault();
-            }
-            
             return View(new StudentPanelViewModel { User = user, Student = student, Thesis = thesis, Supervisor = supervisorUser });
         }
 
@@ -68,48 +59,42 @@ namespace ProjectThesis.Controllers
                                 .Where(s => s.Id == specialtyId)
                                 .Select(s => s.FacId)
                                 .FirstOrDefault();
-            
-            var supervisorToNumberOfStudents = (
-                        from s in _context.Supervisors
-                        join t in _context.Theses on s.Id equals t.SuperId
-                        where s.FacultyId == facultyId && t.StudentId != null
-                        select new { superId = s.Id, thesisId = t.Id } into x
-                        group x by x.superId into g
-                        select new
-                        {
-                            SupervisorId = g.Key,
-                            ThesisCount = g.Count()
-                        }).ToList();
 
 
+            //<This is ugly>
+            var supervisorsByStudentCounts = _context.Supervisors
+                .Where(s => s.FacultyId == facultyId)
+                .ToDictionary(s => s.Id, s => 0);
 
-            /*var supervisors = _context.Supervisors
-                            .Where(s => (s.FacultyId == facultyId && s.StudentLimit));*/
-
-            /*foreach (var supervisor in supervisors)
+            var studentCounts = (
+                from s in _context.Supervisors
+                join t in _context.Theses on s.Id equals t.SuperId
+                where s.FacultyId == facultyId && t.StudentId != null
+                select new {superId = s.Id, thesisId = t.Id}
+                into x
+                group x by x.superId
+                into g
+                select new
+                {
+                    SupervisorId = g.Key,
+                    ThesisCount = g.Count()
+                }).ToList();
+            foreach (var entry in studentCounts)
             {
-                var supervisors = _context.Theses
-                    .Where(t => (
-                        t.SuperId == supervisor.Id && 
-                        t.StudentId == null &&
-                        ))
-                    .ToList<Thesis>();
-            }*/
-
-            /*List<string> superData = new List<string>();
-            foreach(var super in supers)
-            {
-                var user = _context.Users
-                            .Where(u => (u.Id == super.UserId))
-                            .FirstOrDefault<User>();
-                superData.Add(super.Id + " " + user.FirstName + " " + user.LastName);
-            }*/
-
+                supervisorsByStudentCounts[entry.SupervisorId] = entry.ThesisCount;
+            }
+            //</This is ugly> - but works
 
             var supers = _context.Supervisors
                 .Include(s => s.User)
                 .ToList();
-            return View(new ThesesListViewModel{ Supervisors = supers, FacultyId = facultyId, DegreeCycle = degreeCycle });
+            return View(new ThesesListViewModel
+            {
+                Supervisors = supers,
+                SupervisorsByStudentCounts = supervisorsByStudentCounts,
+                FacultyId = facultyId,
+                DegreeCycle = degreeCycle
+            });
         }
 
         //[HttpPost, ValidateAntiForgeryToken]
