@@ -29,9 +29,6 @@ namespace ProjectThesis.Models
         public int SpecialtyId { get; set; }
         public Specialty Specialty { get; set; }
 
-        public int? SuperId { get; set; }
-        public virtual Supervisor Super { get; set; }
-
         public Thesis ChosenThesis { get; set; }
     }
 }

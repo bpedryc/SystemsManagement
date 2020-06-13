@@ -1,37 +1,39 @@
-﻿@model List<string>
+﻿@model ICollection<Supervisor>
 @{
     ViewData["Title"] = "Thesis";
     Layout = "_Layout";
 }
 
-
-<div id="supers-div" style="width: 50%; left: 35%; position: relative;">
-    @foreach (string item in Model)
-    {
-        var supId = item.Substring(0, item.IndexOf(" "));
-        var FullName = item.Substring(item.IndexOf(" "));
-        var supDivId = supId + "_div";
-        <div class="form-group" style="display: flex; padding-top: 0.5em;" id=@supDivId>
-            <h5 style="width:50%">@FullName</h5>
-            <button class="btn btn-primary" onclick="showThesisList(this.id)" id=@supId style="width: 2em; height: 2em; padding: 0;">+</button>
-        </div>
-    }
-</div>
+    <div id="supers-div" style="width: 50%; left: 35%; position: relative;">
+        @foreach (Supervisor supervisor in Model)
+        {
+            var containerId = "supervisor-container-" + supervisor.Id;
+            <div id=@containerId class="d-flex flex-column form-group pt-1">
+                <div class="d-flex flex-row">
+                    <h5 class="w-50">@supervisor.User.FirstName @supervisor.User.LastName</h5>
+                    <button class="btn btn-primary p-0" onclick="ShowThesisList(this.value)" value=@supervisor.Id style="width: 2em; height: 2em;">+</button>
+                </div>
+                <ul id="thesis-list" class="list-group"></ul>
+            </div>
+        }
+    </div>
 
 <script type="text/javascript">
-    function showThesisList(super_id) {
-        var item = "#" + super_id + "_div";
-        var butt = "#" + super_id;
-        if ($(butt).html() === "+") {
-            $(butt).html("-");
-            var idthesislist = super_id + "_thes";
-            var thesisList = '<div id="' + idthesislist + '">';
-            $(item).after(thesisList + "<p>test1</p><p>test2</p><p>test3</p></div>");
+    function ShowThesisList(supervisorId) {
+        var $supervisorContainer = $("#supervisor-container-" + supervisorId);
+
+        var $supervisorButton = $supervisorContainer.find("button");
+        var $thesisList = $supervisorContainer.find("ul");
+
+        if ($supervisorButton.html() === "+") {
+            $supervisorButton.html("-");
+            for (var i = 0; i < 5; i++) {
+                $thesisList.append(`<li class="list-group-item">Temat ${i}</li>`);
+            }
         }
         else {
-            var idthesislist = "#" + super_id + "_thes";
-            $(idthesislist).remove();
-            $(butt).html("+");
+            $supervisorButton.html("+");
+            $thesisList.empty();
         }
     }
 </script>

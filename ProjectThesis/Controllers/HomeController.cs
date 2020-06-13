@@ -37,9 +37,10 @@ namespace ProjectThesis.Controllers
                 thesis = new Thesis { Subject = "Brak Wybranej Pracy" };
             }
 
-            var supervisor = _context.Supervisors
+            /*var supervisor = _context.Supervisors
                                 .Where(s => (s.Id == student.SuperId))
-                                .FirstOrDefault();
+                                .FirstOrDefault();*/
+            Supervisor supervisor = null;
             var supervisorUser = new User { FirstName = "Brak", LastName = "Promotora" };
             if (supervisor != null){
                 supervisorUser = _context.Users
@@ -62,27 +63,56 @@ namespace ProjectThesis.Controllers
                                 .Where(s => s.Id == specialtyId)
                                 .Select(s => s.FacId)
                                 .FirstOrDefault();
-            var supers = _context.Supervisors
-                            .Where(s => (s.FacultyId == facultyId));
+            var supervisorToNumberOfStudents = (
+                        from s in _context.Supervisors
+                        join t in _context.Theses on s.Id equals t.SuperId
+                        where s.FacultyId == facultyId && t.StudentId != null
+                        select new { superId = s.Id, thesisId = t.Id } into x
+                        group x by x.superId into g
+                        select new
+                        {
+                            SupervisorId = g.Key,
+                            ThesisCount = g.Count()
+                        }).ToList();
 
-            List<string> superData = new List<string>();
+
+
+            /*var supervisors = _context.Supervisors
+                            .Where(s => (s.FacultyId == facultyId && s.StudentLimit));*/
+
+            /*foreach (var supervisor in supervisors)
+            {
+                var supervisors = _context.Theses
+                    .Where(t => (
+                        t.SuperId == supervisor.Id && 
+                        t.StudentId == null &&
+                        ))
+                    .ToList<Thesis>();
+            }*/
+
+            /*List<string> superData = new List<string>();
             foreach(var super in supers)
             {
                 var user = _context.Users
                             .Where(u => (u.Id == super.UserId))
                             .FirstOrDefault<User>();
                 superData.Add(super.Id + " " + user.FirstName + " " + user.LastName);
-            }
-            return View(superData);
+            }*/
+
+
+            var supers = _context.Supervisors
+                .Include(s => s.User)
+                .ToList();
+            return View(supers);
         }
 
-        [HttpPost, ValidateAntiForgeryToken]
-        public IActionResult Thesis(Thesis model)
-        {
-            /*_context.Users.Add(new User { Username = model.Username, Password = model.Password});
-            _context.SaveChanges();*/
-            return View();
-        }
+        //[HttpPost, ValidateAntiForgeryToken]
+        //public IActionResult Thesis(Thesis model)
+        //{
+        //    /*_context.Users.Add(new User { Username = model.Username, Password = model.Password});
+        //    _context.SaveChanges();*/
+        //    return View();
+        //}
 
         public IActionResult SignOut()
         {

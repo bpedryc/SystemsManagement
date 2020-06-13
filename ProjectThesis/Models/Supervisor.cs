@@ -14,8 +14,8 @@ namespace ProjectThesis.Models
         public int Id { get; set; }
         public int StudentLimit { get; set; }
 
-        public int UserId { get; set; }
-        public User User { get; set; }
+        public virtual int UserId { get; set; }
+        public virtual User User { get; set; }
 
         public int FacultyId { get; set; }
         public Faculty Faculty { get; set; }
