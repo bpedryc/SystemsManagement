@@ -53,13 +53,10 @@ namespace ProjectThesis.Controllers
             var matchedUser = _context.Users
                                 .Where(u => (u.Email == user.Email && u.Password == hashedPassword))
                                 .FirstOrDefault<User>();
-            var pomUser = _context.Set<User>();
-         
+
             if (matchedUser != null)
             {
-                Debug.WriteLine(matchedUser.Id);
                 HttpContext.Session.SetString("UserId", matchedUser.Id.ToString());
-                //HttpContext.Session.SetString("UserId", "29");
                 return RedirectToAction("Index", "Home");
             }
 
@@ -87,30 +84,6 @@ namespace ProjectThesis.Controllers
 
             using (var transaction = _context.Database.BeginTransaction())
             {
-                //try
-                //{
-                //    MailAddress m = new MailAddress(model.User.Email);
-                //}
-                //catch (FormatException)
-                //{
-                //    Debug.WriteLine("email");
-                //    return View(model);
-                //}
-
-                //TODO: check if StudetNO is only numeric signs
-                //if(!Regex.IsMatch(model.User.FirstName, @"^[0-9]+$"))
-
-                //if (!Regex.IsMatch(model.User.FirstName, @"^[a-zA-Z]+$"))
-                //{
-                //    Debug.WriteLine("uncorrect name");
-                //    return View(model);
-                //}
-                //if (!Regex.IsMatch(model.User.LastName, @"^[a-zA-Z]+$"))
-                //{
-                //    Debug.WriteLine("uncorrect lastname");
-                //    return View(model);
-                //}
-
                 var matchedUser = _context.Users
                                 .Where(u => (u.Email == model.User.Email))
                                 .FirstOrDefault<User>();

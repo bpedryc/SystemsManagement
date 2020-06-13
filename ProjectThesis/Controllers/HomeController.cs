@@ -22,7 +22,10 @@ namespace ProjectThesis.Controllers
 
         public IActionResult Index()
         {
+            //TODO: What if there is no session variable?? Also we need to check on every action that requires authentication
             int userId = int.Parse(HttpContext.Session.GetString("UserId"));
+            
+
             var user = _context.Users
                                 .Where(u => (u.Id == userId))
                                 .FirstOrDefault();
@@ -54,15 +57,18 @@ namespace ProjectThesis.Controllers
         [HttpGet]
         public IActionResult Thesis()
         {
-            int userId = int.Parse(HttpContext.Session.GetString("UserId"));
-            var specialtyId = _context.Students
-                                .Where(s => s.UserId == userId)
-                                .Select(s => s.SpecialtyId)
-                                .FirstOrDefault();
+            int userId = int.Parse(HttpContext.Session.GetString("UserId")); //TODO: what if he's not logged in?
+            var loggedStudent = _context.Students
+                .FirstOrDefault(s => s.UserId == userId);
+
+            int specialtyId = loggedStudent.SpecialtyId;
+            int degreeCycle = loggedStudent.DegreeCycle;
+
             var facultyId = _context.Specialties
                                 .Where(s => s.Id == specialtyId)
                                 .Select(s => s.FacId)
                                 .FirstOrDefault();
+            
             var supervisorToNumberOfStudents = (
                         from s in _context.Supervisors
                         join t in _context.Theses on s.Id equals t.SuperId
@@ -103,7 +109,7 @@ namespace ProjectThesis.Controllers
             var supers = _context.Supervisors
                 .Include(s => s.User)
                 .ToList();
-            return View(supers);
+            return View(new ThesesListViewModel{ Supervisors = supers, FacultyId = facultyId, DegreeCycle = degreeCycle });
         }
 
         //[HttpPost, ValidateAntiForgeryToken]
@@ -120,6 +126,16 @@ namespace ProjectThesis.Controllers
             return RedirectToAction("Login", "Authentication");
         }
 
+
+        public JsonResult GetSupervisorTheses(int supervisorId, int specialtyId, int degreeCycle)
+        {
+            var theses = _context.Theses
+                .Where(t => (t.SuperId == supervisorId &&
+                             t.SpecId == specialtyId &&
+                             t.DegreeCycle == degreeCycle &&
+                             t.StudentId == null));
+            return Json(theses);
+        }
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {

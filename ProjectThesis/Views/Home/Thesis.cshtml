@@ -1,11 +1,11 @@
-﻿@model ICollection<Supervisor>
+﻿@model ProjectThesis.ViewModels.ThesesListViewModel
 @{
     ViewData["Title"] = "Thesis";
     Layout = "_Layout";
 }
 
     <div id="supers-div" style="width: 50%; left: 35%; position: relative;">
-        @foreach (Supervisor supervisor in Model)
+        @foreach (Supervisor supervisor in Model.Supervisors)
         {
             var containerId = "supervisor-container-" + supervisor.Id;
             <div id=@containerId class="d-flex flex-column form-group pt-1">
@@ -18,7 +18,7 @@
         }
     </div>
 
-<script type="text/javascript">
+    <script type="text/javascript">
     function ShowThesisList(supervisorId) {
         var $supervisorContainer = $("#supervisor-container-" + supervisorId);
 
@@ -27,13 +27,29 @@
 
         if ($supervisorButton.html() === "+") {
             $supervisorButton.html("-");
-            for (var i = 0; i < 5; i++) {
-                $thesisList.append(`<li class="list-group-item">Temat ${i}</li>`);
-            }
+
+            $.ajax({
+                method: "GET",
+                url: "@Url.Action("GetSupervisorTheses", "Home")",
+                data: { "supervisorId": supervisorId, "specialtyId": "@Model.FacultyId", "degreeCycle": "@Model.DegreeCycle" },
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (theses) {
+                    theses.forEach(function (thesis) {
+                        $thesisList.append(
+                            $('<li class="list-group-item"</li>').val(thesis.id).html(thesis.subject)
+                        );
+                    });
+                    $thesisList.append(
+                        $('<a href="#" class="list-group-item list-group-item-action active"></a>').html("Zaproponuj własny temat")
+                    );
+                }
+            });
         }
         else {
             $supervisorButton.html("+");
             $thesisList.empty();
-        }
+        } 
+        //value="${thesis.id}">${thesis.subject}
     }
-</script>
+    </script>
