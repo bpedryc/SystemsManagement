@@ -34,8 +34,8 @@ namespace ProjectThesis.Controllers
         [HttpGet]
         public IActionResult Login()
         {
-            return RedirectToAction("Index", "HomeSupervisor");
-            //return View();
+            //return RedirectToAction("Post", "HomeSupervisor");
+            return View();
         }
 
         [HttpPost, ValidateAntiForgeryToken]
@@ -57,8 +57,8 @@ namespace ProjectThesis.Controllers
             if (matchedUser != null)
             {
                 HttpContext.Session.SetString("UserId", matchedUser.Id.ToString());
-                //return RedirectToAction("Index", "Home");
-                return RedirectToAction("Index", "HomeSupervisor");
+                return RedirectToAction("Index", "Home");
+                //return RedirectToAction("Index", "HomeSupervisor");
             }
 
             ViewData["Message"] = "Niepoprawny email lub has³o. Spróbuj ponownie.";

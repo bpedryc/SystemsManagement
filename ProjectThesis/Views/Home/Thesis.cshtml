@@ -12,7 +12,7 @@
                 <div class="d-flex flex-row">
                     <h5 class="w-50">@supervisor.User.FirstName @supervisor.User.LastName</h5>
                     <span>@Model.SupervisorsByStudentCounts[supervisor.Id] / @supervisor.StudentLimit</span>
-                    <button class="btn btn-primary p-0" onclick="ShowThesisList(this.value)" value=@supervisor.Id style="width: 2em; height: 2em;">+</button>
+                    <button class="btn btn-primary p-0" onclick="ShowThesisList(this.value)" value=@supervisor.Id style="width: 2em; height: 2em; margin-left:10px;">+</button>
                 </div>
                 <ul id="thesis-list" class="list-group"></ul>
             </div>
@@ -42,7 +42,7 @@
                         );
                     });
                     $thesisList.append(
-                        $('<a href="#" class="list-group-item list-group-item-action active"></a>').html("Zaproponuj własny temat")
+                        $('<a href="#" class="list-group-item list-group-item-action active" style="margin-top:10px; width:70%;"></a>').html("Zaproponuj własny temat")
                     );
                 }
             });
