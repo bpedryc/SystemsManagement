@@ -22,7 +22,7 @@ namespace ProjectThesis.Controllers
         }
         public IActionResult Index()
         {
-            int userId = 63;//int.Parse(HttpContext.Session.GetString("UserId"));
+            int userId = int.Parse(HttpContext.Session.GetString("UserId"));
             var super = _context.Supervisors
                 .FirstOrDefault(s => s.UserId == userId);
 
@@ -63,6 +63,52 @@ namespace ProjectThesis.Controllers
             }
 
             return View(allTheses);
+        }
+
+        public IActionResult Post()
+        {
+            //Get students new thesis subjects and return them to proper supervisor
+
+            //When supervisor limit is end we need to reject others thesis subjects 
+            int userId = int.Parse(HttpContext.Session.GetString("UserId"));
+            var thesesSubjects = (    from th in _context.Theses
+                                       from sp in _context.Supervisors
+                                       from us in _context.Users
+                                       where sp.UserId == us.Id && th.SuperId == sp.Id && us.Id == userId && th.StudentId != null
+                                       select new
+                                       {
+                                          thes = th.Subject
+                                       });
+            var countOfStudents = thesesSubjects.Count();
+            var superv = _context.Supervisors
+                                .Where(s => s.UserId == userId)
+                                .FirstOrDefault<Supervisor>();
+            Debug.WriteLine(countOfStudents + " / " + superv.StudentLimit);
+            return View();
+        }
+
+        [HttpPost]
+        public IActionResult Post(string decisionButton)
+        {
+            Debug.WriteLine(decisionButton);
+            if (decisionButton.Contains("acc"))
+            {
+                Debug.WriteLine("accept");
+                //Action for accept thesis subject
+            }
+            else if (decisionButton.Contains("rej"))
+            {
+                Debug.WriteLine("reject");
+                //Action for reject thesis subject
+            }
+
+            return this.Post();
+        }
+
+        public IActionResult SignOut()
+        {
+            HttpContext.Session.SetString("UserId", "");
+            return RedirectToAction("Login", "Authentication");
         }
     }
 }
