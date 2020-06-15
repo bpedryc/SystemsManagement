@@ -1,0 +1,29 @@
+﻿@model ICollection<Student>
+@{
+    Layout = "_AdminLayout";
+}
+
+<table class="table">
+<thead>
+    <tr>
+        <th scope="col">Id</th>
+        <th scope="col">Imię</th>
+        <th scope="col">Nazwisko</th>
+        <th scope="col">Email</th>
+        <th scope="col">Rok studiów</th>
+        <th scope="col">Numer albumu</th>
+    </tr>
+
+@foreach (var student in Model)
+{
+<tr>
+    <th scope="row">@student.Id</th>
+    <td>@student.User.FirstName</td>
+    <td>@student.User.LastName</td>
+    <td>@student.User.Email</td>
+    <td>@student.DegreeCycle</td>
+    <td>@student.StudentNo</td>
+</tr>
+}
+
+</table>

@@ -70,6 +70,14 @@ namespace ProjectThesis.Controllers
                     return RedirectToAction("Index", "SupervisorHome");
                 }
 
+                var matchedAdmin = _context.Admins
+                    .FirstOrDefault(a => a.UserId == matchedUser.Id);
+                if (matchedAdmin != null)
+                {
+                    HttpContext.Session.SetString("UserId", matchedUser.Id.ToString());
+                    return RedirectToAction("Index", "AdminHome");
+                }
+
                 ViewData["Message"] = "Twoje konto nie zosta³o poprawnie aktywowane. Skontaktuj siê z administratorem";
                 return View();
             }
