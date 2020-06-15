@@ -26,51 +26,26 @@ namespace ProjectThesis.Controllers
             var super = _context.Supervisors
                 .FirstOrDefault(s => s.UserId == userId);
 
+            var students = _context.Students
+                .Include(s => s.ChosenThesis)
+                .Where(s => s.ChosenThesis.SuperId == super.Id)
+                .Include(s => s.User);
+                
 
-            //It's not the best option, but it works
+            var thesesNotChosen = _context.Theses
+                .Where(t => t.SuperId == super.Id && t.StudentId == null)
+                .ToList();
 
-            var thesesWithStudents = (from st in _context.Students
-                              from th in _context.Theses
-                              from sp in _context.Supervisors
-                              from us in _context.Users
-                              where sp.Id == super.Id && us.Id == st.UserId && th.StudentId == st.Id && sp.Id == th.SuperId
-                              select new
-                              {
-                                  sub = th.Subject,
-                                  name = us.FirstName,
-                                  lname = us.LastName,
-                                  email = us.Email,
-                                  number = st.StudentNo
-                              });
-
-            var restOfTheses = (from th in _context.Theses
-                         where th.SuperId == super.Id && th.StudentId == null
-                         select new
-                         {
-                             sub = th.Subject,
-                         });
-
-            List<string> allTheses = new List<string>();
-
-            foreach (var thes in thesesWithStudents)
-            {
-                allTheses.Add(thes.sub + "," + thes.name + " " + thes.lname + " " + thes.number + " " + thes.email);
-            }
-
-            foreach (var thes in restOfTheses)
-            {
-                allTheses.Add(thes.sub + "," + "Nie wybrano");
-            }
-
-            return View(allTheses);
+            return View(new SupervisorPanelViewModel{Students = students, ThesesNotChosen = thesesNotChosen});
         }
 
         public IActionResult Post()
         {
-            //Get students new thesis subjects and return them to proper supervisor
-
-            //When supervisor limit is end we need to reject others thesis subjects 
-            int userId = int.Parse(HttpContext.Session.GetString("UserId"));
+            //When supervisor limit is end we need to reject others thesis subjects
+            //Re: we won't let students apply to such supervisors
+            // THIS LOGIC SHOULD BE IMPLEMENTED IN StudentHomeController>ReserveThesis
+            
+            /*int userId = int.Parse(HttpContext.Session.GetString("UserId"));
             var thesesSubjects = (    from th in _context.Theses
                                        from sp in _context.Supervisors
                                        from us in _context.Users
@@ -81,10 +56,21 @@ namespace ProjectThesis.Controllers
                                        });
             var countOfStudents = thesesSubjects.Count();
             var superv = _context.Supervisors
-                                .Where(s => s.UserId == userId)
-                                .FirstOrDefault<Supervisor>();
-            Debug.WriteLine(countOfStudents + " / " + superv.StudentLimit);
+                .FirstOrDefault(s => s.UserId == userId);
+            Debug.WriteLine(countOfStudents + " / " + superv.StudentLimit);*/
             return View();
+        }
+
+        public IActionResult RemoveStudent(int thesisId)
+        {
+            var thesis = _context.Theses
+                .FirstOrDefault(t => t.Id == thesisId);
+
+            thesis.StudentId = null;
+            _context.SaveChanges();
+
+            TempData["Success"] = "Pomyślnie odsunięto studenta od tematu";
+            return RedirectToAction("Index", "SupervisorHome");
         }
 
         [HttpPost]
@@ -103,12 +89,6 @@ namespace ProjectThesis.Controllers
             }
 
             return this.Post();
-        }
-
-        public IActionResult SignOut()
-        {
-            HttpContext.Session.SetString("UserId", "");
-            return RedirectToAction("Login", "Authentication");
         }
     }
 }

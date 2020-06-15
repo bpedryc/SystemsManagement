@@ -5,6 +5,7 @@
 <h1>Witaj w systemie rezerwacji prac dyplomowych</h1>
 <p>Zaloguj się, aby móc korzystać z systemu</p>
 <p class="text-danger">@ViewData["Message"]</p>
+<p class="text-success">@TempData["Message"]</p>
 <form asp-controller="Authentication" asp-action="Login" style="margin-left: 30%; width: 40%;">
     <div class="form-group">
         <label asp-for="Email">E-mail</label>

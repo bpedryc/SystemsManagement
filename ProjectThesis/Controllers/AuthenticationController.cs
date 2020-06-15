@@ -117,11 +117,11 @@ namespace ProjectThesis.Controllers
 
                 transaction.Commit();
             }
-            return RedirectToAction("Login", "Authentication"); //TODO: redirect to a special view telling you that registration was successful    
+            TempData["Message"] = "Pomyœlnie zarejestrowano";
+            return RedirectToAction("Login", "Authentication");   
         }
         public IActionResult SignOut()
         {
-            //HttpContext.Session.SetString("UserId", "");
             HttpContext.Session.Remove("UserId");
             return RedirectToAction("Login", "Authentication");
         }

@@ -7,7 +7,7 @@
 
 <form asp-controller="Authentication" asp-action="Register">
 
-    <p style="color: crimson">@ViewData["Message"]</p>
+    <p class="text-danger">@ViewData["Message"]</p>
     <div class="row">
         <div class="col">
             <label asp-for="User.Email">E-mail</label>

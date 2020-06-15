@@ -1,14 +1,26 @@
-﻿@model List<string>
+﻿@model ProjectThesis.ViewModels.SupervisorPanelViewModel
 @{
     ViewData["Title"] = "HomeSupervisor";
     Layout = "_SupervisorHomeLayout";
 }
 
-@foreach (var row in Model)
+<div class="row">
+    <div class="col-12">
+        <p class="text-danger text-center">@TempData["Error"]</p>
+        <p class="text-success text-center">@TempData["Success"]</p>
+    </div>
+</div>
+
+@foreach (var student in Model.Students)
 {
-    var subject = row.Substring(0, row.IndexOf(","));
-    var stud = row.Substring(row.IndexOf(",") + 1);
-    <h3>@subject</h3>
-    <p>@stud</p>
+    <h3>@student.ChosenThesis.Subject</h3>
+    <p>@student.User.FirstName @student.User.LastName @student.User.Email @student.StudentNo</p>
+    <a class="btn btn-danger"asp-controller="SupervisorHome" asp-action="RemoveStudent" asp-route-thesisId="@student.ChosenThesis.Id">Odsuń studenta od tematu</a>
+}
+
+<h2>Pozostałe prace:</h2>
+@foreach (var thesis in Model.ThesesNotChosen)
+{
+    <h4>@thesis.Subject</h4>
 }
 

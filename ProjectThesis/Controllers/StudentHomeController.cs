@@ -49,8 +49,18 @@ namespace ProjectThesis.Controllers
         public IActionResult Theses()
         {
             int userId = int.Parse(HttpContext.Session.GetString("UserId")); //TODO: what if he's not logged in?
+
             var loggedStudent = _context.Students
                 .FirstOrDefault(s => s.UserId == userId);
+
+            var chosenThesis = _context.Theses
+                .FirstOrDefault(t => t.StudentId == loggedStudent.Id);
+            if (chosenThesis != null)
+            {
+                TempData["Error"] = "Wybrałeś już temat pracy! W razie problemów skontaktuj się ze swoim promotorem.";
+                return RedirectToAction("Index", "StudentHome");
+            }
+
 
             int specialtyId = loggedStudent.SpecialtyId;
             int degreeCycle = loggedStudent.DegreeCycle;
@@ -93,18 +103,32 @@ namespace ProjectThesis.Controllers
                 Supervisors = supers,
                 SupervisorsByStudentCounts = supervisorsByStudentCounts,
                 FacultyId = facultyId,
+                SpecialtyId = specialtyId,
                 DegreeCycle = degreeCycle
             });
         }
 
-        //[HttpPost, ValidateAntiForgeryToken]
-        //public IActionResult Thesis(Thesis model)
-        //{
-        //    /*_context.Users.Add(new User { Username = model.Username, Password = model.Password});
-        //    _context.SaveChanges();*/
-        //    return View();
-        //}
+        public IActionResult ReserveThesis(int thesisId)
+        {
+            var userId = int.Parse(HttpContext.Session.GetString("UserId"));
 
+            var chosenThesis = _context.Theses
+                .FirstOrDefault(t => t.Id == thesisId && t.StudentId == null);
+
+            if (chosenThesis == null)
+            {
+                TempData["Error"] = "Ten temat został właśnie zajęty";
+                return RedirectToAction("Theses", "StudentHome");
+            }
+
+            var loggedStudent = _context.Students
+                .FirstOrDefault(s => s.UserId == userId);
+            chosenThesis.StudentId = loggedStudent.Id;
+            _context.SaveChanges();
+
+            TempData["Success"] = "Temat został pomyślnie przydzielony";
+            return RedirectToAction("Index", "StudentHome");
+        }
         public JsonResult GetSupervisorTheses(int supervisorId, int specialtyId, int degreeCycle)
         {
             var theses = _context.Theses
