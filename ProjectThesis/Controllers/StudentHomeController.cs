@@ -138,6 +138,22 @@ namespace ProjectThesis.Controllers
                              t.StudentId == null));
             return Json(theses);
         }
+
+        public IActionResult newThesis(int supersId, string thesisSubject)
+        {
+            var userId = int.Parse(HttpContext.Session.GetString("UserId"));
+
+            var stud = _context.Students
+                .Where(s => s.UserId == userId)
+                .FirstOrDefault();
+
+            var thes = new Thesis{Subject = thesisSubject, DegreeCycle = 0, SpecId = stud.SpecialtyId, SuperId = supersId, StudentId = stud.Id};
+            _context.Add<Thesis>(thes);
+            _context.SaveChanges();
+            Debug.WriteLine(supersId + " " + thesisSubject);
+            return RedirectToAction("Index", "StudentHome");
+        }
+
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {

@@ -11,16 +11,52 @@
     </div>
 </div>
 
-@foreach (var student in Model.Students)
-{
-    <h3>@student.ChosenThesis.Subject</h3>
-    <p>@student.User.FirstName @student.User.LastName @student.User.Email @student.StudentNo</p>
-    <a class="btn btn-danger"asp-controller="SupervisorHome" asp-action="RemoveStudent" asp-route-thesisId="@student.ChosenThesis.Id">Odsuń studenta od tematu</a>
-}
+<div id="thesisList" style="width: 100%; height: 100%">
+    @foreach (var student in Model.Students)
+    {
+        <h3>@student.ChosenThesis.Subject</h3>
+        <p>@student.User.FirstName @student.User.LastName @student.User.Email @student.StudentNo</p>
+        <a class="btn btn-danger" asp-controller="SupervisorHome" asp-action="RemoveStudent" asp-route-thesisId="@student.ChosenThesis.Id">Odsuń studenta od tematu</a>
+    }
+    <br/>
+    <h2>Pozostałe prace:</h2>
+    @foreach (var thesis in Model.ThesesNotChosen)
+    {
+        <form asp-controller="SupervisorHome" asp-action="removeThesis">
+            <div class="form-group">
+                <h4>@thesis.Subject</h4>
+                <button type="submit" name="thesisId" value=@thesis.Id class="btn btn-danger">Usuń temat</button>
+                <button type="button" id=@thesis.Id onclick="changeThesis(this.id)" class="btn btn-primary">Edytuj temat</button>
+            </div>
+        </form>
+    }
+</div>
 
-<h2>Pozostałe prace:</h2>
-@foreach (var thesis in Model.ThesesNotChosen)
-{
-    <h4>@thesis.Subject</h4>
-}
+<form asp-controller="SupervisorHome" asp-action="changeThesis" id="changeThesForm" style="display: none; text-align: center; left: 25%; width: 50%; height: 100%; top: 35%; position: fixed; background: white;">
+    <div class="d-flex flex-row" style="width: 100%; width: 100%;">
+        <div class="form-group" style="width: 100%;">
+            <label>Podaj temat</label>
+            <input require type="text" name="thesisSubject" class="form-control">
+            <button type="submit" id="changeThesButton" name="thesisId" class="btn btn-primary" style="text-align:center; margin-right: 5px; margin-top: 10px;">Zapisz temat</button>
+            <button type="button" class="btn btn-secondary" onclick="showThesis()" style="text-align:center; margin-top: 10px;">Powrót</button>
+        </div>
+    </div>
+</form>
 
+<script type="text/javascript">
+
+    function changeThesis(id) {
+
+        $("#changeThesButton").attr('value', id);
+        $('#changeThesForm').show();
+        $('#thesisList').hide();
+        console.log(id);
+    }
+
+    function showThesis() {
+
+        $('#changeThesForm').hide();
+        $('#thesisList').show();
+    }
+
+</script>

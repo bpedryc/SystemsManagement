@@ -39,8 +39,8 @@ namespace ProjectThesis.Controllers
             return View(new SupervisorPanelViewModel{Students = students, ThesesNotChosen = thesesNotChosen});
         }
 
-        public IActionResult Post()
-        {
+        //public IActionResult Post()
+        //{
             //When supervisor limit is end we need to reject others thesis subjects
             //Re: we won't let students apply to such supervisors
             // THIS LOGIC SHOULD BE IMPLEMENTED IN StudentHomeController>ReserveThesis
@@ -57,9 +57,9 @@ namespace ProjectThesis.Controllers
             var countOfStudents = thesesSubjects.Count();
             var superv = _context.Supervisors
                 .FirstOrDefault(s => s.UserId == userId);
-            Debug.WriteLine(countOfStudents + " / " + superv.StudentLimit);*/
+            Debug.WriteLine(countOfStudents + " / " + superv.StudentLimit);
             return View();
-        }
+        }*/
 
         public IActionResult RemoveStudent(int thesisId)
         {
@@ -73,7 +73,24 @@ namespace ProjectThesis.Controllers
             return RedirectToAction("Index", "SupervisorHome");
         }
 
-        [HttpPost]
+        public IActionResult removeThesis(int thesisId)
+        {
+            var thes = _context.Theses.Where(t => t.Id == thesisId).First();
+            _context.Theses.Remove(thes);
+            _context.SaveChanges();
+            return RedirectToAction("Index", "SupervisorHome");
+        }
+
+        public IActionResult changeThesis(int thesisId, string thesisSubject)
+        {
+            var thes = _context.Theses.Where(t => t.Id == thesisId).First();
+            thes.Subject = thesisSubject;
+            _context.SaveChanges();
+            return RedirectToAction("Index", "SupervisorHome");
+        }
+
+
+        /*[HttpPost]
         public IActionResult Post(string decisionButton)
         {
             Debug.WriteLine(decisionButton);
@@ -89,6 +106,6 @@ namespace ProjectThesis.Controllers
             }
 
             return this.Post();
-        }
+        }*/
     }
 }
