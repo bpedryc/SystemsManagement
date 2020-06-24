@@ -81,8 +81,11 @@ namespace ProjectThesis.Controllers
             return RedirectToAction("Index", "SupervisorHome");
         }
 
-        public IActionResult changeThesis(int thesisId, string thesisSubject)
+        public IActionResult changeThesis(string thesisSubject)
         {
+            var thesisId = int.Parse(thesisSubject.Substring(0, thesisSubject.IndexOf(" ")));
+            thesisSubject = thesisSubject.Substring(thesisSubject.IndexOf(" ") + 1);
+
             var thes = _context.Theses.Where(t => t.Id == thesisId).First();
             thes.Subject = thesisSubject;
             _context.SaveChanges();
