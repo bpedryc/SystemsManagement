@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using ProjectThesis.Models;
 using ProjectThesis.ViewModels;
 
 namespace ProjectThesis.Controllers
@@ -29,7 +30,7 @@ namespace ProjectThesis.Controllers
         // GET: StudentController/Details/5
         public ActionResult Details(int id)
         {
-            return View();
+            throw new NotImplementedException();
         }
 
         // GET: StudentController/Create
@@ -74,25 +75,31 @@ namespace ProjectThesis.Controllers
             }
         }
 
-        // GET: StudentController/Delete/5
         public ActionResult Delete(int id)
         {
-            return View();
-        }
+            var student = _context.Students
+                .FirstOrDefault(s => s.Id == id);
+            var user = new User {Id = student.UserId};
 
-        // POST: StudentController/Delete/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
-        {
-            try
+            using (var transaction = _context.Database.BeginTransaction())
             {
-                return RedirectToAction(nameof(Index));
+                var studentThesis = _context.Theses
+                    .FirstOrDefault(t => t.StudentId == student.Id);
+                if (studentThesis != null)
+                {
+                    studentThesis.StudentId = null;
+                    _context.SaveChanges();
+                }
+
+                _context.Remove(student);
+                _context.SaveChanges();
+
+                _context.Entry(user).State = EntityState.Deleted;
+                _context.SaveChanges();
+
+                transaction.Commit();
             }
-            catch
-            {
-                return View();
-            }
+            return RedirectToAction(nameof(Index));
         }
     }
 }

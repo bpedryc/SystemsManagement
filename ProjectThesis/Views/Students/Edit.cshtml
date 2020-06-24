@@ -1,12 +1,10 @@
-﻿@model ProjectThesis.ViewModels.RegisterStudentViewModel; 
+﻿@model ProjectThesis.ViewModels.StudentViewModel
 @{
-    Layout = "AuthenticationLayout";
+    Layout = "_AdminLayout";
 }
 <script type="text/javascript" src="~/js/studentCreation.js"></script>
 
-
-<p>Utwórz konto, by mieć możliwość rezerwacji tematu pracy</p>
-<form asp-controller="Authentication" asp-action="Register">
+<form asp-controller="Students" asp-action="Edit">
 
     <p class="text-danger">@ViewData["Message"]</p>
     <div class="row">
@@ -56,12 +54,7 @@
             </select>
             <div class="text-danger">@Html.ValidationMessage("Student.Specialty")</div>
 
-            <button type="submit" style="width: 100%; margin-left: 0; margin-top: 2.05em;" class="btn btn-primary">Dokończ rejestrację</button>
+            <button type="submit" style="width: 100%; margin-left: 0; margin-top: 2.05em;" class="btn btn-primary">Edytuj</button>
         </div>
     </div>
 </form>
-
-<p>
-    Masz już konto?
-    <a asp-controller="Authentication" asp-action="Login"> Zaloguj się</a>
-</p>

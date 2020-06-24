@@ -3,8 +3,12 @@
     Layout = "_AdminLayout";
 }
 
+<div class="row mb-2">
+    <a class="col-12 col-md-8 col-lg-6 btn btn-success" asp-controller="Supervisors" asp-action="Create">Dodaj nowego promotora</a>
+</div>
+
 <table class="table">
-<thead>
+    <thead>
     <tr>
         <th scope="col">Id</th>
         <th scope="col">Imię</th>
@@ -13,17 +17,25 @@
         <th scope="col">Rok studiów</th>
         <th scope="col">Numer albumu</th>
     </tr>
-
-@foreach (var student in Model)
-{
-<tr>
-    <th scope="row">@student.Id</th>
-    <td>@student.User.FirstName</td>
-    <td>@student.User.LastName</td>
-    <td>@student.User.Email</td>
-    <td>@student.DegreeCycle</td>
-    <td>@student.StudentNo</td>
-</tr>
-}
-
+    @foreach (var student in Model)
+    {
+        <tr>
+            <th scope="row">
+                <p>@student.Id</p>
+                <a class="btn btn-warning" asp-controller="Students" asp-action="Edit" asp-route-id="@student.Id"><i class="fa fa-pencil-square-o"></i></a>
+                <a class="btn btn-danger" asp-controller="Students" asp-action="Delete" asp-route-id="@student.Id"><i class="fas fa-trash-alt"></i></a>
+            </th>
+            <td>@student.User.FirstName</td>
+            <td>@student.User.LastName</td>
+            <td>@student.User.Email</td>
+            <td>@student.DegreeCycle</td>
+            <td>@student.StudentNo</td>
+        </tr>
+    }
 </table>
+
+<div class="row mt-2">
+    <a class="col-12 col-md-8 col-lg-6 btn btn-success" asp-controller="Students" asp-action="Create">Dodaj nowego studenta</a>
+</div>
+
+
