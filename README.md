@@ -37,7 +37,7 @@
     <ul>
         <li>Może sam zarejestrować się na stronie powitalnej</li>
         <li>Na swoim profilu może przeglądać swoje dane i zmienić niektóre z nich</li>
-        <li>Jeśli student nie został jeszcze przypisany do żadnego tematu, może wybrać jeden z listy tematów lub zaproponować swój własny</li>
+        <li>Jeśli student nie został jeszcze przypisany do żadnego tematu, może wybrać jeden z listy tematów lub zaproponować swój własny
             <ul>
                 <li>Student powinien widzieć tylko tych promotorów, którzy pracują na jego wydziale</li>
                 <li>Student nie powinien widzieć na liście promotorów, którzy osiągneli już swój limit studentów do opieki</li>
