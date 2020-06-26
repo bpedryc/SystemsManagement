@@ -144,7 +144,7 @@ namespace ProjectThesis.Controllers
             return Json(specialtiesInFaculty);
         }
 
-        private static string GetSha256FromString(string strData)
+        public static string GetSha256FromString(string strData)
         {
             byte[] strBytes = Encoding.UTF8.GetBytes(strData);
             var sha = new SHA256Managed();

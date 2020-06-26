@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ProjectThesis.Models;
 using ProjectThesis.ViewModels;
+using Remotion.Linq.Clauses;
 
 namespace ProjectThesis.Controllers
 {
@@ -27,52 +28,108 @@ namespace ProjectThesis.Controllers
             return View(students);
         }
 
-        // GET: StudentController/Details/5
-        public ActionResult Details(int id)
-        {
-            throw new NotImplementedException();
-        }
-
-        // GET: StudentController/Create
         public ActionResult Create()
         {
             return View();
         }
 
-        // POST: StudentController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
+        public ActionResult Create(StudentViewModel model)
         {
-            try
+            if (!ModelState.IsValid)
             {
-                return RedirectToAction(nameof(Index));
+                return View(model);
             }
-            catch
+
+            var enteredStudent = model.Student;
+            var enteredUser = model.Student.User;
+
+            using (var transaction = _context.Database.BeginTransaction())
             {
-                return View();
+                var matchedUser = _context.Users
+                    .FirstOrDefault(u => (u.Email == model.Student.User.Email));
+                if (matchedUser != null)
+                {
+                    ViewData["Message"] = "Taki użytkownik istnieje już w systemie!";
+                    return View(model);
+                }
+
+                enteredUser.Password = AuthenticationController.GetSha256FromString(enteredUser.Password);
+
+                _context.Users.Add(enteredUser);
+                _context.SaveChanges();
+
+                model.Student.UserId = enteredUser.Id;
+                _context.Students.Add(enteredStudent);
+                _context.SaveChanges();
+
+                transaction.Commit();
             }
+            return RedirectToAction("Index", "Students");
         }
 
-        // GET: StudentController/Edit/5
         public ActionResult Edit(int id)
         {
-            return View();
+            var student = _context.Students
+                .FirstOrDefault(s => s.Id == id);
+            student.User = _context.Users
+                .FirstOrDefault(u => u.Id == student.UserId);
+            student.Specialty = _context.Specialties
+                .FirstOrDefault(s => s.Id == student.SpecialtyId);
+
+            return View(new StudentViewModel{ Student = student });
         }
 
-        // POST: StudentController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        public ActionResult Edit(StudentViewModel viewModel)
         {
-            try
+            var enteredStudent = viewModel.Student;
+            var enteredUser = viewModel.Student.User;
+
+            var student = _context.Students
+                .FirstOrDefault(s => s.Id == viewModel.Student.Id);
+            var user = _context.Users
+                .FirstOrDefault(u => u.Id == student.UserId);
+
+            if (!string.IsNullOrWhiteSpace(enteredUser.Email))
             {
-                return RedirectToAction(nameof(Index));
+                user.Email = enteredUser.Email;
             }
-            catch
+            if (!string.IsNullOrWhiteSpace(enteredUser.FirstName))
             {
-                return View();
+                user.FirstName = enteredUser.FirstName;
             }
+            if (!string.IsNullOrWhiteSpace(enteredUser.LastName))
+            {
+                user.LastName = enteredUser.LastName;
+            }
+            if (!string.IsNullOrWhiteSpace(enteredUser.Password))
+            {
+                if (enteredUser.Password != viewModel.ConfirmPassword)
+                {
+                    ViewData["Message"] = "Wpisane hasła nie są takie same";
+                    return View();
+                }
+                user.Password = AuthenticationController.GetSha256FromString(enteredUser.Password);
+            }
+
+            if (enteredStudent.SpecialtyId != student.SpecialtyId)
+            {
+                student.SpecialtyId = enteredStudent.SpecialtyId;
+            }
+            if (enteredStudent.DegreeCycle != student.DegreeCycle)
+            {
+                student.DegreeCycle = enteredStudent.DegreeCycle;
+            }
+            if (enteredStudent.StudentNo != student.StudentNo)
+            {
+                student.StudentNo = enteredStudent.StudentNo;
+            }
+
+            _context.SaveChanges();
+            return RedirectToAction("Index", "Students");
         }
 
         public ActionResult Delete(int id)

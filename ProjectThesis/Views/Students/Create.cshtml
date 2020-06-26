@@ -9,25 +9,25 @@
         <p class="text-danger">@ViewData["Message"]</p>
         <div class="row">
             <div class="col">
-                <label asp-for="User.Email">E-mail</label>
-                <input required type="text" asp-for="User.Email" class="form-control">
-                <div class="text-danger">@Html.ValidationMessage("User.Email")</div>
+                <label asp-for="Student.User.Email">E-mail</label>
+                <input required type="text" asp-for="Student.User.Email" class="form-control">
+                <div class="text-danger">@Html.ValidationMessage("Student.User.Email")</div>
 
-                <label asp-for="User.Password">Hasło</label>
-                <input required type="password" asp-for="User.Password" class="form-control" aria-describedby="passwordHelp">
-                <div class="text-danger">@Html.ValidationMessage("User.Password")</div>
+                <label asp-for="Student.User.Password">Hasło</label>
+                <input required type="password" asp-for="Student.User.Password" class="form-control" aria-describedby="passwordHelp">
+                <div class="text-danger">@Html.ValidationMessage("Student.User.Password")</div>
 
                 <label>Powtórz hasło</label>
                 <input required type="password" name="ConfirmPassword" class="form-control" aria-describedby="passwordHelp">
                 <div class="text-danger">@Html.ValidationMessage("ConfirmPassword")</div>
 
-                <label asp-for="User.FirstName">Imię</label>
-                <input required type="text" asp-for="User.FirstName" class="form-control">
-                <div class="text-danger">@Html.ValidationMessage("User.FirstName")</div>
+                <label asp-for="Student.User.FirstName">Imię</label>
+                <input required type="text" asp-for="Student.User.FirstName" class="form-control">
+                <div class="text-danger">@Html.ValidationMessage("Student.User.FirstName")</div>
 
-                <label asp-for="User.LastName">Nazwisko</label>
-                <input required type="text" asp-for="User.LastName" class="form-control">
-                <div class="text-danger">@Html.ValidationMessage("User.LastName")</div>
+                <label asp-for="Student.User.LastName">Nazwisko</label>
+                <input required type="text" asp-for="Student.User.LastName" class="form-control">
+                <div class="text-danger">@Html.ValidationMessage("Student.User.LastName")</div>
             </div>
             <div class="col">
                 <label asp-for="Student.StudentNo">Nr albumu</label>
@@ -41,13 +41,10 @@
                 </select>
                 <div class="text-danger">@Html.ValidationMessage("Student.DegreeCycle")</div>
 
-                <label asp-for="Faculties">Wydział</label>
-                @Html.DropDownListFor(
-                    model => model.Faculties,
-                    new SelectList(Model.Faculties, "Id", "Name"),
-                    "-- Wybierz wydział --",
-                    new { @class = "form-control", @onchange = "javascript:GetSpecialties(this.value);" }
-                )
+                <label for="Faculties">Wydział</label>
+                <select name="faculties" id="Faculties" class="form-control" onchange="javascript: GetSpecialties(this.value);">
+                    <option value="" selected disabled hidden>-- Wybierz wydział --</option>
+                </select>
 
                 <label asp-for="Student.SpecialtyId">Kierunek</label>
                 <select required asp-for="Student.SpecialtyId" class="form-control">

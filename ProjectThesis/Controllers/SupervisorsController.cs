@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using ProjectThesis.Models;
 using ProjectThesis.ViewModels;
 
 namespace ProjectThesis.Controllers
@@ -25,31 +26,18 @@ namespace ProjectThesis.Controllers
             return View(supervisors);
         }
 
-        // GET: SupervisorsController/Details/5
-        public ActionResult Details(int id)
-        {
-            return View();
-        }
-
-        // GET: SupervisorsController/Create
         public ActionResult Create()
         {
             return View();
         }
 
-        // POST: SupervisorsController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
+        public ActionResult Create(Supervisor supervisor)
         {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
+            
+
+            return RedirectToAction("Index", "Supervisors");
         }
 
         // GET: SupervisorsController/Edit/5

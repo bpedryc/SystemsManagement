@@ -43,13 +43,10 @@
             </select>
             <div class="text-danger">@Html.ValidationMessage("Student.DegreeCycle")</div>
 
-            <label asp-for="Faculties">Wydział</label>
-            @Html.DropDownListFor(
-                model => model.Faculties,
-                new SelectList(Model.Faculties, "Id", "Name"),
-                "-- Wybierz wydział --",
-                new { @class = "form-control", @onchange = "javascript:GetSpecialties(this.value);" }
-            )
+            <label for="Faculties">Wydział</label>
+            <select name="faculties" id="Faculties" class="form-control" onchange="javascript: GetSpecialties(this.value);">
+                <option value="" selected disabled hidden>-- Wybierz wydział --</option>
+            </select>
 
             <label asp-for="Student.SpecialtyId">Kierunek</label>
             <select required asp-for="Student.SpecialtyId" class="form-control">
