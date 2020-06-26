@@ -97,6 +97,7 @@ namespace ProjectThesis.Controllers
 
             var supers = _context.Supervisors
                 .Include(s => s.User)
+                .Where(s => s.FacultyId == facultyId)
                 .ToList();
             return View(new ThesesListViewModel
             {

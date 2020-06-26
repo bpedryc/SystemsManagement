@@ -13,9 +13,7 @@ namespace ProjectThesis.Models
     {
         [DatabaseGenerated(DatabaseGeneratedOption.Identity), Key]
         public int Id { get; set; }
-        [DataAnnotationsExtensions.Integer(ErrorMessage = "Ten numer albumu jest niepoprawny")]
-        //[Required(ErrorMessage = "Numer albumu jest wymagany")]
-        //[Range(100000, 999999, ErrorMessage = "Ten numer albumu jest niepoprawny")]
+        [Required(ErrorMessage = "Numer albumu jest wymagany")]
         public int StudentNo { get; set; }
 
         [Required(ErrorMessage = "Rok studiów jest wymagany")]

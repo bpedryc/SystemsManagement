@@ -1,0 +1,57 @@
+﻿@model ProjectThesis.ViewModels.StudentViewModel
+@{
+    Layout = "_AdminLayout";
+}
+    <script type="text/javascript" src="~/js/studentCreation.js"></script>
+
+    <form asp-controller="Students" asp-action="Create">
+
+        <p class="text-danger">@ViewData["Message"]</p>
+        <div class="row">
+            <div class="col">
+                <label asp-for="Student.User.Email">E-mail</label>
+                <input required type="text" asp-for="Student.User.Email" class="form-control">
+                <div class="text-danger">@Html.ValidationMessage("Student.User.Email")</div>
+
+                <label asp-for="Student.User.Password">Hasło</label>
+                <input required type="password" asp-for="Student.User.Password" class="form-control" aria-describedby="passwordHelp">
+                <div class="text-danger">@Html.ValidationMessage("Student.User.Password")</div>
+
+                <label>Powtórz hasło</label>
+                <input required type="password" name="ConfirmPassword" class="form-control" aria-describedby="passwordHelp">
+                <div class="text-danger">@Html.ValidationMessage("ConfirmPassword")</div>
+
+                <label asp-for="Student.User.FirstName">Imię</label>
+                <input required type="text" asp-for="Student.User.FirstName" class="form-control">
+                <div class="text-danger">@Html.ValidationMessage("Student.User.FirstName")</div>
+
+                <label asp-for="Student.User.LastName">Nazwisko</label>
+                <input required type="text" asp-for="Student.User.LastName" class="form-control">
+                <div class="text-danger">@Html.ValidationMessage("Student.User.LastName")</div>
+            </div>
+            <div class="col">
+                <label asp-for="Student.StudentNo">Nr albumu</label>
+                <input required type="text" asp-for="Student.StudentNo" class="form-control">
+                <div class="text-danger">@Html.ValidationMessage("Student.StudentNo")</div>
+
+                <label asp-for="Student.DegreeCycle">Stopień studiów</label>
+                <select required asp-for="Student.DegreeCycle" class="form-control">
+                    <option value="0">I</option>
+                    <option value="1">II</option>
+                </select>
+                <div class="text-danger">@Html.ValidationMessage("Student.DegreeCycle")</div>
+
+                <label for="Faculties">Wydział</label>
+                <select name="faculties" id="Faculties" class="form-control" onchange="javascript: GetSpecialties(this.value);">
+                    <option value="" selected disabled hidden>-- Wybierz wydział --</option>
+                </select>
+
+                <label asp-for="Student.SpecialtyId">Kierunek</label>
+                <select required asp-for="Student.SpecialtyId" class="form-control">
+                </select>
+                <div class="text-danger">@Html.ValidationMessage("Student.Specialty")</div>
+
+                <button type="submit" style="width: 100%; margin-left: 0; margin-top: 2.05em;" class="btn btn-primary">Stwórz</button>
+            </div>
+        </div>
+    </form>
