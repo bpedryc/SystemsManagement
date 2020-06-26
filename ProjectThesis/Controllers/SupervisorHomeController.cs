@@ -39,28 +39,6 @@ namespace ProjectThesis.Controllers
             return View(new SupervisorPanelViewModel{Students = students, ThesesNotChosen = thesesNotChosen});
         }
 
-        //public IActionResult Post()
-        //{
-            //When supervisor limit is end we need to reject others thesis subjects
-            //Re: we won't let students apply to such supervisors
-            // THIS LOGIC SHOULD BE IMPLEMENTED IN StudentHomeController>ReserveThesis
-            
-            /*int userId = int.Parse(HttpContext.Session.GetString("UserId"));
-            var thesesSubjects = (    from th in _context.Theses
-                                       from sp in _context.Supervisors
-                                       from us in _context.Users
-                                       where sp.UserId == us.Id && th.SuperId == sp.Id && us.Id == userId && th.StudentId != null
-                                       select new
-                                       {
-                                          thes = th.Subject
-                                       });
-            var countOfStudents = thesesSubjects.Count();
-            var superv = _context.Supervisors
-                .FirstOrDefault(s => s.UserId == userId);
-            Debug.WriteLine(countOfStudents + " / " + superv.StudentLimit);
-            return View();
-        }*/
-
         public IActionResult RemoveStudent(int thesisId)
         {
             var thesis = _context.Theses
