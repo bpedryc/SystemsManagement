@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Security.Cryptography;
+using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -89,15 +91,29 @@ namespace ProjectThesis.Controllers
                     SupervisorId = g.Key,
                     ThesisCount = g.Count()
                 }).ToList();
+
+
             foreach (var entry in studentCounts)
             {
                 supervisorsByStudentCounts[entry.SupervisorId] = entry.ThesisCount;
             }
             //</This is ugly> - but works
 
+            //It may cause problems
+            /*var supers = _context.Supervisors
+                .Include(s => s.User)
+                .ToList();*/
+
             var supers = _context.Supervisors
+                .Where(s => s.FacultyId == facultyId)
                 .Include(s => s.User)
                 .ToList();
+
+            foreach (var ent in supers)
+            {
+                Debug.WriteLine(ent.Id);
+            }
+
             return View(new ThesesListViewModel
             {
                 Supervisors = supers,
@@ -150,7 +166,27 @@ namespace ProjectThesis.Controllers
             var thes = new Thesis{Subject = thesisSubject, DegreeCycle = 0, SpecId = stud.SpecialtyId, SuperId = supersId, StudentId = stud.Id};
             _context.Add<Thesis>(thes);
             _context.SaveChanges();
-            Debug.WriteLine(supersId + " " + thesisSubject);
+            return RedirectToAction("Index", "StudentHome");
+        }
+
+        public IActionResult changePassword(string newPassword)
+        {
+            var userId = int.Parse(HttpContext.Session.GetString("UserId"));
+
+            var us = _context.Users.Where(u => u.Id == userId).First();
+            us.Password = GetSha256FromString(newPassword);
+            _context.SaveChanges();
+            return RedirectToAction("Index", "StudentHome");
+        }
+
+        public IActionResult changeEmail(string newEmail)
+        {
+            var userId = int.Parse(HttpContext.Session.GetString("UserId"));
+
+            var us = _context.Users.Where(u => u.Id == userId).First();
+            us.Email = newEmail;
+            _context.SaveChanges();
+
             return RedirectToAction("Index", "StudentHome");
         }
 
@@ -158,6 +194,20 @@ namespace ProjectThesis.Controllers
         public IActionResult Error()
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+        }
+
+        private static string GetSha256FromString(string strData)
+        {
+            byte[] strBytes = Encoding.UTF8.GetBytes(strData);
+            var sha = new SHA256Managed();
+            var hash = new StringBuilder();
+
+            byte[] hashBytes = sha.ComputeHash(strBytes);
+            foreach (byte hashByte in hashBytes)
+            {
+                hash.Append($"{hashByte:x2}");
+            }
+            return hash.ToString();
         }
     }
 }

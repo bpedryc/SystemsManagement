@@ -10,5 +10,6 @@ namespace ProjectThesis.ViewModels
     {
         public IEnumerable<Student> Students;
         public IEnumerable<Thesis> ThesesNotChosen;
+        public IEnumerable<Specialty> SpecialitiesForSupervisor;
     }
 }

@@ -30,7 +30,55 @@
         </p>
     </div>
     <div id="change-buttons">
-        <button type="submit" class="btn btn-primary" id="change-password">Zmień hasło</button>
-        <button type="submit" class="btn btn-primary" id="change-email">Zmień e-mail</button>
+        <button type="button" class="btn btn-primary" id="change-password" value="0">Zmień hasło</button>
+        <form asp-controller="StudentHome" asp-action="changePassword" id="changePasswordForm" style="margin-top:1em; margin-bottom: 1em; display: none;">
+            <div class="form-group" id="form-group-password">
+                <input require type="password" id="password-1" name="newPassword" class="form-control" style="width: 50%; margin-bottom: 0.3em;">
+                <input require type="password" id="password-2" class="form-control" style="width: 50%; margin-bottom: 0.3em;">
+                <button type="button" class="btn btn-secondary" id="confirm-change-password" style="width: 50%;">Zatwierdź</button>
+            </div>
+        </form>
+        <button type="button" class="btn btn-primary" id="change-email" value="0">Zmień e-mail</button>
+        <form asp-controller="StudentHome" asp-action="changeEmail" id="changeEmailForm" style="margin-top:1em; margin-bottom: 1em; display: none;">
+            <div class="form-group">
+                <input require type="text" name="newEmail" class="form-control" style="width: 50%; margin-bottom: 0.3em;">
+                <button type="submit" class="btn btn-secondary" id="confirm-change-email" style="width: 50%;">Zatwierdź</button>
+            </div>
+        </form>
     </div>
 </div>
+
+<script type="text/javascript">
+    $('#change-password').click(function () {
+        console.log('dziala' + $(this).attr('value'));
+        if ($(this).attr('value') == 0) {
+            $('#changePasswordForm').show();
+            $(this).attr('value', 1);
+        }
+        else {
+            $('#changePasswordForm').hide();
+            $(this).attr('value', 0);
+        }
+    });
+
+    $('#confirm-change-password').click(function () {
+        if ($('#password-1').val() === $('#password-2').val()) {
+            $('#changePasswordForm').submit();
+        }
+        else {
+            $('<div style="text-align: center; width: 50%; margin-top: 0.3em;"><p style="color: crimson;">Hasła są różne</p></div>').insertBefore('#form-group-password');
+        }
+    });
+
+    $('#change-email').click(function () {
+        console.log('dziala' + $(this).attr('value'));
+        if ($(this).attr('value') == 0) {
+            $('#changeEmailForm').show();
+            $(this).attr('value', 1);
+        }
+        else {
+            $('#changeEmailForm').hide();
+            $(this).attr('value', 0);
+        }
+    });
+</script>

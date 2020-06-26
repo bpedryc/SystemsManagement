@@ -36,7 +36,16 @@ namespace ProjectThesis.Controllers
                 .Where(t => t.SuperId == super.Id && t.StudentId == null)
                 .ToList();
 
-            return View(new SupervisorPanelViewModel{Students = students, ThesesNotChosen = thesesNotChosen});
+            var specialitiesForSupervisor = from s in _context.Specialties
+                                           join f in _context.Faculties on s.FacId equals f.Id
+                                           where f.Id == super.FacultyId
+                                           select new Specialty
+                                           {
+                                               Id = s.Id,
+                                               Name = s.Name
+                                           };
+
+            return View(new SupervisorPanelViewModel{Students = students, ThesesNotChosen = thesesNotChosen, SpecialitiesForSupervisor = specialitiesForSupervisor });
         }
 
         //public IActionResult Post()
@@ -61,7 +70,7 @@ namespace ProjectThesis.Controllers
             return View();
         }*/
 
-        public IActionResult RemoveStudent(int thesisId)
+        /*public IActionResult RemoveStudent(int thesisId)
         {
             var thesis = _context.Theses
                 .FirstOrDefault(t => t.Id == thesisId);
@@ -71,7 +80,7 @@ namespace ProjectThesis.Controllers
 
             TempData["Success"] = "Pomyślnie odsunięto studenta od tematu";
             return RedirectToAction("Index", "SupervisorHome");
-        }
+        }*/
 
         public IActionResult removeThesis(int thesisId)
         {
@@ -92,6 +101,20 @@ namespace ProjectThesis.Controllers
             return RedirectToAction("Index", "SupervisorHome");
         }
 
+        public IActionResult createThesis(string thesisSubjectCreate, int specialityType)
+        {
+            var userId = int.Parse(HttpContext.Session.GetString("UserId"));
+
+            var sup = _context.Supervisors
+               .Where(s => s.UserId == userId)
+               .FirstOrDefault();
+
+            var thes = new Thesis { Subject = thesisSubjectCreate, DegreeCycle = 0, SpecId = specialityType, SuperId = sup.Id, StudentId = null};
+            _context.Add<Thesis>(thes);
+            _context.SaveChanges();
+
+            return RedirectToAction("Index", "SupervisorHome");
+        }
 
         /*[HttpPost]
         public IActionResult Post(string decisionButton)
