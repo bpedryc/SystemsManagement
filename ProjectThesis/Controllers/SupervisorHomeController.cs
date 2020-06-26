@@ -45,7 +45,7 @@ namespace ProjectThesis.Controllers
                                                 Name = s.Name
                                             };
 
-            return View(new SupervisorPanelViewModel { Students = students, ThesesNotChosen = thesesNotChosen, SpecialitiesForSupervisor = specialitiesForSupervisor });
+            return View(new SupervisorPanelViewModel { Students = students, ThesesNotChosen = thesesNotChosen, SpecialitiesForSupervisor = specialitiesForSupervisor});
         }
 
         public IActionResult removeThesis(int thesisId)
@@ -81,23 +81,5 @@ namespace ProjectThesis.Controllers
 
             return RedirectToAction("Index", "SupervisorHome");
         }
-
-        /*[HttpPost]
-        public IActionResult Post(string decisionButton)
-        {
-            Debug.WriteLine(decisionButton);
-            if (decisionButton.Contains("acc"))
-            {
-                Debug.WriteLine("accept");
-                //Action for accept thesis subject
-            }
-            else if (decisionButton.Contains("rej"))
-            {
-                Debug.WriteLine("reject");
-                //Action for reject thesis subject
-            }
-
-            return this.Post();
-        }*/
     }
 }

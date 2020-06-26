@@ -9,24 +9,24 @@
         <p class="text-danger">@ViewData["Message"]</p>
         <div class="row">
 
-            <input type="hidden" asp-for="Id" />
-            <input type="hidden" asp-for="UserId" />
+            <input type="hidden" asp-for="Id" maxlength="10"/>
+            <input type="hidden" asp-for="UserId" maxlength="10"/>
 
             <div class="col">
                 <label asp-for="User.Email">E-mail</label>
-                <input required type="text" asp-for="User.Email" class="form-control">
+                <input required type="text" asp-for="User.Email" class="form-control" maxlength="50">
                 <div class="text-danger">@Html.ValidationMessage("Student.User.Email")</div>
 
                 <label asp-for="User.Password">Hasło</label>
-                <input type="password" asp-for="User.Password" class="form-control" aria-describedby="passwordHelp">
+                <input type="password" asp-for="User.Password" class="form-control" aria-describedby="passwordHelp" maxlength="30">
                 <div class="text-danger">@Html.ValidationMessage("Student.User.Password")</div>
 
                 <label asp-for="User.FirstName">Imię</label>
-                <input required type="text" asp-for="User.FirstName" class="form-control">
+                <input required type="text" asp-for="User.FirstName" class="form-control" maxlength="30">
                 <div class="text-danger">@Html.ValidationMessage("Student.User.FirstName")</div>
 
                 <label asp-for="User.LastName">Nazwisko</label>
-                <input required type="text" asp-for="User.LastName" class="form-control">
+                <input required type="text" asp-for="User.LastName" class="form-control" maxlength="30">
                 <div class="text-danger">@Html.ValidationMessage("Student.User.LastName")</div>
             </div>
             <div class="col">
@@ -37,7 +37,7 @@
                 <div class="text-danger">@Html.ValidationMessage("FacultyId")</div>
 
                 <label asp-for="StudentLimit">Limit studentów</label>
-                <input type="text" asp-for="StudentLimit" class="form-control" />
+                <input type="text" asp-for="StudentLimit" class="form-control" maxlength="3"/>
                 <div class="text-danger">@Html.ValidationMessage("StudentLimit")</div>
 
                 <button type="submit" style="width: 100%; margin-left: 0; margin-top: 2.05em;" class="btn btn-primary">Edytuj</button>

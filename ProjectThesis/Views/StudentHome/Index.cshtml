@@ -33,15 +33,15 @@
         <button type="button" class="btn btn-primary" id="change-password" value="0">Zmień hasło</button>
         <form asp-controller="StudentHome" asp-action="changePassword" id="changePasswordForm" style="margin-top:1em; margin-bottom: 1em; display: none;">
             <div class="form-group" id="form-group-password">
-                <input require type="password" id="password-1" name="newPassword" class="form-control" style="width: 50%; margin-bottom: 0.3em;">
-                <input require type="password" id="password-2" class="form-control" style="width: 50%; margin-bottom: 0.3em;">
+                <input require type="password" maxlength="30" id="password-1" name="newPassword" class="form-control" style="width: 50%; margin-bottom: 0.3em;">
+                <input require type="password" maxlength="30" id="password-2" class="form-control" style="width: 50%; margin-bottom: 0.3em;">
                 <button type="button" class="btn btn-secondary" id="confirm-change-password" style="width: 50%;">Zatwierdź</button>
             </div>
         </form>
         <button type="button" class="btn btn-primary" id="change-email" value="0">Zmień e-mail</button>
         <form asp-controller="StudentHome" asp-action="changeEmail" id="changeEmailForm" style="margin-top:1em; margin-bottom: 1em; display: none;">
             <div class="form-group">
-                <input require type="text" name="newEmail" class="form-control" style="width: 50%; margin-bottom: 0.3em;">
+                <input require type="text" maxlength="50" name="newEmail" class="form-control" style="width: 50%; margin-bottom: 0.3em;">
                 <button type="submit" class="btn btn-secondary" id="confirm-change-email" style="width: 50%;">Zatwierdź</button>
             </div>
         </form>

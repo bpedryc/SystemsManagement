@@ -13,7 +13,7 @@
 
     <form asp-controller="SupervisorHome" asp-action="createThesis" id="createThesisForm" style="margin-top:1em; margin-bottom: 2em;">
         <div class="form-group">
-            <input require type="text" name="thesisSubjectCreate" class="form-control" style="width: 70%;">
+            <input require type="text" name="thesisSubjectCreate" class="form-control" style="width: 70%;" maxlength="150">
             <div style="display: flex; flex-direction: row; margin-top: 1em;">
                 <select class="custom-select" name="specialityType" style="width: 30%;"> 
                     @foreach (var speciality in Model.SpecialitiesForSupervisor)
@@ -31,7 +31,6 @@
         {
             <h3>@student.ChosenThesis.Subject</h3>
             <p style="margin-bottom: 1em;">@student.User.FirstName @student.User.LastName @student.User.Email @student.StudentNo</p>
-            @*<a class="btn btn-danger" asp-controller="SupervisorHome" asp-action="RemoveStudent" asp-route-thesisId="@student.ChosenThesis.Id" style="margin-bottom: 1em;">Odsuń studenta od tematu</a>*@
         }
         <br />
         <h2>Pozostałe prace:</h2>
@@ -51,7 +50,7 @@
         <div class="d-flex flex-row" style="width: 100%; width: 100%;">
             <div class="form-group" style="width: 100%;">
                 <label>Podaj temat</label>
-                <input require type="text" name="thesisSubject" class="form-control">
+                <input require type="text" name="thesisSubject" class="form-control" maxlength="150">
                 <button type="button" data-toggle="modal" data-target="#confirm-changing-subject" id="changeThesButton" name="thesisId" class="btn btn-primary" style="text-align:center; margin-right: 5px; margin-top: 10px;">Zapisz temat</button>
                 <button type="button" class="btn btn-secondary" onclick="showThesis()" style="text-align:center; margin-top: 10px;">Powrót</button>
             </div>

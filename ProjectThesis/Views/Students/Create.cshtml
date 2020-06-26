@@ -10,28 +10,28 @@
         <div class="row">
             <div class="col">
                 <label asp-for="Student.User.Email">E-mail</label>
-                <input required type="text" asp-for="Student.User.Email" class="form-control">
+                <input required type="text" asp-for="Student.User.Email" class="form-control" maxlength="50">
                 <div class="text-danger">@Html.ValidationMessage("Student.User.Email")</div>
 
                 <label asp-for="Student.User.Password">Hasło</label>
-                <input required type="password" asp-for="Student.User.Password" class="form-control" aria-describedby="passwordHelp">
+                <input required type="password" asp-for="Student.User.Password" class="form-control" aria-describedby="passwordHelp" maxlength="30">
                 <div class="text-danger">@Html.ValidationMessage("Student.User.Password")</div>
 
                 <label>Powtórz hasło</label>
-                <input required type="password" name="ConfirmPassword" class="form-control" aria-describedby="passwordHelp">
+                <input required type="password" name="ConfirmPassword" class="form-control" aria-describedby="passwordHelp" maxlength="30">
                 <div class="text-danger">@Html.ValidationMessage("ConfirmPassword")</div>
 
                 <label asp-for="Student.User.FirstName">Imię</label>
-                <input required type="text" asp-for="Student.User.FirstName" class="form-control">
+                <input required type="text" asp-for="Student.User.FirstName" class="form-control" maxlength="30">
                 <div class="text-danger">@Html.ValidationMessage("Student.User.FirstName")</div>
 
                 <label asp-for="Student.User.LastName">Nazwisko</label>
-                <input required type="text" asp-for="Student.User.LastName" class="form-control">
+                <input required type="text" asp-for="Student.User.LastName" class="form-control" maxlength="30">
                 <div class="text-danger">@Html.ValidationMessage("Student.User.LastName")</div>
             </div>
             <div class="col">
                 <label asp-for="Student.StudentNo">Nr albumu</label>
-                <input required type="text" asp-for="Student.StudentNo" class="form-control">
+                <input required type="text" asp-for="Student.StudentNo" class="form-control" maxlength="10">
                 <div class="text-danger">@Html.ValidationMessage("Student.StudentNo")</div>
 
                 <label asp-for="Student.DegreeCycle">Stopień studiów</label>

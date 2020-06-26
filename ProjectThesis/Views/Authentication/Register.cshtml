@@ -12,28 +12,28 @@
     <div class="row">
         <div class="col">
             <label asp-for="User.Email">E-mail</label>
-            <input required type="text" asp-for="User.Email" class="form-control">
+            <input required type="text" asp-for="User.Email" class="form-control" maxlength="50">
             <div class="text-danger">@Html.ValidationMessage("User.Email")</div>
 
             <label asp-for="User.Password">Hasło</label>
-            <input required type="password" asp-for="User.Password" class="form-control" aria-describedby="passwordHelp">
+            <input required type="password" asp-for="User.Password" class="form-control" aria-describedby="passwordHelp" maxlength="30">
             <div class="text-danger">@Html.ValidationMessage("User.Password")</div>
 
             <label>Powtórz hasło</label>
-            <input required type="password" name="ConfirmPassword" class="form-control" aria-describedby="passwordHelp">
+            <input required type="password" name="ConfirmPassword" class="form-control" aria-describedby="passwordHelp" maxlength="30">
             <div class="text-danger">@Html.ValidationMessage("ConfirmPassword")</div>
 
             <label asp-for="User.FirstName">Imię</label>
-            <input required type="text" asp-for="User.FirstName" class="form-control">
+            <input required type="text" asp-for="User.FirstName" class="form-control" maxlength="30">
             <div class="text-danger">@Html.ValidationMessage("User.FirstName")</div>
 
             <label asp-for="User.LastName">Nazwisko</label>
-            <input required type="text" asp-for="User.LastName" class="form-control">
+            <input required type="text" asp-for="User.LastName" class="form-control" maxlength="30">
             <div class="text-danger">@Html.ValidationMessage("User.LastName")</div>
         </div>
         <div class="col">
             <label asp-for="Student.StudentNo">Nr albumu</label>
-            <input required type="text" asp-for="Student.StudentNo" class="form-control">
+            <input required type="text" asp-for="Student.StudentNo" class="form-control" maxlength="10">
             <div class="text-danger">@Html.ValidationMessage("Student.StudentNo")</div>
 
             <label asp-for="Student.DegreeCycle">Stopień studiów</label>
