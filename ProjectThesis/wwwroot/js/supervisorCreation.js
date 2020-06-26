@@ -1,12 +1,16 @@
-﻿$(document).ready(function () {
+﻿function GetAllFaculties() {
     $.ajax({
         type: 'GET',
         url: "/Faculties/GetAllFaculties",
         dataType: 'json',
+        async: false,
         success: function (faculties) {
             faculties.forEach(function (f) {
-                $("#Faculty_Id").append($("<option/>").val(f.id).text(f.name));
+                $("#FacultyId").append($("<option/>").val(f.id).text(f.name));
             });
+        },
+        error: function (e) {
+            console.log(e);
         }
     });
-});
+}

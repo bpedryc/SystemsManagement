@@ -19,7 +19,11 @@
     @foreach (var supervisor in Model)
     {
         <tr>
-            <th scope="row">@supervisor.Id</th>
+            <th scope="row">
+                @supervisor.Id
+                <a class="btn btn-warning" asp-controller="Supervisors" asp-action="Edit" asp-route-id="@supervisor.Id"><i class="fa fa-pencil-square-o"></i></a>
+                <a class="btn btn-danger" asp-controller="Supervisors" asp-action="Delete" asp-route-id="@supervisor.Id"><i class="fas fa-trash-alt"></i></a>
+            </th>
             <td>@supervisor.User.FirstName</td>
             <td>@supervisor.User.LastName</td>
             <td>@supervisor.User.Email</td>

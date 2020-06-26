@@ -4,21 +4,22 @@
 }
     <script type="text/javascript" src="~/js/supervisorCreation.js"></script>
 
-    <form asp-controller="Supervisors" asp-action="Create">
+    <form asp-controller="Supervisors" asp-action="Edit">
 
         <p class="text-danger">@ViewData["Message"]</p>
         <div class="row">
+
+            <input type="hidden" asp-for="Id" />
+            <input type="hidden" asp-for="UserId" />
+
             <div class="col">
                 <label asp-for="User.Email">E-mail</label>
                 <input required type="text" asp-for="User.Email" class="form-control">
                 <div class="text-danger">@Html.ValidationMessage("Student.User.Email")</div>
 
                 <label asp-for="User.Password">Hasło</label>
-                <input required type="password" asp-for="User.Password" class="form-control" aria-describedby="passwordHelp">
+                <input type="password" asp-for="User.Password" class="form-control" aria-describedby="passwordHelp">
                 <div class="text-danger">@Html.ValidationMessage("Student.User.Password")</div>
-
-                <label>Powtórz hasło</label>
-                <input required type="password" name="ConfirmPassword" class="form-control" aria-describedby="passwordHelp">
 
                 <label asp-for="User.FirstName">Imię</label>
                 <input required type="text" asp-for="User.FirstName" class="form-control">
@@ -39,13 +40,14 @@
                 <input type="text" asp-for="StudentLimit" class="form-control" />
                 <div class="text-danger">@Html.ValidationMessage("StudentLimit")</div>
 
-                <button type="submit" style="width: 100%; margin-left: 0; margin-top: 2.05em;" class="btn btn-primary">Stwórz</button>
+                <button type="submit" style="width: 100%; margin-left: 0; margin-top: 2.05em;" class="btn btn-primary">Edytuj</button>
             </div>
         </div>
     </form>
 
-    <script type="text/javascript">
-        $(document).ready(function () {
-            GetAllFaculties();
-        });
-    </script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        GetAllFaculties();
+        $("#FacultyId").val(@Model.FacultyId);
+    });
+</script>

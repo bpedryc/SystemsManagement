@@ -35,51 +35,91 @@ namespace ProjectThesis.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create(Supervisor supervisor)
         {
-            
+            if (!ModelState.IsValid)
+            {
+                return View();
+            }
 
-            return RedirectToAction("Index", "Supervisors");
+            supervisor.User.Password = AuthenticationController.GetSha256FromString(supervisor.User.Password);
+
+            using (var transaction = _context.Database.BeginTransaction())
+            {
+                _context.Users.Add(supervisor.User);
+                _context.SaveChanges();
+
+                _context.Supervisors.Add(supervisor);
+                _context.SaveChanges();
+
+                transaction.Commit();
+            }
+            
+            return RedirectToAction("Index");
         }
 
-        // GET: SupervisorsController/Edit/5
+        [HttpGet]
         public ActionResult Edit(int id)
         {
-            return View();
+            var supervisor = _context.Supervisors
+                .FirstOrDefault(s => s.Id == id);
+            var user = _context.Users
+                .FirstOrDefault(u => u.Id == supervisor.UserId);
+            supervisor.User = user;
+
+            return View(supervisor);
         }
 
-        // POST: SupervisorsController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        public ActionResult Edit(Supervisor model)
         {
-            try
+            var supervisor = _context.Supervisors
+                .FirstOrDefault(s => s.Id == model.Id);
+            var user = _context.Users
+                .FirstOrDefault(u => u.Id == model.UserId);
+
+            if (model.User.FirstName != user.FirstName)
             {
-                return RedirectToAction(nameof(Index));
+                user.FirstName = model.User.FirstName;
             }
-            catch
+            if (model.User.LastName != user.LastName)
             {
-                return View();
+                user.LastName = model.User.LastName;
             }
+            if (model.User.Email != user.Email)
+            {
+                user.Email = model.User.Email;
+            }
+            if (!String.IsNullOrWhiteSpace(model.User.Password))
+            {
+                user.Password = AuthenticationController.GetSha256FromString(model.User.Password);
+            }
+
+            if (model.FacultyId != supervisor.FacultyId)
+            {
+                supervisor.FacultyId = model.FacultyId;
+            }
+            if (model.StudentLimit != supervisor.StudentLimit)
+            {
+                supervisor.StudentLimit = model.StudentLimit;
+            }
+
+            _context.SaveChanges();
+
+            return RedirectToAction("Index");
         }
 
-        // GET: SupervisorsController/Delete/5
         public ActionResult Delete(int id)
         {
-            return View();
-        }
+            var supervisor =_context.Supervisors
+                .FirstOrDefault(s => s.Id == id);
+            var user = _context.Users
+                .FirstOrDefault(u => u.Id == supervisor.UserId);
 
-        // POST: SupervisorsController/Delete/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
+            _context.Entry(supervisor).State = EntityState.Deleted;
+            _context.Entry(user).State = EntityState.Deleted;
+            _context.SaveChanges();
+
+            return RedirectToAction("Index");
         }
     }
 }
