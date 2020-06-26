@@ -2,9 +2,10 @@
 @{
     Layout = "AuthenticationLayout";
 }
+<script type="text/javascript" src="~/js/studentCreation.js"></script>
+
 
 <p>Utwórz konto, by mieć możliwość rezerwacji tematu pracy</p>
-
 <form asp-controller="Authentication" asp-action="Register">
 
     <p class="text-danger">@ViewData["Message"]</p>
@@ -42,13 +43,10 @@
             </select>
             <div class="text-danger">@Html.ValidationMessage("Student.DegreeCycle")</div>
 
-            <label asp-for="Faculties">Wydział</label>
-            @Html.DropDownListFor(
-                model => model.Faculties,
-                new SelectList(Model.Faculties, "Id", "Name"),
-                "-- Wybierz wydział --",
-                new { @class = "form-control", @onchange = "javascript:GetSpecialties(this.value);" }
-            )
+            <label for="Faculties">Wydział</label>
+            <select name="faculties" id="Faculties" class="form-control" onchange="javascript: GetSpecialties(this.value);">
+                <option value="" selected disabled hidden>-- Wybierz wydział --</option>
+            </select>
 
             <label asp-for="Student.SpecialtyId">Kierunek</label>
             <select required asp-for="Student.SpecialtyId" class="form-control">
@@ -64,29 +62,3 @@
     Masz już konto?
     <a asp-controller="Authentication" asp-action="Login"> Zaloguj się</a>
 </p>
-
-<script type="text/javascript">
-
-    function GetSpecialties(faculty)
-    {
-        $.ajax({
-            type: "GET",
-            url: "@Url.Action("GetSpecialties", "Authentication")",
-            data: { "facultyId": faculty },
-            contentType: 'application/json; charset=utf-8',
-            dataType: 'json',
-            error: function (XMLHttpRequest, textStatus, errorThrown) {
-                alert("Request: " + XMLHttpRequest.toString() + "\n\nStatus: " + textStatus + "\n\nError: " + errorThrown);
-            },
-            success: function (specialties) {
-                var dropdown = $('#Student_SpecialtyId');
-                dropdown.empty();
-                specialties.forEach(function (s) {
-                    dropdown.append(
-                        $('<option></option>').val(s.id).html(s.name)
-                    );
-                });
-            }
-        });
-    }
-</script>

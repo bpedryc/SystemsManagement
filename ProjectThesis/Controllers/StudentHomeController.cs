@@ -107,6 +107,7 @@ namespace ProjectThesis.Controllers
             var supers = _context.Supervisors
                 .Where(s => s.FacultyId == facultyId)
                 .Include(s => s.User)
+                .Where(s => s.FacultyId == facultyId)
                 .ToList();
 
             foreach (var ent in supers)
@@ -130,11 +131,21 @@ namespace ProjectThesis.Controllers
 
             var chosenThesis = _context.Theses
                 .FirstOrDefault(t => t.Id == thesisId && t.StudentId == null);
-
             if (chosenThesis == null)
             {
                 TempData["Error"] = "Ten temat został właśnie zajęty";
-                return RedirectToAction("Theses", "StudentHome");
+                return RedirectToAction("Index");
+            }
+
+            var supervisor = _context.Supervisors
+                .FirstOrDefault(s => s.Id == chosenThesis.SuperId);
+            var supervisorThesesCount = _context.Theses
+                .Where(t => t.SuperId == chosenThesis.SuperId)
+                .Count();
+            if (supervisorThesesCount >= supervisor.StudentLimit)
+            {
+                TempData["Error"] = "Ten promotor ma już maksymalną ilość studentów";
+                return RedirectToAction("Index");
             }
 
             var loggedStudent = _context.Students
@@ -145,6 +156,7 @@ namespace ProjectThesis.Controllers
             TempData["Success"] = "Temat został pomyślnie przydzielony";
             return RedirectToAction("Index", "StudentHome");
         }
+
         public JsonResult GetSupervisorTheses(int supervisorId, int specialtyId, int degreeCycle)
         {
             var theses = _context.Theses

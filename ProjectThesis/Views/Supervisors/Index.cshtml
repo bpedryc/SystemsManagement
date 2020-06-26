@@ -1,0 +1,33 @@
+﻿@model ICollection<Supervisor>
+@{
+    Layout = "_AdminLayout";
+}
+
+<div class="row mb-2">
+    <a class="col-12 col-md-8 col-lg-6 btn btn-success" asp-controller="Supervisors" asp-action="Create">Dodaj nowego promotora</a>
+</div>
+
+<table class="table">
+    <thead>
+    <tr>
+        <th scope="col">Id</th>
+        <th scope="col">Imię</th>
+        <th scope="col">Nazwisko</th>
+        <th scope="col">Email</th>
+    </tr>
+
+    @foreach (var supervisor in Model)
+    {
+        <tr>
+            <th scope="row">
+                @supervisor.Id
+                <a class="btn btn-warning" asp-controller="Supervisors" asp-action="Edit" asp-route-id="@supervisor.Id"><i class="fa fa-pencil-square-o"></i></a>
+                <a class="btn btn-danger" asp-controller="Supervisors" asp-action="Delete" asp-route-id="@supervisor.Id"><i class="fas fa-trash-alt"></i></a>
+            </th>
+            <td>@supervisor.User.FirstName</td>
+            <td>@supervisor.User.LastName</td>
+            <td>@supervisor.User.Email</td>
+        </tr>
+    }
+</table>
+

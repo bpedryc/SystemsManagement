@@ -18,7 +18,6 @@ namespace ProjectThesis.Models
         [DataType(DataType.EmailAddress, ErrorMessage = "Ten adres email nie jest poprawny")]
         public string Email { get; set; }
         [Required(ErrorMessage = "Hasło jest wymagane")]
-        //TODO: regex for password
         public string Password { get; set; }
     }
 }

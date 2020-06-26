@@ -70,6 +70,14 @@ namespace ProjectThesis.Controllers
                     return RedirectToAction("Index", "SupervisorHome");
                 }
 
+                var matchedAdmin = _context.Admins
+                    .FirstOrDefault(a => a.UserId == matchedUser.Id);
+                if (matchedAdmin != null)
+                {
+                    HttpContext.Session.SetString("UserId", matchedUser.Id.ToString());
+                    return RedirectToAction("Index", "AdminHome");
+                }
+
                 ViewData["Message"] = "Twoje konto nie zosta³o poprawnie aktywowane. Skontaktuj siê z administratorem";
                 return View();
             }
@@ -136,7 +144,7 @@ namespace ProjectThesis.Controllers
             return Json(specialtiesInFaculty);
         }
 
-        private static string GetSha256FromString(string strData)
+        public static string GetSha256FromString(string strData)
         {
             byte[] strBytes = Encoding.UTF8.GetBytes(strData);
             var sha = new SHA256Managed();

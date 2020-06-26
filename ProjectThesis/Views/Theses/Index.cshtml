@@ -1,0 +1,38 @@
+﻿@model ICollection<Thesis>
+@{
+    Layout = "_AdminLayout";
+}
+
+<table class="table">
+    <thead>
+    <tr>
+        <th scope="col">Id</th>
+        <th scope="col">Tytuł</th>
+        <th scope="col">Rok studiów</th>
+        <th scope="col">Promotor</th>
+        <th scope="col">Student</th>
+        <th scope="col">Wydział</th>
+        <th scope="col">Kierunek</th>
+    </tr>
+
+    @foreach (var thesis in Model)
+    {
+        <tr>
+            <th scope="row">@thesis.Id</th>
+            <td>@thesis.Subject</td>
+            <td>@thesis.DegreeCycle</td>
+            <td>@thesis.Super.User.FirstName @thesis.Super.User.LastName</td>
+            <td>
+                @if (thesis.Student != null)
+                {
+                    @thesis.Student.User.FirstName
+                    @thesis.Student.User.LastName
+                    <a class="btn btn-danger" asp-controller="Theses" asp-action="RemoveStudent" asp-route-thesisId="@thesis.Id">X</a>
+                }
+
+            </td>
+            <td>@thesis.Spec.Name</td>
+            <td>@thesis.Spec.Fac.Name</td>
+        </tr>
+    }
+</table>

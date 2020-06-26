@@ -30,57 +30,23 @@ namespace ProjectThesis.Controllers
                 .Include(s => s.ChosenThesis)
                 .Where(s => s.ChosenThesis.SuperId == super.Id)
                 .Include(s => s.User);
-                
+
 
             var thesesNotChosen = _context.Theses
                 .Where(t => t.SuperId == super.Id && t.StudentId == null)
                 .ToList();
 
             var specialitiesForSupervisor = from s in _context.Specialties
-                                           join f in _context.Faculties on s.FacId equals f.Id
-                                           where f.Id == super.FacultyId
-                                           select new Specialty
-                                           {
-                                               Id = s.Id,
-                                               Name = s.Name
-                                           };
+                                            join f in _context.Faculties on s.FacId equals f.Id
+                                            where f.Id == super.FacultyId
+                                            select new Specialty
+                                            {
+                                                Id = s.Id,
+                                                Name = s.Name
+                                            };
 
-            return View(new SupervisorPanelViewModel{Students = students, ThesesNotChosen = thesesNotChosen, SpecialitiesForSupervisor = specialitiesForSupervisor });
+            return View(new SupervisorPanelViewModel { Students = students, ThesesNotChosen = thesesNotChosen, SpecialitiesForSupervisor = specialitiesForSupervisor });
         }
-
-        //public IActionResult Post()
-        //{
-            //When supervisor limit is end we need to reject others thesis subjects
-            //Re: we won't let students apply to such supervisors
-            // THIS LOGIC SHOULD BE IMPLEMENTED IN StudentHomeController>ReserveThesis
-            
-            /*int userId = int.Parse(HttpContext.Session.GetString("UserId"));
-            var thesesSubjects = (    from th in _context.Theses
-                                       from sp in _context.Supervisors
-                                       from us in _context.Users
-                                       where sp.UserId == us.Id && th.SuperId == sp.Id && us.Id == userId && th.StudentId != null
-                                       select new
-                                       {
-                                          thes = th.Subject
-                                       });
-            var countOfStudents = thesesSubjects.Count();
-            var superv = _context.Supervisors
-                .FirstOrDefault(s => s.UserId == userId);
-            Debug.WriteLine(countOfStudents + " / " + superv.StudentLimit);
-            return View();
-        }*/
-
-        /*public IActionResult RemoveStudent(int thesisId)
-        {
-            var thesis = _context.Theses
-                .FirstOrDefault(t => t.Id == thesisId);
-
-            thesis.StudentId = null;
-            _context.SaveChanges();
-
-            TempData["Success"] = "Pomyślnie odsunięto studenta od tematu";
-            return RedirectToAction("Index", "SupervisorHome");
-        }*/
 
         public IActionResult removeThesis(int thesisId)
         {
