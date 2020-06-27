@@ -59,6 +59,7 @@ namespace ProjectThesis.Controllers
                 if (matchedStudent != null)
                 {
                     HttpContext.Session.SetString("UserId", matchedUser.Id.ToString());
+                    HttpContext.Session.SetString("UserRole", "student");
                     return RedirectToAction("Index", "StudentHome");
                 }
 
@@ -67,6 +68,7 @@ namespace ProjectThesis.Controllers
                 if (matchedSupervisor != null)
                 {
                     HttpContext.Session.SetString("UserId", matchedUser.Id.ToString());
+                    HttpContext.Session.SetString("UserRole", "supervisor");
                     return RedirectToAction("Index", "SupervisorHome");
                 }
 
@@ -75,6 +77,7 @@ namespace ProjectThesis.Controllers
                 if (matchedAdmin != null)
                 {
                     HttpContext.Session.SetString("UserId", matchedUser.Id.ToString());
+                    HttpContext.Session.SetString("UserRole", "admin");
                     return RedirectToAction("Index", "AdminHome");
                 }
 
@@ -124,13 +127,16 @@ namespace ProjectThesis.Controllers
                 _context.SaveChanges();
 
                 transaction.Commit();
+                HttpContext.Session.SetString("UserRole", "student");
             }
             TempData["Message"] = "Pomyœlnie zarejestrowano";
+
             return RedirectToAction("Login", "Authentication");   
         }
         public IActionResult SignOut()
         {
             HttpContext.Session.Remove("UserId");
+            HttpContext.Session.Remove("UserRole");
             return RedirectToAction("Login", "Authentication");
         }
 

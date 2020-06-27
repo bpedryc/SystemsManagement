@@ -8,9 +8,9 @@
     <tr>
         <th scope="col">Id</th>
         <th scope="col">Tytuł</th>
-        <th scope="col">Rok studiów</th>
+        <th scope="col">Stopień</th>
         <th scope="col">Promotor</th>
-        <th scope="col">Student</th>
+        <th scope="col" style="text-align: center;">Student</th>
         <th scope="col">Wydział</th>
         <th scope="col">Kierunek</th>
     </tr>
@@ -18,16 +18,17 @@
     @foreach (var thesis in Model)
     {
         <tr>
-            <th scope="row">@thesis.Id</th>
+            <th scope="row" style="padding-bottom: 2em;">@thesis.Id</th>
             <td>@thesis.Subject</td>
             <td>@thesis.DegreeCycle</td>
             <td>@thesis.Super.User.FirstName @thesis.Super.User.LastName</td>
-            <td>
+            <td style="text-align: center;">
                 @if (thesis.Student != null)
                 {
-                    @thesis.Student.User.FirstName
+                    
+                    @(string.Format("{0} {1}", @thesis.Student.User.FirstName, " "))
                     @thesis.Student.User.LastName
-                    <a class="btn btn-danger" asp-controller="Theses" asp-action="RemoveStudent" asp-route-thesisId="@thesis.Id">X</a>
+                    <a class="btn btn-danger" asp-controller="Theses" asp-action="RemoveStudent" asp-route-thesisId="@thesis.Id">Odsuń studenta</a>
                 }
 
             </td>

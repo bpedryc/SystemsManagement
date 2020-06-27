@@ -32,13 +32,12 @@
             <h3>@student.ChosenThesis.Subject</h3>
             <p style="margin-bottom: 1em;">@student.User.FirstName @student.User.LastName @student.User.Email @student.StudentNo</p>
         }
-        <br />
-        <h2>Pozostałe prace:</h2>
+        <br/>
         @foreach (var thesis in Model.ThesesNotChosen)
         {
-            <form asp-controller="SupervisorHome" asp-action="removeThesis" id="RemoveThesisForm" style="margin-top:1em; margin-bottom: 2em;">
+            <form asp-controller="SupervisorHome" asp-action="removeThesis" id="RemoveThesisForm">
                 <div class="form-group">
-                    <h4>@thesis.Subject</h4>
+                    <h4 id="@("h4" + @thesis.Id)">@thesis.Subject</h4>
                     <button type="button" id="remove-thesis-button" value=@thesis.Id onclick="removeThesis(this.value)" data-toggle="modal" data-target="#confirm-removing-subject" class="btn btn-danger">Usuń temat</button>
                     <button type="button" id=@thesis.Id onclick="changeThesis(this.id)" class="btn btn-primary">Edytuj temat</button>
                 </div>
@@ -124,6 +123,7 @@
         });
 
         $('#confirmChangeButton').click(function () {
+            $('input[name="thesisSubject"]').css('color', 'white');
             $('input[name="thesisSubject"]').val($("#changeThesButton").attr('value') + " " + $('input[name="thesisSubject"]').val());
             $('#changeThesForm').submit();
         });
@@ -151,6 +151,7 @@
 
             $("#changeThesButton").attr('value', id);
             $('#changeThesForm').show();
+            $('input[name="thesisSubject"]').val($("#h4" + id).html());
             $('#thesisList').hide();
             $('#createThesisForm').hide();
         }

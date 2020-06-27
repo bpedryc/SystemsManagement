@@ -4,7 +4,7 @@
 }
 
 <div class="row mt-2">
-    <a class="col-12 col-md-8 col-lg-6 btn btn-success" asp-controller="Students" asp-action="Create">Dodaj nowego studenta</a>
+    <a class="col-12 col-md-8 col-lg-6 btn btn-success" asp-controller="Students" asp-action="Create" style="margin-bottom: 0.5rem;">Dodaj nowego studenta</a>
 </div>
 
 <table class="table">
@@ -20,9 +20,9 @@
     @foreach (var student in Model)
     {
         <tr>
-            <th scope="row">
-                <p>@student.Id</p>
-                <a class="btn btn-warning" asp-controller="Students" asp-action="Edit" asp-route-id="@student.Id"><i class="fa fa-pencil-square-o"></i></a>
+            <th scope="row" style="display: flex;">
+                <div style="padding-top: 0.4em; min-width: 20%;">@student.Id</div>
+                <a class="btn btn-warning" asp-controller="Students" asp-action="Edit" asp-route-id="@student.Id" style="margin-right: 5px;"><i class="fa fa-pencil-square-o"></i></a>
                 <a class="btn btn-danger" asp-controller="Students" asp-action="Delete" asp-route-id="@student.Id"><i class="fas fa-trash-alt"></i></a>
             </th>
             <td>@student.User.FirstName</td>

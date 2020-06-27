@@ -26,8 +26,22 @@ namespace ProjectThesis.Controllers
             return View(supervisors);
         }
 
+        private ActionResult checkRole()
+        {
+            var role = HttpContext.Session.GetString("UserRole");
+            if (role.Equals("student"))
+                return RedirectToAction("Index", "StudentHome");
+            else if (role.Equals("supervisor"))
+                return RedirectToAction("Index", "SupervisorHome");
+            return null;
+        }
+
         public ActionResult Create()
         {
+            var roleAction = checkRole();
+            if (roleAction != null)
+                return roleAction;
+
             return View();
         }
 
@@ -35,6 +49,10 @@ namespace ProjectThesis.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create(Supervisor supervisor)
         {
+            var roleAction = checkRole();
+            if (roleAction != null)
+                return roleAction;
+
             if (!ModelState.IsValid)
             {
                 return View();
@@ -59,6 +77,10 @@ namespace ProjectThesis.Controllers
         [HttpGet]
         public ActionResult Edit(int id)
         {
+            var roleAction = checkRole();
+            if (roleAction != null)
+                return roleAction;
+
             var supervisor = _context.Supervisors
                 .FirstOrDefault(s => s.Id == id);
             var user = _context.Users
@@ -72,6 +94,10 @@ namespace ProjectThesis.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Edit(Supervisor model)
         {
+            var roleAction = checkRole();
+            if (roleAction != null)
+                return roleAction;
+
             var supervisor = _context.Supervisors
                 .FirstOrDefault(s => s.Id == model.Id);
             var user = _context.Users
@@ -110,6 +136,10 @@ namespace ProjectThesis.Controllers
 
         public ActionResult Delete(int id)
         {
+            var roleAction = checkRole();
+            if (roleAction != null)
+                return roleAction;
+
             var supervisor =_context.Supervisors
                 .FirstOrDefault(s => s.Id == id);
             var user = _context.Users

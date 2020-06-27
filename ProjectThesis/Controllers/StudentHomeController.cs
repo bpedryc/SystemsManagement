@@ -22,8 +22,23 @@ namespace ProjectThesis.Controllers
             _context = context;
         }
 
+        private IActionResult checkRole()
+        {
+            var role = HttpContext.Session.GetString("UserRole");
+            if (role.Equals("admin"))
+                return RedirectToAction("Index", "AdminHome");
+            else if (role.Equals("supervisor"))
+                return RedirectToAction("Index", "SupervisorHome");
+            return null;
+        }
+
+
         public IActionResult Index()
         {
+            var roleAction = checkRole();
+            if (roleAction != null)
+                return roleAction;
+
             //TODO: What if there is no session variable?? Also we need to check on every action that requires authentication
             int userId = int.Parse(HttpContext.Session.GetString("UserId"));
             
@@ -50,6 +65,10 @@ namespace ProjectThesis.Controllers
         [HttpGet]
         public IActionResult Theses()
         {
+            var roleAction = checkRole();
+            if (roleAction != null)
+                return roleAction;
+
             int userId = int.Parse(HttpContext.Session.GetString("UserId")); //TODO: what if he's not logged in?
 
             var loggedStudent = _context.Students
@@ -127,6 +146,10 @@ namespace ProjectThesis.Controllers
 
         public IActionResult ReserveThesis(int thesisId)
         {
+            var roleAction = checkRole();
+            if (roleAction != null)
+                return roleAction;
+
             var userId = int.Parse(HttpContext.Session.GetString("UserId"));
 
             var chosenThesis = _context.Theses
@@ -169,6 +192,10 @@ namespace ProjectThesis.Controllers
 
         public IActionResult newThesis(int supersId, string thesisSubject)
         {
+            var roleAction = checkRole();
+            if (roleAction != null)
+                return roleAction;
+
             var userId = int.Parse(HttpContext.Session.GetString("UserId"));
 
             var stud = _context.Students
@@ -183,6 +210,10 @@ namespace ProjectThesis.Controllers
 
         public IActionResult changePassword(string newPassword)
         {
+            var roleAction = checkRole();
+            if (roleAction != null)
+                return roleAction;
+
             var userId = int.Parse(HttpContext.Session.GetString("UserId"));
 
             var us = _context.Users.Where(u => u.Id == userId).First();
@@ -193,6 +224,10 @@ namespace ProjectThesis.Controllers
 
         public IActionResult changeEmail(string newEmail)
         {
+            var roleAction = checkRole();
+            if (roleAction != null)
+                return roleAction;
+
             var userId = int.Parse(HttpContext.Session.GetString("UserId"));
 
             var us = _context.Users.Where(u => u.Id == userId).First();
@@ -205,6 +240,10 @@ namespace ProjectThesis.Controllers
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {
+            var roleAction = checkRole();
+            if (roleAction != null)
+                return roleAction;
+
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
 

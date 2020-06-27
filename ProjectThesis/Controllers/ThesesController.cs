@@ -17,8 +17,22 @@ namespace ProjectThesis.Controllers
         {
             _context = context;
         }
+        private ActionResult checkRole()
+        {
+            var role = HttpContext.Session.GetString("UserRole");
+            if (role.Equals("student"))
+                return RedirectToAction("Index", "StudentHome");
+            else if (role.Equals("supervisor"))
+                return RedirectToAction("Index", "SupervisorHome");
+            return null;
+        }
+
         public ActionResult Index()
         {
+            var roleAction = checkRole();
+            if (roleAction != null)
+                return roleAction;
+
             var theses = _context.Theses
                 .Include(t => t.Super)
                 .Include(t => t.Super.User)
@@ -32,6 +46,10 @@ namespace ProjectThesis.Controllers
 
         public IActionResult RemoveStudent(int thesisId)
         {
+            var roleAction = checkRole();
+            if (roleAction != null)
+                return roleAction;
+
             var thesis = _context.Theses
                 .FirstOrDefault(t => t.Id == thesisId);
 
@@ -44,12 +62,20 @@ namespace ProjectThesis.Controllers
         // GET: ThesesController/Details/5
         public ActionResult Details(int id)
         {
+            var roleAction = checkRole();
+            if (roleAction != null)
+                return roleAction;
+
             return View();
         }
 
         // GET: ThesesController/Create
         public ActionResult Create()
         {
+            var roleAction = checkRole();
+            if (roleAction != null)
+                return roleAction;
+
             return View();
         }
 
@@ -58,6 +84,10 @@ namespace ProjectThesis.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create(IFormCollection collection)
         {
+            var roleAction = checkRole();
+            if (roleAction != null)
+                return roleAction;
+
             try
             {
                 return RedirectToAction(nameof(Index));
@@ -71,6 +101,10 @@ namespace ProjectThesis.Controllers
         // GET: ThesesController/Edit/5
         public ActionResult Edit(int id)
         {
+            var roleAction = checkRole();
+            if (roleAction != null)
+                return roleAction;
+
             return View();
         }
 
@@ -79,6 +113,10 @@ namespace ProjectThesis.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Edit(int id, IFormCollection collection)
         {
+            var roleAction = checkRole();
+            if (roleAction != null)
+                return roleAction;
+
             try
             {
                 return RedirectToAction(nameof(Index));
@@ -92,6 +130,10 @@ namespace ProjectThesis.Controllers
         // GET: ThesesController/Delete/5
         public ActionResult Delete(int id)
         {
+            var roleAction = checkRole();
+            if (roleAction != null)
+                return roleAction;
+
             return View();
         }
 
@@ -100,6 +142,10 @@ namespace ProjectThesis.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Delete(int id, IFormCollection collection)
         {
+            var roleAction = checkRole();
+            if (roleAction != null)
+                return roleAction;
+
             try
             {
                 return RedirectToAction(nameof(Index));

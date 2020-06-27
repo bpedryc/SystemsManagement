@@ -20,8 +20,22 @@ namespace ProjectThesis.Controllers
             _context = context;
         }
 
+        private ActionResult checkRole()
+        {
+            var role = HttpContext.Session.GetString("UserRole");
+            if (role.Equals("student"))
+                return RedirectToAction("Index", "StudentHome");
+            else if (role.Equals("supervisor"))
+                return RedirectToAction("Index", "SupervisorHome");
+            return null;
+        }
+
         public ActionResult Index()
         {
+            var roleAction = checkRole();
+            if (roleAction != null)
+                return roleAction;
+
             var students = _context.Students
                 .Include(s => s.User)
                 .ToList();
@@ -30,6 +44,10 @@ namespace ProjectThesis.Controllers
 
         public ActionResult Create()
         {
+            var roleAction = checkRole();
+            if (roleAction != null)
+                return roleAction;
+
             return View();
         }
 
@@ -37,6 +55,10 @@ namespace ProjectThesis.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create(StudentViewModel model)
         {
+            var roleAction = checkRole();
+            if (roleAction != null)
+                return roleAction;
+
             if (!ModelState.IsValid)
             {
                 return View(model);
@@ -71,6 +93,10 @@ namespace ProjectThesis.Controllers
 
         public ActionResult Edit(int id)
         {
+            var roleAction = checkRole();
+            if (roleAction != null)
+                return roleAction;
+
             var student = _context.Students
                 .FirstOrDefault(s => s.Id == id);
             student.User = _context.Users
@@ -85,6 +111,10 @@ namespace ProjectThesis.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Edit(StudentViewModel viewModel)
         {
+            var roleAction = checkRole();
+            if (roleAction != null)
+                return roleAction;
+
             var enteredStudent = viewModel.Student;
             var enteredUser = viewModel.Student.User;
 
@@ -134,6 +164,10 @@ namespace ProjectThesis.Controllers
 
         public ActionResult Delete(int id)
         {
+            var roleAction = checkRole();
+            if (roleAction != null)
+                return roleAction;
+
             var student = _context.Students
                 .FirstOrDefault(s => s.Id == id);
             var user = new User {Id = student.UserId};

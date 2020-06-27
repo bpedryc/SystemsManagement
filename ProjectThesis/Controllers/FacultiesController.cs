@@ -16,6 +16,7 @@ namespace ProjectThesis.Controllers
         {
             _context = context;
         }
+
         public ActionResult GetAllFaculties()
         {
             var faculties = _context.Faculties
