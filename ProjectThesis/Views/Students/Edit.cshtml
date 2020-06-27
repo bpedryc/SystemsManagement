@@ -1,7 +1,6 @@
 ﻿@model ProjectThesis.ViewModels.StudentViewModel
-@{
-    Layout = "_AdminLayout";
-}
+@{ Layout = (string)ViewData["Layout"] ?? "_AdminHomeLayout"; }
+
 <script type="text/javascript" src="~/js/studentCreation.js"></script>
 
 <form asp-controller="Students" asp-action="Edit">
@@ -9,9 +8,9 @@
     <p class="text-danger">@ViewData["Message"]</p>
     <div class="row">
         <div class="col">
-            
-            <input type="hidden" asp-for="Student.Id" maxlength="10"/>
-            <input type="hidden" asp-for="Student.UserId" maxlength="10"/>
+
+            <input type="hidden" asp-for="Student.Id" maxlength="10" />
+            <input type="hidden" asp-for="Student.UserId" maxlength="10" />
 
             <label asp-for="Student.User.Email">E-mail</label>
             <input type="text" asp-for="Student.User.Email" class="form-control" maxlength="50">

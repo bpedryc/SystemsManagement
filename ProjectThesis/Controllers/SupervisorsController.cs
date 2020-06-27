@@ -20,6 +20,12 @@ namespace ProjectThesis.Controllers
         }
         public ActionResult Index()
         {
+            if (!AuthenticationController.IsUserAuthorized(HttpContext, AuthenticationController.UserRole.Admin))
+            {
+                return RedirectToAction("NotAuthorized", "Authentication");
+            }
+            ViewData["Layout"] = AuthenticationController.GetUserLayout(HttpContext);
+
             var supervisors = _context.Supervisors
                 .Include(s => s.User)
                 .Include(s => s.Faculty)
@@ -29,22 +35,13 @@ namespace ProjectThesis.Controllers
             return View(supervisors);
         }
 
-        private ActionResult checkRole()
-        {
-            var role = HttpContext.Session.GetString("UserRole");
-            if (role.Equals("student"))
-                return RedirectToAction("Index", "StudentHome");
-            else if (role.Equals("supervisor"))
-                return RedirectToAction("Index", "SupervisorHome");
-            return null;
-        }
-
         public ActionResult Create()
         {
-            var roleAction = checkRole();
-            if (roleAction != null)
-                return roleAction;
-
+            if (!AuthenticationController.IsUserAuthorized(HttpContext, AuthenticationController.UserRole.Admin))
+            {
+                return RedirectToAction("NotAuthorized", "Authentication");
+            }
+            ViewData["Layout"] = AuthenticationController.GetUserLayout(HttpContext);
             return View();
         }
 
@@ -52,9 +49,11 @@ namespace ProjectThesis.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create(Supervisor supervisor)
         {
-            var roleAction = checkRole();
-            if (roleAction != null)
-                return roleAction;
+            if (!AuthenticationController.IsUserAuthorized(HttpContext, AuthenticationController.UserRole.Admin))
+            {
+                return RedirectToAction("NotAuthorized", "Authentication");
+            }
+            ViewData["Layout"] = AuthenticationController.GetUserLayout(HttpContext);
 
             if (!ModelState.IsValid)
             {
@@ -74,15 +73,17 @@ namespace ProjectThesis.Controllers
                 transaction.Commit();
             }
             
-            return RedirectToAction("Index");
+            return RedirectToAction(nameof(Index));
         }
 
         [HttpGet]
         public ActionResult Edit(int id)
         {
-            var roleAction = checkRole();
-            if (roleAction != null)
-                return roleAction;
+            if (!AuthenticationController.IsUserAuthorized(HttpContext, AuthenticationController.UserRole.Admin))
+            {
+                return RedirectToAction("NotAuthorized", "Authentication");
+            }
+            ViewData["Layout"] = AuthenticationController.GetUserLayout(HttpContext);
 
             var supervisor = _context.Supervisors
                 .FirstOrDefault(s => s.Id == id);
@@ -97,9 +98,10 @@ namespace ProjectThesis.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Edit(Supervisor model)
         {
-            var roleAction = checkRole();
-            if (roleAction != null)
-                return roleAction;
+            if (!AuthenticationController.IsUserAuthorized(HttpContext, AuthenticationController.UserRole.Admin))
+            {
+                return RedirectToAction("NotAuthorized", "Authentication");
+            }
 
             var supervisor = _context.Supervisors
                 .FirstOrDefault(s => s.Id == model.Id);
@@ -118,7 +120,7 @@ namespace ProjectThesis.Controllers
             {
                 user.Email = model.User.Email;
             }
-            if (!String.IsNullOrWhiteSpace(model.User.Password))
+            if (!string.IsNullOrWhiteSpace(model.User.Password))
             {
                 user.Password = AuthenticationController.GetSha256FromString(model.User.Password);
             }
@@ -134,14 +136,15 @@ namespace ProjectThesis.Controllers
 
             _context.SaveChanges();
 
-            return RedirectToAction("Index");
+            return RedirectToAction(nameof(Index));
         }
 
         public ActionResult Delete(int id)
         {
-            var roleAction = checkRole();
-            if (roleAction != null)
-                return roleAction;
+            if (!AuthenticationController.IsUserAuthorized(HttpContext, AuthenticationController.UserRole.Admin))
+            {
+                return RedirectToAction("NotAuthorized", "Authentication");
+            }
 
             var supervisor =_context.Supervisors
                 .FirstOrDefault(s => s.Id == id);
@@ -152,7 +155,7 @@ namespace ProjectThesis.Controllers
             _context.Entry(user).State = EntityState.Deleted;
             _context.SaveChanges();
 
-            return RedirectToAction("Index");
+            return RedirectToAction(nameof(Index));
         }
     }
 }

@@ -1,49 +1,45 @@
 ﻿@model ICollection<Thesis>
-@{
-    Layout = "_AdminLayout";
-}
+@{ Layout = (string)ViewData["Layout"] ?? "_AdminHomeLayout"; }
 
 <table class="table">
     <thead>
-    <tr>
-        <th scope="col">Id</th>
-        <th scope="col">Tytuł</th>
-        <th scope="col">Stopień</th>
-        <th scope="col">Promotor</th>
-        <th scope="col" style="text-align: center;">Student</th>
-        <th scope="col">Wydział</th>
-        <th scope="col">Kierunek</th>
-    </tr>
-
-    @foreach (var thesis in Model)
-    {
         <tr>
-            <th scope="row" style="padding-bottom: 4.5em;">@thesis.Id</th>
-            <td>@thesis.Subject</td>
-            <td>
-                @if (thesis.DegreeCycle == 0)
-                {
-                    <span>I</span>
-                } else if (thesis.DegreeCycle == 1)
-                {
-                    <span>II</span>
-                }
-            </td>
-            <td>@thesis.Super.User.FirstName @thesis.Super.User.LastName</td>
-            <td style="text-align: center;">
-                @if (thesis.Student != null)
-                {
-                    
-                    @(string.Format("{0} {1}", @thesis.Student.User.FirstName, " "))
-                    @thesis.Student.User.LastName
-                   <a class="btn btn-danger" asp-controller="Theses" asp-action="RemoveStudent" asp-route-thesisId="@thesis.Id">Odsuń studenta</a>
-                @*<span>
-                    @thesis.Student.User.FirstName @thesis.Student.User.LastName <a class="btn btn-danger" asp-controller="Theses" asp-action="RemoveStudent" asp-route-thesisId="@thesis.Id">X</a>
-                </span>*@
-                }
-            </td>
-            <td>@thesis.Spec.Name</td>
-            <td>@thesis.Spec.Fac.Name</td>
+            <th scope="col">Id</th>
+            <th scope="col">Tytuł</th>
+            <th scope="col">Stopień</th>
+            <th scope="col">Promotor</th>
+            <th scope="col" style="text-align: center;">Student</th>
+            <th scope="col">Wydział</th>
+            <th scope="col">Kierunek</th>
         </tr>
-    }
+
+        @foreach (var thesis in Model)
+        {
+            <tr>
+                <th scope="row" style="padding-bottom: 2em;">@thesis.Id</th>
+                <td>@thesis.Subject</td>
+                <td>
+                    @if (thesis.DegreeCycle == 0)
+                    {
+                        <span>I</span>
+                    }
+                    else if (thesis.DegreeCycle == 1)
+                    {
+                        <span>II</span>
+                    }
+                </td>
+                <td>@thesis.Super.User.FirstName @thesis.Super.User.LastName</td>
+                <td style="text-align: center;">
+                    @if (thesis.Student != null)
+                    {
+                        <span>
+                            @thesis.Student.User.FirstName @thesis.Student.User.LastName
+                            <a class="btn btn-danger" asp-controller="Theses" asp-action="RemoveStudent" asp-route-thesisId="@thesis.Id">X</a>
+                        </span>
+                    }
+                </td>
+                <td>@thesis.Spec.Name</td>
+                <td>@thesis.Spec.Fac.Name</td>
+            </tr>
+        }
 </table>

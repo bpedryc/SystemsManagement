@@ -22,16 +22,6 @@ namespace ProjectThesis.Controllers
         {
             _context = context;
         }
-        private IActionResult checkRole()
-        {
-            var role = HttpContext.Session.GetString("UserRole");
-            if (role.Equals("admin"))
-                return RedirectToAction("Index", "AdminHome");
-            else if (role.Equals("student"))
-                return RedirectToAction("Index", "StudentsHome");
-            return null;
-        }
-
         public IActionResult Index()
         {
             int userId = int.Parse(HttpContext.Session.GetString("UserId"));
@@ -50,17 +40,17 @@ namespace ProjectThesis.Controllers
 
         public IActionResult Theses()
         {
-            var roleAction = checkRole();
-            if (roleAction != null)
-                return roleAction;
-
             var role = HttpContext.Session.GetString("UserRole");
             if (role.Equals("admin"))
                 return RedirectToAction("Index", "AdminHome");
             else if (role.Equals("student"))
                 return RedirectToAction("Index", "StudentHome");
+            if (!AuthenticationController.IsUserAuthorized(HttpContext, AuthenticationController.UserRole.Supervisor))
+            {
+                return RedirectToAction("NotAuthorized", "Authentication");
+            }
+            var userId = HttpContext.Session.GetInt32("UserId");
 
-            int userId = int.Parse(HttpContext.Session.GetString("UserId"));
             var super = _context.Supervisors
                 .FirstOrDefault(s => s.UserId == userId);
 
@@ -74,7 +64,7 @@ namespace ProjectThesis.Controllers
                 .Where(t => t.SuperId == super.Id && t.StudentId == null)
                 .ToList();
 
-            var specialitiesForSupervisor = from s in _context.Specialties
+            var specialtiesForSupervisor = from s in _context.Specialties
                                             join f in _context.Faculties on s.FacId equals f.Id
                                             where f.Id == super.FacultyId
                                             select new Specialty
@@ -83,17 +73,21 @@ namespace ProjectThesis.Controllers
                                                 Name = s.Name
                                             };
 
-            return View(new SupervisorPanelViewModel { Students = students, 
-                ThesesNotChosen = thesesNotChosen, SpecialitiesForSupervisor = specialitiesForSupervisor});
+            return View(new SupervisorPanelViewModel { 
+                Students = students, 
+                ThesesNotChosen = thesesNotChosen, 
+                SpecialitiesForSupervisor = specialtiesForSupervisor
+            });
         }
 
         public IActionResult removeThesis(int thesisId)
         {
-            var roleAction = checkRole();
-            if (roleAction != null)
-                return roleAction;
+            if (!AuthenticationController.IsUserAuthorized(HttpContext, AuthenticationController.UserRole.Supervisor))
+            {
+                return RedirectToAction("NotAuthorized", "Authentication");
+            }
 
-            var thes = _context.Theses.Where(t => t.Id == thesisId).First();
+            var thes = _context.Theses.FirstOrDefault(t => t.Id == thesisId);
             _context.Theses.Remove(thes);
             _context.SaveChanges();
             TempData["Success"] = "Temat został pomyślnie usunięty";
@@ -102,9 +96,10 @@ namespace ProjectThesis.Controllers
 
         public IActionResult changeThesis(string thesisSubject)
         {
-            var roleAction = checkRole();
-            if (roleAction != null)
-                return roleAction;
+            if (!AuthenticationController.IsUserAuthorized(HttpContext, AuthenticationController.UserRole.Supervisor))
+            {
+                return RedirectToAction("NotAuthorized", "Authentication");
+            }
 
             if (thesisSubject.Substring(thesisSubject.IndexOf(" ") + 1) == "")
             {
@@ -115,36 +110,34 @@ namespace ProjectThesis.Controllers
             var thesisId = int.Parse(thesisSubject.Substring(0, thesisSubject.IndexOf(" ")));
             thesisSubject = thesisSubject.Substring(thesisSubject.IndexOf(" ") + 1);
 
-            var thes = _context.Theses.Where(t => t.Id == thesisId).First();
+            var thes = _context.Theses.FirstOrDefault(t => t.Id == thesisId);
             thes.Subject = thesisSubject;
             _context.SaveChanges();
             TempData["Success"] = "Temat został pomyślnie zmieniony";
-            return RedirectToAction("Theses", "SupervisorHome");
+
+            return RedirectToAction(nameof(Index));
         }
 
         public IActionResult createThesis(string thesisSubjectCreate, int specialityType, int degreeCycle)
         {
-            var roleAction = checkRole();
-            if (roleAction != null)
-                return roleAction;
-           
-            Debug.WriteLine(thesisSubjectCreate + "j");
-
             if (String.IsNullOrEmpty(thesisSubjectCreate))
             {
                 TempData["Error"] = "Temat nie może być pusty";
                 return RedirectToAction("Theses", "SupervisorHome");
             }
 
-            var userId = int.Parse(HttpContext.Session.GetString("UserId"));
+            if (!AuthenticationController.IsUserAuthorized(HttpContext, AuthenticationController.UserRole.Supervisor))
+            {
+                return RedirectToAction("NotAuthorized", "Authentication");
+            }
+            var userId = HttpContext.Session.GetInt32("UserId");
 
             var sup = _context.Supervisors
-               .Where(s => s.UserId == userId)
-               .FirstOrDefault();
+                .FirstOrDefault(s => s.UserId == userId);
 
             var thes = new Thesis { Subject = thesisSubjectCreate, DegreeCycle = degreeCycle, 
                 SpecId = specialityType, SuperId = sup.Id, StudentId = null};
-            _context.Add<Thesis>(thes);
+            _context.Add(thes);
             _context.SaveChanges();
 
             TempData["Success"] = "Nowy temat został dodany";
@@ -153,9 +146,6 @@ namespace ProjectThesis.Controllers
 
         public IActionResult changePassword(string newPassword)
         {
-            var roleAction = checkRole();
-            if (roleAction != null)
-                return roleAction;
 
             var userId = int.Parse(HttpContext.Session.GetString("UserId"));
 
@@ -167,9 +157,7 @@ namespace ProjectThesis.Controllers
 
         public IActionResult changeEmail(string newEmail)
         {
-            var roleAction = checkRole();
-            if (roleAction != null)
-                return roleAction;
+
 
             var userId = int.Parse(HttpContext.Session.GetString("UserId"));
 
@@ -177,7 +165,7 @@ namespace ProjectThesis.Controllers
             us.Email = newEmail;
             _context.SaveChanges();
 
-            return RedirectToAction("Index", "SupervisorHome");
+            return RedirectToAction(nameof(Index));
         }
 
         private static string GetSha256FromString(string strData)

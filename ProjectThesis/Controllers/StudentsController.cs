@@ -20,21 +20,12 @@ namespace ProjectThesis.Controllers
             _context = context;
         }
 
-        private ActionResult checkRole()
-        {
-            var role = HttpContext.Session.GetString("UserRole");
-            if (role.Equals("student"))
-                return RedirectToAction("Index", "StudentHome");
-            else if (role.Equals("supervisor"))
-                return RedirectToAction("Index", "SupervisorHome");
-            return null;
-        }
-
         public ActionResult Index()
         {
-            var roleAction = checkRole();
-            if (roleAction != null)
-                return roleAction;
+            if (!AuthenticationController.IsUserAuthorized(HttpContext, AuthenticationController.UserRole.Admin))
+            {
+                return RedirectToAction("NotAuthorized", "Authentication");
+            }
 
             var students = _context.Students
                 .Include(s => s.User)
@@ -48,9 +39,11 @@ namespace ProjectThesis.Controllers
 
         public ActionResult Create()
         {
-            var roleAction = checkRole();
-            if (roleAction != null)
-                return roleAction;
+            if (!AuthenticationController.IsUserAuthorized(HttpContext, AuthenticationController.UserRole.Admin))
+            {
+                return RedirectToAction("NotAuthorized", "Authentication");
+            }
+            ViewData["Layout"] = AuthenticationController.GetUserLayout(HttpContext);
 
             return View();
         }
@@ -59,9 +52,11 @@ namespace ProjectThesis.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create(StudentViewModel model)
         {
-            var roleAction = checkRole();
-            if (roleAction != null)
-                return roleAction;
+            if (!AuthenticationController.IsUserAuthorized(HttpContext, AuthenticationController.UserRole.Admin))
+            {
+                return RedirectToAction("NotAuthorized", "Authentication");
+            }
+            ViewData["Layout"] = AuthenticationController.GetUserLayout(HttpContext);
 
             if (!ModelState.IsValid)
             {
@@ -92,14 +87,16 @@ namespace ProjectThesis.Controllers
 
                 transaction.Commit();
             }
-            return RedirectToAction("Index", "Students");
+            return RedirectToAction(nameof(Index));
         }
 
         public ActionResult Edit(int id)
         {
-            var roleAction = checkRole();
-            if (roleAction != null)
-                return roleAction;
+            if (!AuthenticationController.IsUserAuthorized(HttpContext, AuthenticationController.UserRole.Admin))
+            {
+                return RedirectToAction("NotAuthorized", "Authentication");
+            }
+            ViewData["Layout"] = AuthenticationController.GetUserLayout(HttpContext);
 
             var student = _context.Students
                 .FirstOrDefault(s => s.Id == id);
@@ -115,9 +112,11 @@ namespace ProjectThesis.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Edit(StudentViewModel viewModel)
         {
-            var roleAction = checkRole();
-            if (roleAction != null)
-                return roleAction;
+            if (!AuthenticationController.IsUserAuthorized(HttpContext, AuthenticationController.UserRole.Admin))
+            {
+                return RedirectToAction("NotAuthorized", "Authentication");
+            }
+            ViewData["Layout"] = AuthenticationController.GetUserLayout(HttpContext);
 
             var enteredStudent = viewModel.Student;
             var enteredUser = viewModel.Student.User;
@@ -163,14 +162,15 @@ namespace ProjectThesis.Controllers
             }
 
             _context.SaveChanges();
-            return RedirectToAction("Index", "Students");
+            return RedirectToAction(nameof(Index));
         }
 
         public ActionResult Delete(int id)
         {
-            var roleAction = checkRole();
-            if (roleAction != null)
-                return roleAction;
+            if (!AuthenticationController.IsUserAuthorized(HttpContext, AuthenticationController.UserRole.Admin))
+            {
+                return RedirectToAction("NotAuthorized", "Authentication");
+            }
 
             var student = _context.Students
                 .FirstOrDefault(s => s.Id == id);
