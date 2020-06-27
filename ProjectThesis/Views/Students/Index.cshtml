@@ -9,14 +9,16 @@
 
 <table class="table">
     <thead>
-    <tr>
-        <th scope="col">Id</th>
-        <th scope="col">Imię</th>
-        <th scope="col">Nazwisko</th>
-        <th scope="col">Email</th>
-        <th scope="col">Rok studiów</th>
-        <th scope="col">Numer albumu</th>
-    </tr>
+        <tr>
+            <th scope="col">Id</th>
+            <th scope="col">Imię</th>
+            <th scope="col">Nazwisko</th>
+            <th scope="col">Email</th>
+            <th scope="col">Rok studiów</th>
+            <th scope="col">Numer albumu</th>
+            <th scope="col">Wydział</th>
+            <th scope="col">Kierunek</th>
+        </tr>
     @foreach (var student in Model)
     {
         <tr>
@@ -28,8 +30,19 @@
             <td>@student.User.FirstName</td>
             <td>@student.User.LastName</td>
             <td>@student.User.Email</td>
-            <td>@student.DegreeCycle</td>
+            <td>
+                @if (student.DegreeCycle == 0)
+                {
+                    <span>I</span>
+                }
+                else if (student.DegreeCycle == 1)
+                {
+                    <span>II</span>
+                }
+            </td>
             <td>@student.StudentNo</td>
+            <td>@student.Specialty.Name</td>
+            <td>@student.Specialty.Fac.Name</td>
         </tr>
     }
 </table>
