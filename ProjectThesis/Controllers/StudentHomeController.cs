@@ -92,7 +92,6 @@ namespace ProjectThesis.Controllers
                                 .FirstOrDefault();
 
 
-            //<This is ugly>
             var supervisorsByStudentCounts = _context.Supervisors
                 .Where(s => s.FacultyId == facultyId)
                 .ToDictionary(s => s.Id, s => 0);
@@ -116,23 +115,11 @@ namespace ProjectThesis.Controllers
             {
                 supervisorsByStudentCounts[entry.SupervisorId] = entry.ThesisCount;
             }
-            //</This is ugly> - but works
-
-            //It may cause problems
-            /*var supers = _context.Supervisors
-                .Include(s => s.User)
-                .ToList();*/
 
             var supers = _context.Supervisors
-                .Where(s => s.FacultyId == facultyId)
+                .Where(s => s.FacultyId == facultyId && supervisorsByStudentCounts[s.Id] < s.StudentLimit)
                 .Include(s => s.User)
-                .Where(s => s.FacultyId == facultyId)
                 .ToList();
-
-            foreach (var ent in supers)
-            {
-                Debug.WriteLine(ent.Id);
-            }
 
             return View(new ThesesListViewModel
             {
@@ -199,11 +186,10 @@ namespace ProjectThesis.Controllers
             var userId = int.Parse(HttpContext.Session.GetString("UserId"));
 
             var stud = _context.Students
-                .Where(s => s.UserId == userId)
-                .FirstOrDefault();
+                .FirstOrDefault(s => s.UserId == userId);
 
-            var thes = new Thesis{Subject = thesisSubject, DegreeCycle = 0, SpecId = stud.SpecialtyId, SuperId = supersId, StudentId = stud.Id};
-            _context.Add<Thesis>(thes);
+            var thesis = new Thesis{Subject = thesisSubject, DegreeCycle = 0, SpecId = stud.SpecialtyId, SuperId = supersId, StudentId = stud.Id};
+            _context.Add(thesis);
             _context.SaveChanges();
             return RedirectToAction("Index", "StudentHome");
         }
@@ -216,8 +202,8 @@ namespace ProjectThesis.Controllers
 
             var userId = int.Parse(HttpContext.Session.GetString("UserId"));
 
-            var us = _context.Users.Where(u => u.Id == userId).First();
-            us.Password = GetSha256FromString(newPassword);
+            var user = _context.Users.FirstOrDefault(u => u.Id == userId);
+            user.Password = GetSha256FromString(newPassword);
             _context.SaveChanges();
             return RedirectToAction("Index", "StudentHome");
         }
@@ -230,7 +216,7 @@ namespace ProjectThesis.Controllers
 
             var userId = int.Parse(HttpContext.Session.GetString("UserId"));
 
-            var us = _context.Users.Where(u => u.Id == userId).First();
+            var us = _context.Users.First(u => u.Id == userId);
             us.Email = newEmail;
             _context.SaveChanges();
 

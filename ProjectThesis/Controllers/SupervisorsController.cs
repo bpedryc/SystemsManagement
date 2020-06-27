@@ -22,6 +22,9 @@ namespace ProjectThesis.Controllers
         {
             var supervisors = _context.Supervisors
                 .Include(s => s.User)
+                .Include(s => s.Faculty)
+                .OrderBy(s => s.Faculty.Name)
+                .ThenByDescending(s => s.StudentLimit)
                 .ToList();
             return View(supervisors);
         }

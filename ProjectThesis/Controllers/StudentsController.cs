@@ -12,7 +12,7 @@ using Remotion.Linq.Clauses;
 namespace ProjectThesis.Controllers
 {
     public class StudentsController : Controller
-    { 
+    {
         private readonly ThesisDbContext _context;
 
         public StudentsController(ThesisDbContext context)
@@ -38,6 +38,10 @@ namespace ProjectThesis.Controllers
 
             var students = _context.Students
                 .Include(s => s.User)
+                .Include(s => s.Specialty)
+                .Include(s => s.Specialty.Fac)
+                .OrderBy(s => s.Specialty.Fac.Name)
+                .ThenBy(s => s.Specialty.Name)
                 .ToList();
             return View(students);
         }

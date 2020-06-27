@@ -40,6 +40,9 @@ namespace ProjectThesis.Controllers
                 .Include(t => t.Student.User)
                 .Include(t => t.Spec)
                 .Include(t => t.Spec.Fac)
+                .OrderBy(t => (t.Student == null))
+                .ThenBy(t => t.Spec.Fac.Name)
+                .ThenBy(t => t.Spec.Name)
                 .ToList();
             return View(theses);
         }
