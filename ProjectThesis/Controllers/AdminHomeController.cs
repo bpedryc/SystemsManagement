@@ -11,11 +11,10 @@ namespace ProjectThesis.Controllers
     {
         public IActionResult Index()
         {
-            var role = HttpContext.Session.GetString("UserRole");
-            if(role.Equals("student"))
-                return RedirectToAction("Index", "StudentHome");
-            else if(role.Equals("supervisor"))
-                return RedirectToAction("Index", "SupervisorHome");
+            if (!AuthenticationController.IsUserAuthorized(HttpContext, AuthenticationController.UserRole.Admin))
+            {
+                return RedirectToAction("NotAuthorized", "Authentication");
+            }
 
             return View();
         }

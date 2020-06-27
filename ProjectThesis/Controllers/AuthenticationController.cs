@@ -24,8 +24,48 @@ namespace ProjectThesis.Controllers
 {
     public class AuthenticationController : Controller
     {
-        private readonly ThesisDbContext _context;
+        public enum UserRole
+        {
+            Student,
+            Supervisor,
+            Admin
+        }
 
+        public static Dictionary<UserRole, string> RoleToLayout = new Dictionary<UserRole, string> {
+            {UserRole.Student, "_StudentHomeLayout"},
+            {UserRole.Supervisor, "_SupervisorHomeLayout"},
+            {UserRole.Admin, "_AdminHomeLayout"}
+        };
+
+        private static UserRole? GetUserRole(HttpContext http)
+        {
+            int? userRoleRaw = http.Session.GetInt32("UserRole");
+            if (userRoleRaw == null || !Enum.IsDefined(typeof(UserRole), userRoleRaw))
+            {
+                return null;
+            }
+            return (UserRole)userRoleRaw;
+        }
+        public static bool IsUserAuthorized(HttpContext http, UserRole requiredRole)
+        {
+            UserRole? userRole = GetUserRole(http);
+            if (userRole == null || userRole != requiredRole)
+            {
+                return false;
+            }
+            return true;
+        }
+        public static string GetUserLayout(HttpContext http)
+        {
+            var userRole = GetUserRole(http);
+            if (userRole == null)
+            {
+                return null;
+            }
+            return RoleToLayout[(UserRole)userRole];
+        }
+
+        private readonly ThesisDbContext _context;
         public AuthenticationController(ThesisDbContext context)
         {
             _context = context;
@@ -40,8 +80,6 @@ namespace ProjectThesis.Controllers
         [HttpPost, ValidateAntiForgeryToken]
         public IActionResult Login(User user)
         {
-            // Another possibility would be to query user with provided email,
-            // then check hashed provided password against queried password
             if (user.Password == null || user.Email == null)
             {
                 ViewData["Message"] = "Nale¿y wpisaæ swoje dane!";
@@ -58,8 +96,8 @@ namespace ProjectThesis.Controllers
                     .FirstOrDefault(s => s.UserId == matchedUser.Id);
                 if (matchedStudent != null)
                 {
-                    HttpContext.Session.SetString("UserId", matchedUser.Id.ToString());
-                    HttpContext.Session.SetString("UserRole", "student");
+                    HttpContext.Session.SetInt32("UserId", matchedUser.Id);
+                    HttpContext.Session.SetInt32("UserRole", (int)AuthenticationController.UserRole.Student);
                     return RedirectToAction("Index", "StudentHome");
                 }
 
@@ -67,8 +105,8 @@ namespace ProjectThesis.Controllers
                     .FirstOrDefault(s => s.UserId == matchedUser.Id);
                 if (matchedSupervisor != null)
                 {
-                    HttpContext.Session.SetString("UserId", matchedUser.Id.ToString());
-                    HttpContext.Session.SetString("UserRole", "supervisor");
+                    HttpContext.Session.SetInt32("UserId", matchedUser.Id);
+                    HttpContext.Session.SetInt32("UserRole", (int)AuthenticationController.UserRole.Supervisor);
                     return RedirectToAction("Index", "SupervisorHome");
                 }
 
@@ -76,8 +114,8 @@ namespace ProjectThesis.Controllers
                     .FirstOrDefault(a => a.UserId == matchedUser.Id);
                 if (matchedAdmin != null)
                 {
-                    HttpContext.Session.SetString("UserId", matchedUser.Id.ToString());
-                    HttpContext.Session.SetString("UserRole", "admin");
+                    HttpContext.Session.SetInt32("UserId", matchedUser.Id);
+                    HttpContext.Session.SetInt32("UserRole", (int)AuthenticationController.UserRole.Admin);
                     return RedirectToAction("Index", "AdminHome");
                 }
 
@@ -138,6 +176,18 @@ namespace ProjectThesis.Controllers
             HttpContext.Session.Remove("UserId");
             HttpContext.Session.Remove("UserRole");
             return RedirectToAction("Login", "Authentication");
+        }
+
+        public IActionResult NotAuthorized()
+        {
+            UserRole? role = GetUserRole(HttpContext);
+            if (role == null)
+            {
+                return View();
+            }
+            ViewData["Layout"] = RoleToLayout[(UserRole)role];
+
+            return View();
         }
 
         [HttpGet]

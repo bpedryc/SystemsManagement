@@ -1,57 +1,56 @@
 ﻿@model ProjectThesis.ViewModels.StudentViewModel
-@{
-    Layout = "_AdminLayout";
-}
-    <script type="text/javascript" src="~/js/studentCreation.js"></script>
+@{ Layout = (string)ViewData["Layout"] ?? "_AdminHomeLayout"; }
 
-    <form asp-controller="Students" asp-action="Create">
+<script type="text/javascript" src="~/js/studentCreation.js"></script>
 
-        <p class="text-danger">@ViewData["Message"]</p>
-        <div class="row">
-            <div class="col">
-                <label asp-for="Student.User.Email">E-mail</label>
-                <input required type="text" asp-for="Student.User.Email" class="form-control" maxlength="50">
-                <div class="text-danger">@Html.ValidationMessage("Student.User.Email")</div>
+<form asp-controller="Students" asp-action="Create">
 
-                <label asp-for="Student.User.Password">Hasło</label>
-                <input required type="password" asp-for="Student.User.Password" class="form-control" aria-describedby="passwordHelp" maxlength="30">
-                <div class="text-danger">@Html.ValidationMessage("Student.User.Password")</div>
+    <p class="text-danger">@ViewData["Message"]</p>
+    <div class="row">
+        <div class="col">
+            <label asp-for="Student.User.Email">E-mail</label>
+            <input required type="text" asp-for="Student.User.Email" class="form-control" maxlength="50">
+            <div class="text-danger">@Html.ValidationMessage("Student.User.Email")</div>
 
-                <label>Powtórz hasło</label>
-                <input required type="password" name="ConfirmPassword" class="form-control" aria-describedby="passwordHelp" maxlength="30">
-                <div class="text-danger">@Html.ValidationMessage("ConfirmPassword")</div>
+            <label asp-for="Student.User.Password">Hasło</label>
+            <input required type="password" asp-for="Student.User.Password" class="form-control" aria-describedby="passwordHelp" maxlength="30">
+            <div class="text-danger">@Html.ValidationMessage("Student.User.Password")</div>
 
-                <label asp-for="Student.User.FirstName">Imię</label>
-                <input required type="text" asp-for="Student.User.FirstName" class="form-control" maxlength="30">
-                <div class="text-danger">@Html.ValidationMessage("Student.User.FirstName")</div>
+            <label>Powtórz hasło</label>
+            <input required type="password" name="ConfirmPassword" class="form-control" aria-describedby="passwordHelp" maxlength="30">
+            <div class="text-danger">@Html.ValidationMessage("ConfirmPassword")</div>
 
-                <label asp-for="Student.User.LastName">Nazwisko</label>
-                <input required type="text" asp-for="Student.User.LastName" class="form-control" maxlength="30">
-                <div class="text-danger">@Html.ValidationMessage("Student.User.LastName")</div>
-            </div>
-            <div class="col">
-                <label asp-for="Student.StudentNo">Nr albumu</label>
-                <input required type="text" asp-for="Student.StudentNo" class="form-control" maxlength="10">
-                <div class="text-danger">@Html.ValidationMessage("Student.StudentNo")</div>
+            <label asp-for="Student.User.FirstName">Imię</label>
+            <input required type="text" asp-for="Student.User.FirstName" class="form-control" maxlength="30">
+            <div class="text-danger">@Html.ValidationMessage("Student.User.FirstName")</div>
 
-                <label asp-for="Student.DegreeCycle">Stopień studiów</label>
-                <select required asp-for="Student.DegreeCycle" class="form-control">
-                    <option value="0">I</option>
-                    <option value="1">II</option>
-                </select>
-                <div class="text-danger">@Html.ValidationMessage("Student.DegreeCycle")</div>
-
-                <label for="Faculties">Wydział</label>
-                <select name="faculties" id="Faculties" class="form-control" onchange="javascript: GetSpecialties(this.value);">
-                    <option value="" selected disabled hidden>-- Wybierz wydział --</option>
-                </select>
-
-                <label asp-for="Student.SpecialtyId">Kierunek</label>
-                <select required asp-for="Student.SpecialtyId" class="form-control">
-                </select>
-                <div class="text-danger">@Html.ValidationMessage("Student.Specialty")</div>
-
-                <button type="submit" style="width: 100%; margin-left: 0; margin-top: 2.05em;" class="btn btn-primary">Stwórz</button>
-            </div>
+            <label asp-for="Student.User.LastName">Nazwisko</label>
+            <input required type="text" asp-for="Student.User.LastName" class="form-control" maxlength="30">
+            <div class="text-danger">@Html.ValidationMessage("Student.User.LastName")</div>
         </div>
-    </form>
+        <div class="col">
+            <label asp-for="Student.StudentNo">Nr albumu</label>
+            <input required type="text" asp-for="Student.StudentNo" class="form-control" maxlength="10">
+            <div class="text-danger">@Html.ValidationMessage("Student.StudentNo")</div>
+
+            <label asp-for="Student.DegreeCycle">Stopień studiów</label>
+            <select required asp-for="Student.DegreeCycle" class="form-control">
+                <option value="0">I</option>
+                <option value="1">II</option>
+            </select>
+            <div class="text-danger">@Html.ValidationMessage("Student.DegreeCycle")</div>
+
+            <label for="Faculties">Wydział</label>
+            <select name="faculties" id="Faculties" class="form-control" onchange="javascript: GetSpecialties(this.value);">
+                <option value="" selected disabled hidden>-- Wybierz wydział --</option>
+            </select>
+
+            <label asp-for="Student.SpecialtyId">Kierunek</label>
+            <select required asp-for="Student.SpecialtyId" class="form-control">
+            </select>
+            <div class="text-danger">@Html.ValidationMessage("Student.Specialty")</div>
+
+            <button type="submit" style="width: 100%; margin-left: 0; margin-top: 2.05em;" class="btn btn-primary">Stwórz</button>
+        </div>
+    </div>
+</form>

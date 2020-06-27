@@ -1,7 +1,5 @@
 ﻿@model ICollection<Student>
-@{
-    Layout = "_AdminLayout";
-}
+@{ Layout = (string)ViewData["Layout"] ?? "_AdminHomeLayout"; }
 
 <div class="row mt-2">
     <a class="col-12 col-md-8 col-lg-6 btn btn-success" asp-controller="Students" asp-action="Create" style="margin-bottom: 0.5rem;">Dodaj nowego studenta</a>
@@ -19,30 +17,30 @@
             <th scope="col">Wydział</th>
             <th scope="col">Kierunek</th>
         </tr>
-    @foreach (var student in Model)
-    {
-        <tr>
-            <th scope="row" style="display: flex;">
-                <div style="padding-top: 0.4em; min-width: 20%;">@student.Id</div>
-                <a class="btn btn-warning" asp-controller="Students" asp-action="Edit" asp-route-id="@student.Id" style="margin-right: 5px;"><i class="fa fa-pencil-square-o"></i></a>
-                <a class="btn btn-danger" asp-controller="Students" asp-action="Delete" asp-route-id="@student.Id"><i class="fas fa-trash-alt"></i></a>
-            </th>
-            <td>@student.User.FirstName</td>
-            <td>@student.User.LastName</td>
-            <td>@student.User.Email</td>
-            <td>
-                @if (student.DegreeCycle == 0)
-                {
-                    <span>I</span>
-                }
-                else if (student.DegreeCycle == 1)
-                {
-                    <span>II</span>
-                }
-            </td>
-            <td>@student.StudentNo</td>
-            <td>@student.Specialty.Name</td>
-            <td>@student.Specialty.Fac.Name</td>
-        </tr>
-    }
+        @foreach (var student in Model)
+        {
+            <tr>
+                <th scope="row" style="display: flex;">
+                    <div style="padding-top: 0.4em; min-width: 20%;">@student.Id</div>
+                    <a class="btn btn-warning" asp-controller="Students" asp-action="Edit" asp-route-id="@student.Id" style="margin-right: 5px;"><i class="fa fa-pencil-square-o"></i></a>
+                    <a class="btn btn-danger" asp-controller="Students" asp-action="Delete" asp-route-id="@student.Id"><i class="fas fa-trash-alt"></i></a>
+                </th>
+                <td>@student.User.FirstName</td>
+                <td>@student.User.LastName</td>
+                <td>@student.User.Email</td>
+                <td>
+                    @if (student.DegreeCycle == 0)
+                    {
+                        <span>I</span>
+                    }
+                    else if (student.DegreeCycle == 1)
+                    {
+                        <span>II</span>
+                    }
+                </td>
+                <td>@student.StudentNo</td>
+                <td>@student.Specialty.Name</td>
+                <td>@student.Specialty.Fac.Name</td>
+            </tr>
+        }
 </table>

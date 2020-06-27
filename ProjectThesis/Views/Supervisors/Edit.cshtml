@@ -1,49 +1,48 @@
 ﻿@model ProjectThesis.Models.Supervisor;
-@{
-    Layout = "_AdminLayout";
-}
-    <script type="text/javascript" src="~/js/supervisorCreation.js"></script>
+@{ Layout = (string)ViewData["Layout"] ?? "_AdminHomeLayout"; }
 
-    <form asp-controller="Supervisors" asp-action="Edit">
+<script type="text/javascript" src="~/js/supervisorCreation.js"></script>
 
-        <p class="text-danger">@ViewData["Message"]</p>
-        <div class="row">
+<form asp-controller="Supervisors" asp-action="Edit">
 
-            <input type="hidden" asp-for="Id" maxlength="10"/>
-            <input type="hidden" asp-for="UserId" maxlength="10"/>
+    <p class="text-danger">@ViewData["Message"]</p>
+    <div class="row">
 
-            <div class="col">
-                <label asp-for="User.Email">E-mail</label>
-                <input required type="text" asp-for="User.Email" class="form-control" maxlength="50">
-                <div class="text-danger">@Html.ValidationMessage("Student.User.Email")</div>
+        <input type="hidden" asp-for="Id" maxlength="10" />
+        <input type="hidden" asp-for="UserId" maxlength="10" />
 
-                <label asp-for="User.Password">Hasło</label>
-                <input type="password" asp-for="User.Password" class="form-control" aria-describedby="passwordHelp" maxlength="30">
-                <div class="text-danger">@Html.ValidationMessage("Student.User.Password")</div>
+        <div class="col">
+            <label asp-for="User.Email">E-mail</label>
+            <input required type="text" asp-for="User.Email" class="form-control" maxlength="50">
+            <div class="text-danger">@Html.ValidationMessage("Student.User.Email")</div>
 
-                <label asp-for="User.FirstName">Imię</label>
-                <input required type="text" asp-for="User.FirstName" class="form-control" maxlength="30">
-                <div class="text-danger">@Html.ValidationMessage("Student.User.FirstName")</div>
+            <label asp-for="User.Password">Hasło</label>
+            <input type="password" asp-for="User.Password" class="form-control" aria-describedby="passwordHelp" maxlength="30">
+            <div class="text-danger">@Html.ValidationMessage("Student.User.Password")</div>
 
-                <label asp-for="User.LastName">Nazwisko</label>
-                <input required type="text" asp-for="User.LastName" class="form-control" maxlength="30">
-                <div class="text-danger">@Html.ValidationMessage("Student.User.LastName")</div>
-            </div>
-            <div class="col">
-                <label asp-for="FacultyId">Wydział</label>
-                <select required asp-for="FacultyId" class="form-control">
-                    <option value="" selected disabled hidden>-- Wybierz wydział --</option>
-                </select>
-                <div class="text-danger">@Html.ValidationMessage("FacultyId")</div>
+            <label asp-for="User.FirstName">Imię</label>
+            <input required type="text" asp-for="User.FirstName" class="form-control" maxlength="30">
+            <div class="text-danger">@Html.ValidationMessage("Student.User.FirstName")</div>
 
-                <label asp-for="StudentLimit">Limit studentów</label>
-                <input type="text" asp-for="StudentLimit" class="form-control" maxlength="3"/>
-                <div class="text-danger">@Html.ValidationMessage("StudentLimit")</div>
-
-                <button type="submit" style="width: 100%; margin-left: 0; margin-top: 2.05em;" class="btn btn-primary">Edytuj</button>
-            </div>
+            <label asp-for="User.LastName">Nazwisko</label>
+            <input required type="text" asp-for="User.LastName" class="form-control" maxlength="30">
+            <div class="text-danger">@Html.ValidationMessage("Student.User.LastName")</div>
         </div>
-    </form>
+        <div class="col">
+            <label asp-for="FacultyId">Wydział</label>
+            <select required asp-for="FacultyId" class="form-control">
+                <option value="" selected disabled hidden>-- Wybierz wydział --</option>
+            </select>
+            <div class="text-danger">@Html.ValidationMessage("FacultyId")</div>
+
+            <label asp-for="StudentLimit">Limit studentów</label>
+            <input type="text" asp-for="StudentLimit" class="form-control" maxlength="3" />
+            <div class="text-danger">@Html.ValidationMessage("StudentLimit")</div>
+
+            <button type="submit" style="width: 100%; margin-left: 0; margin-top: 2.05em;" class="btn btn-primary">Edytuj</button>
+        </div>
+    </div>
+</form>
 
 <script type="text/javascript">
     $(document).ready(function () {

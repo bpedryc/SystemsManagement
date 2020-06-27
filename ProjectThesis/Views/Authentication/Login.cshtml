@@ -1,7 +1,6 @@
-﻿@model ProjectThesis.Models.User; 
-@{
-    Layout = "AuthenticationLayout";
-}
+﻿@model ProjectThesis.Models.User;
+@{ Layout = (string)ViewData["Layout"] ?? "_AuthenticationLayout"; }
+
 <h1>Witaj w systemie rezerwacji prac dyplomowych</h1>
 <p>Zaloguj się, aby móc korzystać z systemu</p>
 <p class="text-danger">@ViewData["Message"]</p>
