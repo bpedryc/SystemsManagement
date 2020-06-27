@@ -18,7 +18,7 @@
     @foreach (var thesis in Model)
     {
         <tr>
-            <th scope="row" style="padding-bottom: 2em;">@thesis.Id</th>
+            <th scope="row" style="padding-bottom: 4.5em;">@thesis.Id</th>
             <td>@thesis.Subject</td>
             <td>
                 @if (thesis.DegreeCycle == 0)
@@ -36,10 +36,10 @@
                     
                     @(string.Format("{0} {1}", @thesis.Student.User.FirstName, " "))
                     @thesis.Student.User.LastName
-                    <a class="btn btn-danger" asp-controller="Theses" asp-action="RemoveStudent" asp-route-thesisId="@thesis.Id">Odsuń studenta</a>
-                <span>
+                   <a class="btn btn-danger" asp-controller="Theses" asp-action="RemoveStudent" asp-route-thesisId="@thesis.Id">Odsuń studenta</a>
+                @*<span>
                     @thesis.Student.User.FirstName @thesis.Student.User.LastName <a class="btn btn-danger" asp-controller="Theses" asp-action="RemoveStudent" asp-route-thesisId="@thesis.Id">X</a>
-                </span>
+                </span>*@
                 }
             </td>
             <td>@thesis.Spec.Name</td>

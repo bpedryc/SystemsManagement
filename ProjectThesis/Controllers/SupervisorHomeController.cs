@@ -98,7 +98,7 @@ namespace ProjectThesis.Controllers
             return RedirectToAction("Index", "SupervisorHome");
         }
 
-        public IActionResult createThesis(string thesisSubjectCreate, int specialityType)
+        public IActionResult createThesis(string thesisSubjectCreate, int specialityType, int degreeCycle)
         {
             var roleAction = checkRole();
             if (roleAction != null)
@@ -110,7 +110,7 @@ namespace ProjectThesis.Controllers
                .Where(s => s.UserId == userId)
                .FirstOrDefault();
 
-            var thes = new Thesis { Subject = thesisSubjectCreate, DegreeCycle = 0, 
+            var thes = new Thesis { Subject = thesisSubjectCreate, DegreeCycle = degreeCycle, 
                 SpecId = specialityType, SuperId = sup.Id, StudentId = null};
             _context.Add<Thesis>(thes);
             _context.SaveChanges();

@@ -15,13 +15,17 @@
         <div class="form-group">
             <input require type="text" name="thesisSubjectCreate" class="form-control" style="width: 70%;" maxlength="150">
             <div style="display: flex; flex-direction: row; margin-top: 1em;">
-                <select class="custom-select" name="specialityType" style="width: 30%;"> 
+                <select class="custom-select" name="specialityType" style="width: 30%;">
                     @foreach (var speciality in Model.SpecialitiesForSupervisor)
                     {
                         <option value=@speciality.Id>@speciality.Name</option>
                     }
                 </select>
-                <button type="button" id="create-thesis-button" data-toggle="modal" data-target="#confirm-creating-subject" class="btn btn-primary" style="margin-left: 0.7rem;">Dodaj nowy temat</button>
+                <select class="custom-select" name="degreeCycle" style="width: 10%; margin-left: 0.7rem;">
+                    <option value="0">I</option>
+                    <option value="1">II</option>
+                </select>
+                    <button type="button" id="create-thesis-button" data-toggle="modal" data-target="#confirm-creating-subject" class="btn btn-primary" style="margin-left: 0.7rem;">Dodaj nowy temat</button>
             </div>
         </div>
     </form>

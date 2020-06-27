@@ -76,6 +76,7 @@ namespace ProjectThesis.Controllers
 
             var chosenThesis = _context.Theses
                 .FirstOrDefault(t => t.StudentId == loggedStudent.Id);
+
             if (chosenThesis != null)
             {
                 TempData["Error"] = "Wybrałeś już temat pracy! W razie problemów skontaktuj się ze swoim promotorem.";
@@ -188,7 +189,7 @@ namespace ProjectThesis.Controllers
             var stud = _context.Students
                 .FirstOrDefault(s => s.UserId == userId);
 
-            var thesis = new Thesis{Subject = thesisSubject, DegreeCycle = 0, SpecId = stud.SpecialtyId, SuperId = supersId, StudentId = stud.Id};
+            var thesis = new Thesis{Subject = thesisSubject, DegreeCycle = stud.DegreeCycle, SpecId = stud.SpecialtyId, SuperId = supersId, StudentId = stud.Id};
             _context.Add(thesis);
             _context.SaveChanges();
             return RedirectToAction("Index", "StudentHome");
