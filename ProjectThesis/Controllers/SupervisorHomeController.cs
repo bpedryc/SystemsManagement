@@ -88,7 +88,7 @@ namespace ProjectThesis.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        public IActionResult createThesis(string thesisSubjectCreate, int specialityType)
+        public IActionResult createThesis(string thesisSubjectCreate, int specialityType, int degreeCycle)
         {
             if (!AuthenticationController.IsUserAuthorized(HttpContext, AuthenticationController.UserRole.Supervisor))
             {
@@ -99,7 +99,7 @@ namespace ProjectThesis.Controllers
             var sup = _context.Supervisors
                 .FirstOrDefault(s => s.UserId == userId);
 
-            var thes = new Thesis { Subject = thesisSubjectCreate, DegreeCycle = 0, 
+            var thes = new Thesis { Subject = thesisSubjectCreate, DegreeCycle = degreeCycle, 
                 SpecId = specialityType, SuperId = sup.Id, StudentId = null};
             _context.Add(thes);
             _context.SaveChanges();
