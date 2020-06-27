@@ -9,7 +9,7 @@
         <p class="text-success text-center">@TempData["Success"]</p>
     </div>
     <div class="col-sm-3">
-        <h4>Imie</h4>
+        <h4>Imię</h4>
         <h4>Nazwisko</h4>
         <h4>E-mail</h4>
         <h4>Nralbumu</h4>
@@ -33,15 +33,15 @@
         <button type="button" class="btn btn-primary" id="change-password" value="0">Zmień hasło</button>
         <form asp-controller="StudentHome" asp-action="changePassword" id="changePasswordForm" style="margin-top:1em; margin-bottom: 1em; display: none;">
             <div class="form-group" id="form-group-password">
-                <input require type="password" maxlength="30" id="password-1" name="newPassword" class="form-control" style="width: 50%; margin-bottom: 0.3em;">
-                <input require type="password" maxlength="30" id="password-2" class="form-control" style="width: 50%; margin-bottom: 0.3em;">
+                <input required type="password" maxlength="30" id="password-1" name="newPassword" class="form-control" style="width: 50%; margin-bottom: 0.3em;">
+                <input required type="password" maxlength="30" id="password-2" class="form-control" style="width: 50%; margin-bottom: 0.3em;">
                 <button type="button" class="btn btn-secondary" id="confirm-change-password" style="width: 50%;">Zatwierdź</button>
             </div>
         </form>
         <button type="button" class="btn btn-primary" id="change-email" value="0">Zmień e-mail</button>
         <form asp-controller="StudentHome" asp-action="changeEmail" id="changeEmailForm" style="margin-top:1em; margin-bottom: 1em; display: none;">
             <div class="form-group">
-                <input require type="text" maxlength="50" name="newEmail" class="form-control" style="width: 50%; margin-bottom: 0.3em;">
+                <input required type="text" maxlength="50" name="newEmail" class="form-control" style="width: 50%; margin-bottom: 0.3em;">
                 <button type="submit" class="btn btn-secondary" id="confirm-change-email" style="width: 50%;">Zatwierdź</button>
             </div>
         </form>
@@ -62,12 +62,11 @@
     });
 
     $('#confirm-change-password').click(function () {
-        if ($('#password-1').val() === $('#password-2').val()) {
+        if ($('#password-1').val() === $('#password-2').val() && $('#password-1').val() != "")
             $('#changePasswordForm').submit();
-        }
-        else {
-            $('<div style="text-align: center; width: 50%; margin-top: 0.3em;"><p style="color: crimson;">Hasła są różne</p></div>').insertBefore('#form-group-password');
-        }
+        else
+            if ($('#error-message-div').length == 0)
+                $('<div id="error-message-div" style="text-align: center; width: 50%; margin-top: 0.3em;"><p style="color: crimson;">Popraw dane</p></div>').insertBefore('#form-group-password');
     });
 
     $('#change-email').click(function () {

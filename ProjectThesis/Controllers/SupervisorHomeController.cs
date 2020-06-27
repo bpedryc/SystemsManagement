@@ -9,6 +9,8 @@ using System.Diagnostics;
 using ProjectThesis.Models;
 using ProjectThesis.ViewModels;
 using System.Runtime.InteropServices.ComTypes;
+using System.Text;
+using System.Security.Cryptography;
 
 namespace ProjectThesis.Controllers
 {
@@ -31,6 +33,22 @@ namespace ProjectThesis.Controllers
         }
 
         public IActionResult Index()
+        {
+            int userId = int.Parse(HttpContext.Session.GetString("UserId"));
+
+            var user = _context.Users
+                .FirstOrDefault(u => (u.Id == userId));
+
+            var supervisor = _context.Supervisors
+                .FirstOrDefault(s => (s.UserId == userId));
+
+            var faculty = _context.Faculties
+                .FirstOrDefault(f => (f.Id == supervisor.FacultyId));
+
+            return View(new SupervisorViewModel { User = user, Faculty = faculty});
+        }
+
+        public IActionResult Theses()
         {
             var roleAction = checkRole();
             if (roleAction != null)
@@ -79,7 +97,7 @@ namespace ProjectThesis.Controllers
             _context.Theses.Remove(thes);
             _context.SaveChanges();
             TempData["Success"] = "Temat został pomyślnie usunięty";
-            return RedirectToAction("Index", "SupervisorHome");
+            return RedirectToAction("Theses", "SupervisorHome");
         }
 
         public IActionResult changeThesis(string thesisSubject)
@@ -88,6 +106,12 @@ namespace ProjectThesis.Controllers
             if (roleAction != null)
                 return roleAction;
 
+            if (thesisSubject.Substring(thesisSubject.IndexOf(" ") + 1) == "")
+            {
+                TempData["Error"] = "Temat nie może być pusty";
+                return RedirectToAction("Theses", "SupervisorHome");
+            }
+
             var thesisId = int.Parse(thesisSubject.Substring(0, thesisSubject.IndexOf(" ")));
             thesisSubject = thesisSubject.Substring(thesisSubject.IndexOf(" ") + 1);
 
@@ -95,7 +119,7 @@ namespace ProjectThesis.Controllers
             thes.Subject = thesisSubject;
             _context.SaveChanges();
             TempData["Success"] = "Temat został pomyślnie zmieniony";
-            return RedirectToAction("Index", "SupervisorHome");
+            return RedirectToAction("Theses", "SupervisorHome");
         }
 
         public IActionResult createThesis(string thesisSubjectCreate, int specialityType, int degreeCycle)
@@ -103,6 +127,14 @@ namespace ProjectThesis.Controllers
             var roleAction = checkRole();
             if (roleAction != null)
                 return roleAction;
+           
+            Debug.WriteLine(thesisSubjectCreate + "j");
+
+            if (String.IsNullOrEmpty(thesisSubjectCreate))
+            {
+                TempData["Error"] = "Temat nie może być pusty";
+                return RedirectToAction("Theses", "SupervisorHome");
+            }
 
             var userId = int.Parse(HttpContext.Session.GetString("UserId"));
 
@@ -116,7 +148,50 @@ namespace ProjectThesis.Controllers
             _context.SaveChanges();
 
             TempData["Success"] = "Nowy temat został dodany";
+            return RedirectToAction("Theses", "SupervisorHome");
+        }
+
+        public IActionResult changePassword(string newPassword)
+        {
+            var roleAction = checkRole();
+            if (roleAction != null)
+                return roleAction;
+
+            var userId = int.Parse(HttpContext.Session.GetString("UserId"));
+
+            var user = _context.Users.FirstOrDefault(u => u.Id == userId);
+            user.Password = GetSha256FromString(newPassword);
+            _context.SaveChanges();
             return RedirectToAction("Index", "SupervisorHome");
+        }
+
+        public IActionResult changeEmail(string newEmail)
+        {
+            var roleAction = checkRole();
+            if (roleAction != null)
+                return roleAction;
+
+            var userId = int.Parse(HttpContext.Session.GetString("UserId"));
+
+            var us = _context.Users.First(u => u.Id == userId);
+            us.Email = newEmail;
+            _context.SaveChanges();
+
+            return RedirectToAction("Index", "SupervisorHome");
+        }
+
+        private static string GetSha256FromString(string strData)
+        {
+            byte[] strBytes = Encoding.UTF8.GetBytes(strData);
+            var sha = new SHA256Managed();
+            var hash = new StringBuilder();
+
+            byte[] hashBytes = sha.ComputeHash(strBytes);
+            foreach (byte hashByte in hashBytes)
+            {
+                hash.Append($"{hashByte:x2}");
+            }
+            return hash.ToString();
         }
     }
 }

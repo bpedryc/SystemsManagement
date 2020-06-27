@@ -1,171 +1,73 @@
-﻿@model ProjectThesis.ViewModels.SupervisorPanelViewModel
+﻿@model ProjectThesis.ViewModels.SupervisorViewModel;
 @{
-    ViewData["Title"] = "HomeSupervisor";
+    ViewData["Title"] = "Strona główna";
     Layout = "_SupervisorHomeLayout";
 }
-
-<div class="row">
-    <div class="col-12">
-        <p class="text-danger text-center">@TempData["Error"]</p>
-        <p class="text-success text-center">@TempData["Success"]</p>
-    </div>
-</div>
-
-    <form asp-controller="SupervisorHome" asp-action="createThesis" id="createThesisForm" style="margin-top:1em; margin-bottom: 2em;">
-        <div class="form-group">
-            <input require type="text" name="thesisSubjectCreate" class="form-control" style="width: 70%;" maxlength="150">
-            <div style="display: flex; flex-direction: row; margin-top: 1em;">
-                <select class="custom-select" name="specialityType" style="width: 30%;">
-                    @foreach (var speciality in Model.SpecialitiesForSupervisor)
-                    {
-                        <option value=@speciality.Id>@speciality.Name</option>
-                    }
-                </select>
-                <select class="custom-select" name="degreeCycle" style="width: 10%; margin-left: 0.7rem;">
-                    <option value="0">I</option>
-                    <option value="1">II</option>
-                </select>
-                    <button type="button" id="create-thesis-button" data-toggle="modal" data-target="#confirm-creating-subject" class="btn btn-primary" style="margin-left: 0.7rem;">Dodaj nowy temat</button>
-            </div>
+    <div class="row">
+        <div class="col-12">
+            <p class="text-danger text-center">@TempData["Error"]</p>
+            <p class="text-success text-center">@TempData["Success"]</p>
         </div>
-    </form>
-
-    <div id="thesisList" style="width: 100%; height: 100%">
-        @foreach (var student in Model.Students)
-        {
-            <h3>@student.ChosenThesis.Subject</h3>
-            <p style="margin-bottom: 1em;">@student.User.FirstName @student.User.LastName @student.User.Email @student.StudentNo</p>
-        }
-        <br/>
-        @foreach (var thesis in Model.ThesesNotChosen)
-        {
-            <form asp-controller="SupervisorHome" asp-action="removeThesis" id="RemoveThesisForm">
-                <div class="form-group">
-                    <h4 id="@("h4" + @thesis.Id)">@thesis.Subject</h4>
-                    <button type="button" id="remove-thesis-button" value=@thesis.Id onclick="removeThesis(this.value)" data-toggle="modal" data-target="#confirm-removing-subject" class="btn btn-danger">Usuń temat</button>
-                    <button type="button" id=@thesis.Id onclick="changeThesis(this.id)" class="btn btn-primary">Edytuj temat</button>
+        <div class="col-sm-3">
+            <h4>Imię</h4>
+            <h4>Nazwisko</h4>
+            <h4>E-mail</h4>
+        </div>
+        <div class="col-sm">
+            <p>@Html.DisplayFor(model => model.User.FirstName)<p>
+            <p>@Html.DisplayFor(model => model.User.LastName)</p>
+            <p>@Html.DisplayFor(model => model.User.Email)</p>
+        </div>
+        <h4>@Html.DisplayFor(model => model.Faculty.Name)</h4>
+        <div id="change-buttons">
+            <button type="button" class="btn btn-primary" id="change-password" value="0">Zmień hasło</button>
+            <form asp-controller="SupervisorHome" asp-action="changePassword" id="changePasswordForm" style="margin-top:1em; margin-bottom: 1em; display: none;">
+                <div class="form-group" id="form-group-password">
+                    <input required type="password" maxlength="30" id="password-1" name="newPassword" class="form-control" style="width: 50%; margin-bottom: 0.3em;">
+                    <input required type="password" maxlength="30" id="password-2" class="form-control" style="width: 50%; margin-bottom: 0.3em;">
+                    <button type="button" class="btn btn-secondary" id="confirm-change-password" style="width: 50%;">Zatwierdź</button>
                 </div>
             </form>
-        }
-    </div>
-
-    <form asp-controller="SupervisorHome" asp-action="changeThesis" id="changeThesForm" style="display: none; text-align: center; left: 25%; width: 50%; height: 100%; top: 35%; position: fixed; background: white;">
-        <div class="d-flex flex-row" style="width: 100%; width: 100%;">
-            <div class="form-group" style="width: 100%;">
-                <label>Podaj temat</label>
-                <input require type="text" name="thesisSubject" class="form-control" maxlength="150">
-                <button type="button" data-toggle="modal" data-target="#confirm-changing-subject" id="changeThesButton" name="thesisId" class="btn btn-primary" style="text-align:center; margin-right: 5px; margin-top: 10px;">Zapisz temat</button>
-                <button type="button" class="btn btn-secondary" onclick="showThesis()" style="text-align:center; margin-top: 10px;">Powrót</button>
-            </div>
-        </div>
-    </form>
-
-    <div id="confirm-removing-subject" class="modal" tabindex="-1" role="dialog">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">Potwierdzenie usunięcia tematu</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
+            <button type="button" class="btn btn-primary" id="change-email" value="0">Zmień e-mail</button>
+            <form asp-controller="SupervisorHome" asp-action="changeEmail" id="changeEmailForm" style="margin-top:1em; margin-bottom: 1em; display: none;">
+                <div class="form-group">
+                    <input required type="text" maxlength="50" name="newEmail" class="form-control" style="width: 50%; margin-bottom: 0.3em;">
+                    <button type="submit" class="btn btn-secondary" id="confirm-change-email" style="width: 50%;">Zatwierdź</button>
                 </div>
-                <div class="modal-body">
-                    <p>Czy jesteś pewien, że chcesz usunąć ten temat?</p>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-primary" id="confirmRemoveButton">Tak</button>
-                    <button type="button" class="btn btn-danger" data-dismiss="modal">Nie</button>
-                </div>
-            </div>
+            </form>
         </div>
     </div>
 
-    <div id="confirm-changing-subject" class="modal" tabindex="-1" role="dialog">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">Potwierdzenie zmiany tematu</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <p>Czy jesteś pewien, że chcesz zmienić temat na "<span class="text-primary" id="thesis-title"></span>"?</p>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-primary" id="confirmChangeButton">Tak</button>
-                    <button type="button" class="btn btn-danger" data-dismiss="modal">Nie</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div id="confirm-creating-subject" class="modal" tabindex="-1" role="dialog">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">Potwierdzenie dodania tematu</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <p>Czy chcesz dodać temat "<span class="text-primary" id="thesis-title-create"></span>"?</p>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-primary" id="confirmCreateButton">Tak</button>
-                    <button type="button" class="btn btn-danger" data-dismiss="modal">Nie</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <script type="text/javascript">
-
-        $('#changeThesButton').click(function () {
-            $('#thesis-title').text($('input[name="thesisSubject"]').val());
-        });
-
-        $('#confirmChangeButton').click(function () {
-            $('input[name="thesisSubject"]').css('color', 'white');
-            $('input[name="thesisSubject"]').val($("#changeThesButton").attr('value') + " " + $('input[name="thesisSubject"]').val());
-            $('#changeThesForm').submit();
-        });
-
-        $('#create-thesis-button').click(function () {
-            $('#thesis-title-create').text($('input[name="thesisSubjectCreate"]').val());
-        });
-
-        $('#confirmCreateButton').click(function () {
-            $('#createThesisForm').submit();
-        });
-
-        function removeThesis(value) {
-            $('#confirmRemoveButton').attr('value', value);
-
+<script type="text/javascript">
+    $('#change-password').click(function () {
+        console.log('dziala' + $(this).attr('value'));
+        if ($(this).attr('value') == 0) {
+            $('#changePasswordForm').show();
+            $(this).attr('value', 1);
         }
-
-        $('#confirmRemoveButton').click(function () {
-            $('#RemoveThesisForm').append('<input type="hidden" id="additional-input" name="thesisId" value="'
-                + $(this).attr('value') + '" /> ');
-            $('#RemoveThesisForm').submit();
-        });
-
-        function changeThesis(id) {
-
-            $("#changeThesButton").attr('value', id);
-            $('#changeThesForm').show();
-            $('input[name="thesisSubject"]').val($("#h4" + id).html());
-            $('#thesisList').hide();
-            $('#createThesisForm').hide();
+        else {
+            $('#changePasswordForm').hide();
+            $(this).attr('value', 0);
         }
+    });
 
-        function showThesis() {
+    $('#confirm-change-password').click(function () {
+        if ($('#password-1').val() === $('#password-2').val() && $('#password-1').val() != "") 
+            $('#changePasswordForm').submit();
+        else
+            if($('#error-message-div').length == 0)
+                $('<div id="error-message-div" style="text-align: center; width: 50%; margin-top: 0.3em;"><p style="color: crimson;">Popraw dane</p></div>').insertBefore('#form-group-password');
+    });
 
-            $('#changeThesForm').hide();
-            $('#thesisList').show();
-            $('#createThesisForm').show();
-
+    $('#change-email').click(function () {
+        console.log('dziala' + $(this).attr('value'));
+        if ($(this).attr('value') == 0) {
+            $('#changeEmailForm').show();
+            $(this).attr('value', 1);
         }
-
-    </script>
+        else {
+            $('#changeEmailForm').hide();
+            $(this).attr('value', 0);
+        }
+    });
+</script>
