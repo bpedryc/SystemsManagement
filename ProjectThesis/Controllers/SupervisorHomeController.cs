@@ -30,16 +30,16 @@ namespace ProjectThesis.Controllers
             }
             var userId = HttpContext.Session.GetInt32("UserId");
 
-            var user = _context.Users
-                .FirstOrDefault(u => (u.Id == userId));
-
             var supervisor = _context.Supervisors
                 .FirstOrDefault(s => (s.UserId == userId));
 
-            var faculty = _context.Faculties
+            supervisor.User = _context.Users
+                .FirstOrDefault(u => (u.Id == userId));
+
+            supervisor.Faculty = _context.Faculties
                 .FirstOrDefault(f => (f.Id == supervisor.FacultyId));
 
-            return View(new SupervisorViewModel { User = user, Faculty = faculty});
+            return View(supervisor);
         }
 
         public IActionResult Theses()
@@ -55,12 +55,13 @@ namespace ProjectThesis.Controllers
 
             var students = _context.Students
                 .Include(s => s.ChosenThesis)
-                .Where(s => s.ChosenThesis.SuperId == super.Id)
-                .Include(s => s.User);
-
+                .Include(s => s.User)
+                .Include(s => s.ChosenThesis.Spec)
+                .Where(s => s.ChosenThesis.SuperId == super.Id);
 
             var thesesNotChosen = _context.Theses
                 .Where(t => t.SuperId == super.Id && t.StudentId == null)
+                .Include(t => t.Spec)
                 .ToList();
 
             var specialtiesForSupervisor = from s in _context.Specialties
@@ -117,7 +118,7 @@ namespace ProjectThesis.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        public IActionResult createThesis(string thesisSubjectCreate, int specialityType, int degreeCycle)
+        public IActionResult CreateThesis(string thesisSubjectCreate, int specialityType, int degreeCycle)
         {
             if (string.IsNullOrEmpty(thesisSubjectCreate))
             {
@@ -141,42 +142,6 @@ namespace ProjectThesis.Controllers
 
             TempData["Success"] = "Nowy temat został dodany";
             return RedirectToAction("Theses", "SupervisorHome");
-        }
-
-        public IActionResult changePassword(string newPassword)
-        {
-
-            var userId = int.Parse(HttpContext.Session.GetString("UserId"));
-
-            var user = _context.Users.FirstOrDefault(u => u.Id == userId);
-            user.Password = GetSha256FromString(newPassword);
-            _context.SaveChanges();
-            return RedirectToAction("Index", "SupervisorHome");
-        }
-
-        public IActionResult changeEmail(string newEmail)
-        {
-            var userId = int.Parse(HttpContext.Session.GetString("UserId"));
-
-            var us = _context.Users.First(u => u.Id == userId);
-            us.Email = newEmail;
-            _context.SaveChanges();
-
-            return RedirectToAction(nameof(Index));
-        }
-
-        private static string GetSha256FromString(string strData)
-        {
-            byte[] strBytes = Encoding.UTF8.GetBytes(strData);
-            var sha = new SHA256Managed();
-            var hash = new StringBuilder();
-
-            byte[] hashBytes = sha.ComputeHash(strBytes);
-            foreach (byte hashByte in hashBytes)
-            {
-                hash.Append($"{hashByte:x2}");
-            }
-            return hash.ToString();
         }
     }
 }

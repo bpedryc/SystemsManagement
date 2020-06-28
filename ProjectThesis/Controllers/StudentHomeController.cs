@@ -35,6 +35,10 @@ namespace ProjectThesis.Controllers
                 .FirstOrDefault(u => (u.Id == userId));
             var student = _context.Students
                 .FirstOrDefault(s => (s.UserId == userId));
+            student.Specialty = _context.Specialties
+                .FirstOrDefault(s => s.Id == student.SpecialtyId);
+            student.Specialty.Fac = _context.Faculties
+                .FirstOrDefault(f => f.Id == student.Specialty.FacId);
 
             var thesis = _context.Theses
                 .FirstOrDefault(t => (t.StudentId == student.Id)) ?? new Thesis { Id = 0, Subject = "Brak Wybranej Pracy" };
@@ -178,37 +182,6 @@ namespace ProjectThesis.Controllers
             var thesis = new Thesis{Subject = thesisSubject, DegreeCycle = stud.DegreeCycle, SpecId = stud.SpecialtyId, SuperId = supersId, StudentId = stud.Id};
             _context.Add(thesis);
             _context.SaveChanges();
-            return RedirectToAction("Index", "StudentHome");
-        }
-
-        public IActionResult changePassword(string newPassword)
-        {
-            if (!AuthenticationController.IsUserAuthorized(HttpContext, AuthenticationController.UserRole.Student))
-            {
-                return RedirectToAction("NotAuthorized", "Authentication");
-            }
-
-            var userId = HttpContext.Session.GetInt32("UserId");
-
-            var user = _context.Users.FirstOrDefault(u => u.Id == userId);
-            user.Password = GetSha256FromString(newPassword);
-            _context.SaveChanges();
-            return RedirectToAction("Index", "StudentHome");
-        }
-
-        public IActionResult changeEmail(string newEmail)
-        {
-            if (!AuthenticationController.IsUserAuthorized(HttpContext, AuthenticationController.UserRole.Student))
-            {
-                return RedirectToAction("NotAuthorized", "Authentication");
-            }
-
-            var userId = HttpContext.Session.GetInt32("UserId");
-
-            var us = _context.Users.First(u => u.Id == userId);
-            us.Email = newEmail;
-            _context.SaveChanges();
-
             return RedirectToAction("Index", "StudentHome");
         }
 

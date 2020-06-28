@@ -5,7 +5,7 @@
 <p>Zaloguj się, aby móc korzystać z systemu</p>
 <p class="text-danger">@ViewData["Message"]</p>
 <p class="text-success">@TempData["Message"]</p>
-<form asp-controller="Authentication" asp-action="Login" style="margin-left: 30%; width: 40%;">
+<form asp-controller="Authentication" asp-action="Login" class="col-10 col-md-8 col-lg-5 col-xl-4 m-auto">
     <div class="form-group">
         <label asp-for="Email">E-mail</label>
         <input asp-for="Email" require type="text" class="form-control" maxlength="50">

@@ -1,8 +1,6 @@
 ﻿@model ProjectThesis.ViewModels.StudentViewModel
 @{ Layout = (string)ViewData["Layout"] ?? "_AdminHomeLayout"; }
 
-<script type="text/javascript" src="~/js/studentCreation.js"></script>
-
 <form asp-controller="Students" asp-action="Edit">
 
     <p class="text-danger">@ViewData["Message"]</p>
@@ -61,10 +59,13 @@
     </div>
 </form>
 
-<script type="text/javascript">
-    $(document).ready(function() {
-        $("#Faculties").val(@Model.Student.Specialty.FacId);
-        GetSpecialties(@Model.Student.Specialty.FacId);
-        $("#Student_SpecialtyId").val(@Model.Student.SpecialtyId);
-    });
-</script>
+@section Scripts {
+    <script type="text/javascript" src="~/js/studentCreation.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $("#Faculties").val(@Model.Student.Specialty.FacId);
+            GetSpecialties(@Model.Student.Specialty.FacId);
+            $("#Student_SpecialtyId").val(@Model.Student.SpecialtyId);
+        });
+    </script>
+}

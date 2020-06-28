@@ -1,8 +1,6 @@
 ﻿@model ProjectThesis.ViewModels.StudentViewModel
 @{ Layout = (string)ViewData["Layout"] ?? "_AdminHomeLayout"; }
 
-<script type="text/javascript" src="~/js/studentCreation.js"></script>
-
 <form asp-controller="Students" asp-action="Create">
 
     <p class="text-danger">@ViewData["Message"]</p>
@@ -54,3 +52,7 @@
         </div>
     </div>
 </form>
+
+@section Scripts {
+    <script type="text/javascript" src="~/js/studentCreation.js"></script>
+}

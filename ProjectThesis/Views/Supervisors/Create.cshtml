@@ -1,8 +1,6 @@
 ﻿@model ProjectThesis.Models.Supervisor;
 @{ Layout = (string)ViewData["Layout"] ?? "_AdminHomeLayout"; }
 
-<script type="text/javascript" src="~/js/supervisorCreation.js"></script>
-
 <form asp-controller="Supervisors" asp-action="Create">
 
     <p class="text-danger">@ViewData["Message"]</p>
@@ -43,8 +41,11 @@
     </div>
 </form>
 
-<script type="text/javascript">
-    $(document).ready(function () {
-        GetAllFaculties();
-    });
-</script>
+@section Scripts {
+    <script type="text/javascript" src="~/js/supervisorCreation.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            GetAllFaculties();
+        });
+    </script>
+}

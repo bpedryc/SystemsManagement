@@ -3,81 +3,59 @@
     ViewData["Title"] = "Strona główna";
     Layout = "_StudentHomeLayout";
 }
+
 <div class="row">
     <div class="col-12">
         <p class="text-danger text-center">@TempData["Error"]</p>
         <p class="text-success text-center">@TempData["Success"]</p>
     </div>
-    <div class="col-sm-3">
-        <h4>Imię</h4>
-        <h4>Nazwisko</h4>
-        <h4>E-mail</h4>
-        <h4>Nralbumu</h4>
+
+    <div class="student-data col-6 col-md-3">
+        <h4>Imię:</h4>
+        <h4>Nazwisko:</h4>
+        <h4>E-mail:</h4>
+        <h4>Nralbumu:</h4>
+        <h4>Wydział:</h4>
+        <h4>Kierunek:</h4>
     </div>
-    <div class="col-sm">
+    <div class="student-data col-6">
         <p>@Html.DisplayFor(model => model.User.FirstName)<p>
         <p>@Html.DisplayFor(model => model.User.LastName)</p>
         <p>@Html.DisplayFor(model => model.User.Email)</p>
         <p>@Html.DisplayFor(model => model.Student.StudentNo)</p>
+        <p>@Html.DisplayFor(model => model.Student.Specialty.Fac.Name)</p>
+        <p>@Html.DisplayFor(model => model.Student.Specialty.Name)</p>
     </div>
-    <div class="col-sm">
+    <div class="col-12 col-md-3">
         <h4>Temat mojej pracy</h4>
         <p>@Html.DisplayFor(model => model.Thesis.Subject)</p>
-        <h4>Moj promotor</h4>
+        <h4>Mój promotor</h4>
         <p>
             @Html.DisplayFor(model => model.Supervisor.FirstName)
             @Html.DisplayFor(model => model.Supervisor.LastName)
         </p>
     </div>
-    <div id="change-buttons">
-        <button type="button" class="btn btn-primary" id="change-password" value="0">Zmień hasło</button>
-        <form asp-controller="StudentHome" asp-action="changePassword" id="changePasswordForm" style="margin-top:1em; margin-bottom: 1em; display: none;">
-            <div class="form-group" id="form-group-password">
-                <input required type="password" maxlength="30" id="password-1" name="newPassword" class="form-control" style="width: 50%; margin-bottom: 0.3em;">
-                <input required type="password" maxlength="30" id="password-2" class="form-control" style="width: 50%; margin-bottom: 0.3em;">
-                <button type="button" class="btn btn-secondary" id="confirm-change-password" style="width: 50%;">Zatwierdź</button>
+    <div id="change-buttons" class="col-10 col-md-6 offset-1 offset-md-0">
+        <button type="button" class="btn btn-primary mb-1" id="change-password">Zmień hasło</button>
+        <form asp-controller="Authentication" asp-action="ChangePassword" id="changePasswordForm" class="d-none">
+            <div id="form-group-password" class="form-group">
+                <input id="password-1" required type="password" maxlength="30" name="newPassword" class="form-control mb-1">
+                <input id="password-2" required type="password" maxlength="30" class="form-control mb-1">
+                <button id="confirm-change-password" type="button" class="btn btn-secondary w-100">Zatwierdź</button>
             </div>
         </form>
-        <button type="button" class="btn btn-primary" id="change-email" value="0">Zmień e-mail</button>
-        <form asp-controller="StudentHome" asp-action="changeEmail" id="changeEmailForm" style="margin-top:1em; margin-bottom: 1em; display: none;">
+        <button type="button" class="btn btn-primary mb-1" id="change-email">Zmień e-mail</button>
+        <form asp-controller="Authentication" asp-action="ChangeEmail" id="changeEmailForm" class="d-none">
             <div class="form-group">
-                <input required type="text" maxlength="50" name="newEmail" class="form-control" style="width: 50%; margin-bottom: 0.3em;">
-                <button type="submit" class="btn btn-secondary" id="confirm-change-email" style="width: 50%;">Zatwierdź</button>
+                <input required type="text" maxlength="50" name="newEmail" class="form-control mb-1">
+                <button id="confirm-change-email" type="submit" class="btn btn-secondary w-100">Zatwierdź</button>
             </div>
         </form>
     </div>
 </div>
 
-<script type="text/javascript">
-    $('#change-password').click(function () {
-        console.log('dziala' + $(this).attr('value'));
-        if ($(this).attr('value') == 0) {
-            $('#changePasswordForm').show();
-            $(this).attr('value', 1);
-        }
-        else {
-            $('#changePasswordForm').hide();
-            $(this).attr('value', 0);
-        }
-    });
-
-    $('#confirm-change-password').click(function () {
-        if ($('#password-1').val() === $('#password-2').val() && $('#password-1').val() != "")
-            $('#changePasswordForm').submit();
-        else
-            if ($('#error-message-div').length == 0)
-                $('<div id="error-message-div" style="text-align: center; width: 50%; margin-top: 0.3em;"><p style="color: crimson;">Popraw dane</p></div>').insertBefore('#form-group-password');
-    });
-
-    $('#change-email').click(function () {
-        console.log('dziala' + $(this).attr('value'));
-        if ($(this).attr('value') == 0) {
-            $('#changeEmailForm').show();
-            $(this).attr('value', 1);
-        }
-        else {
-            $('#changeEmailForm').hide();
-            $(this).attr('value', 0);
-        }
-    });
-</script>
+@section Scripts 
+{
+    <script type="text/javascript" src="~/js/changePassword.js"></script>
+    <script type="text/javascript" src="~/js/changeEmail.js"></script>
+}

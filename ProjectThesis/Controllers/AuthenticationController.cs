@@ -97,7 +97,7 @@ namespace ProjectThesis.Controllers
                 if (matchedStudent != null)
                 {
                     HttpContext.Session.SetInt32("UserId", matchedUser.Id);
-                    HttpContext.Session.SetInt32("UserRole", (int)AuthenticationController.UserRole.Student);
+                    HttpContext.Session.SetInt32("UserRole", (int)UserRole.Student);
                     return RedirectToAction("Index", "StudentHome");
                 }
 
@@ -106,7 +106,7 @@ namespace ProjectThesis.Controllers
                 if (matchedSupervisor != null)
                 {
                     HttpContext.Session.SetInt32("UserId", matchedUser.Id);
-                    HttpContext.Session.SetInt32("UserRole", (int)AuthenticationController.UserRole.Supervisor);
+                    HttpContext.Session.SetInt32("UserRole", (int)UserRole.Supervisor);
                     return RedirectToAction("Index", "SupervisorHome");
                 }
 
@@ -115,7 +115,7 @@ namespace ProjectThesis.Controllers
                 if (matchedAdmin != null)
                 {
                     HttpContext.Session.SetInt32("UserId", matchedUser.Id);
-                    HttpContext.Session.SetInt32("UserRole", (int)AuthenticationController.UserRole.Admin);
+                    HttpContext.Session.SetInt32("UserRole", (int)UserRole.Admin);
                     return RedirectToAction("Index", "AdminHome");
                 }
 
@@ -171,6 +171,53 @@ namespace ProjectThesis.Controllers
 
             return RedirectToAction("Login", "Authentication");   
         }
+
+        public IActionResult ChangePassword(string newPassword)
+        {
+            var userId = HttpContext.Session.GetInt32("UserId");
+            if (userId == null)
+            {
+                return RedirectToAction(nameof(NotAuthorized));
+            }
+
+            var user = _context.Users.FirstOrDefault(u => u.Id == userId);
+            user.Password = GetSha256FromString(newPassword);
+            _context.SaveChanges();
+
+            if (GetUserRole(HttpContext) == UserRole.Student)
+            {
+                return RedirectToAction("Index", "StudentHome");
+            }
+            if (GetUserRole(HttpContext) == UserRole.Supervisor)
+            {
+                return RedirectToAction("Index", "SupervisorHome");
+            }
+            return RedirectToAction(nameof(NotAuthorized));
+        }
+
+        public IActionResult ChangeEmail(string newEmail)
+        {
+            var userId = HttpContext.Session.GetInt32("UserId");
+            if (userId == null)
+            {
+                return RedirectToAction(nameof(NotAuthorized));
+            }
+
+            var user = _context.Users.FirstOrDefault(u => u.Id == userId);
+            user.Email = newEmail;
+            _context.SaveChanges();
+
+            if (GetUserRole(HttpContext) == UserRole.Student)
+            {
+                return RedirectToAction("Index", "StudentHome");
+            }
+            if (GetUserRole(HttpContext) == UserRole.Supervisor)
+            {
+                return RedirectToAction("Index", "SupervisorHome");
+            }
+            return RedirectToAction(nameof(NotAuthorized));
+        }
+
         public IActionResult SignOut()
         {
             HttpContext.Session.Remove("UserId");

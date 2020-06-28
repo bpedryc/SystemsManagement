@@ -11,7 +11,7 @@
     </div>
 </div>
 
-    <form asp-controller="SupervisorHome" asp-action="createThesis" id="createThesisForm" style="margin-top:1em; margin-bottom: 2em;">
+    <form asp-controller="SupervisorHome" asp-action="CreateThesis" id="createThesisForm" style="margin-top:1em; margin-bottom: 2em;">
         <div class="form-group">
             <input required type="text" name="thesisSubjectCreate" class="form-control" style="width: 70%;" maxlength="150">
             <div style="display: flex; flex-direction: row; margin-top: 1em;">
@@ -25,31 +25,18 @@
                     <option value="0">I</option>
                     <option value="1">II</option>
                 </select>
-                    <button type="button" id="create-thesis-button" data-toggle="modal" data-target="#confirm-creating-subject" class="btn btn-primary" style="margin-left: 0.7rem;">Dodaj nowy temat</button>
+                <button type="button" id="create-thesis-button" data-toggle="modal" data-target="#confirm-creating-subject" class="btn btn-primary" style="margin-left: 0.7rem;">Dodaj nowy temat</button>
             </div>
         </div>
     </form>
 
-    <div id="thesisList" style="width: 100%; height: 100%">
+    <div id="thesisList" class="w-100 h-100">
         @foreach (var student in Model.Students)
         {
-            @foreach (var speciality in Model.SpecialitiesForSupervisor)
-            {
-                @if (speciality.Id == student.SpecialtyId)
-                {
-                    @foreach (var thesis in Model.ThesesNotChosen)
-                    {
-                        if (thesis.SpecId == speciality.Id)
-                        {
-                            if (@thesis.DegreeCycle == 0)
-                                @(string.Format("{0} {1}",  speciality.Name, "I"))
-                            else
-                               @(string.Format("{0} {1}",  speciality.Name, "II"))
-                            break;
-                        }
-                    }
-                }
-            }
+            <p>
+                @student.ChosenThesis.Spec.Name
+                @(student.ChosenThesis.DegreeCycle == 0 ? "I" : "II")
+            </p>
 
             <h3 id="@("h3" + @student.ChosenThesis.Id)" style="margin: 0;">@student.ChosenThesis.Subject</h3>
             <p style="margin: 0;">
@@ -64,17 +51,11 @@
         <br />
         @foreach (var thesis in Model.ThesesNotChosen)
         {
-            @foreach (var speciality in Model.SpecialitiesForSupervisor)
-            {
-                @if (speciality.Id == thesis.SpecId)
-                {
-                    if (@thesis.DegreeCycle == 0)
-                        @(string.Format("{0} {1}",  speciality.Name, "I"))
-                    else
-                        @(string.Format("{0} {1}",  speciality.Name, "II"))
-                    break;
-                }
-            }
+            <p>
+                @thesis.Spec.Name
+                @(thesis.DegreeCycle == 0 ? "I" : "II")
+            </p>
+
             <form asp-controller="SupervisorHome" asp-action="removeThesis" id="RemoveThesisForm">
                 <div class="form-group">
                     <h4 id="@("h4" + @thesis.Id)">@thesis.Subject</h4>

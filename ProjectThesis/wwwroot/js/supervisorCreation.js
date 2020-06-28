@@ -1,8 +1,8 @@
 ﻿function GetAllFaculties() {
     $.ajax({
-        type: 'GET',
+        type: "GET",
         url: "/Faculties/GetAllFaculties",
-        dataType: 'json',
+        dataType: "json",
         async: false,
         success: function (faculties) {
             faculties.forEach(function (f) {
