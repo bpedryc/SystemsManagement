@@ -146,6 +146,14 @@ namespace ProjectThesis.Controllers
                 return RedirectToAction("NotAuthorized", "Authentication");
             }
 
+            var theses = _context.Theses
+                .Where(t => t.SuperId == id)
+                .ToList();
+            foreach (var thesis in theses)
+            {
+                _context.Entry(thesis).State = EntityState.Deleted;
+            }
+
             var supervisor =_context.Supervisors
                 .FirstOrDefault(s => s.Id == id);
             var user = _context.Users
