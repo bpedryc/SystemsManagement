@@ -24,7 +24,11 @@ namespace ProjectThesis.Controllers
         }
         public IActionResult Index()
         {
-            int userId = int.Parse(HttpContext.Session.GetString("UserId"));
+            if (!AuthenticationController.IsUserAuthorized(HttpContext, AuthenticationController.UserRole.Supervisor))
+            {
+                return RedirectToAction("NotAuthorized", "Authentication");
+            }
+            var userId = HttpContext.Session.GetInt32("UserId");
 
             var user = _context.Users
                 .FirstOrDefault(u => (u.Id == userId));
@@ -40,11 +44,6 @@ namespace ProjectThesis.Controllers
 
         public IActionResult Theses()
         {
-            var role = HttpContext.Session.GetString("UserRole");
-            if (role.Equals("admin"))
-                return RedirectToAction("Index", "AdminHome");
-            else if (role.Equals("student"))
-                return RedirectToAction("Index", "StudentHome");
             if (!AuthenticationController.IsUserAuthorized(HttpContext, AuthenticationController.UserRole.Supervisor))
             {
                 return RedirectToAction("NotAuthorized", "Authentication");
@@ -120,7 +119,7 @@ namespace ProjectThesis.Controllers
 
         public IActionResult createThesis(string thesisSubjectCreate, int specialityType, int degreeCycle)
         {
-            if (String.IsNullOrEmpty(thesisSubjectCreate))
+            if (string.IsNullOrEmpty(thesisSubjectCreate))
             {
                 TempData["Error"] = "Temat nie może być pusty";
                 return RedirectToAction("Theses", "SupervisorHome");
@@ -157,8 +156,6 @@ namespace ProjectThesis.Controllers
 
         public IActionResult changeEmail(string newEmail)
         {
-
-
             var userId = int.Parse(HttpContext.Session.GetString("UserId"));
 
             var us = _context.Users.First(u => u.Id == userId);
