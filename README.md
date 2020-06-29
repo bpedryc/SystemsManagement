@@ -1,6 +1,14 @@
 # SystemsManagement
 <h2>Thesis Reservation Project</h2>
 <a href="https://pkprojectthesis.azurewebsites.net/">Website</a>
+
+<h3>Authentication policy</h3>
+<ul>
+    <li>Supervisors should all be registered on "pk.edu.pl" domain. For example: krzysztof.kielbasa@pk.edu.pl</li>
+    <li>Every password should be: firstName+lastName, no caps. For example for krzysztof.kielbasa@pk.edu.pl, password is "krzysztofkielbasa"</li>
+    <li>There is one admin account: email:admin@gmail.com, password:admin</li>
+</ul>
+
 <h3>User types:</h3>
 <ul>
     <li><h4>Student</h4></li>
