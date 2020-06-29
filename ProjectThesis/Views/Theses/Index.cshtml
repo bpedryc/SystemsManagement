@@ -16,7 +16,7 @@
         @foreach (var thesis in Model)
         {
             <tr>
-                <th scope="row" style="padding-bottom: 2em;">@thesis.Id</th>
+                <th scope="row" style="vertical-align: top;">@thesis.Id</th>
                 <td>@thesis.Subject</td>
                 <td>
                     @if (thesis.DegreeCycle == 0)
@@ -34,7 +34,7 @@
                     {
                         <span>
                             @thesis.Student.User.FirstName @thesis.Student.User.LastName
-                            <a class="btn btn-danger" asp-controller="Theses" asp-action="RemoveStudent" asp-route-thesisId="@thesis.Id">X</a>
+                            <a class="btn btn-danger" asp-controller="Theses" asp-action="RemoveStudent" asp-route-thesisId="@thesis.Id">Odsuń studenta</a>
                         </span>
                     }
                 </td>

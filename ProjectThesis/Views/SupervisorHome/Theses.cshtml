@@ -163,6 +163,7 @@
         }
 
         $('#confirmRemoveButton').click(function () {
+            console.log('elo');
             $('#RemoveThesisForm').append('<input type="hidden" id="additional-input" name="thesisId" value="'
                 + $(this).attr('value') + '" /> ');
             $('#RemoveThesisForm').submit();

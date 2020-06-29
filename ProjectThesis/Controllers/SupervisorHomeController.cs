@@ -87,6 +87,7 @@ namespace ProjectThesis.Controllers
                 return RedirectToAction("NotAuthorized", "Authentication");
             }
 
+            Debug.WriteLine("eleo");
             var thes = _context.Theses.FirstOrDefault(t => t.Id == thesisId);
             _context.Theses.Remove(thes);
             _context.SaveChanges();
@@ -115,7 +116,7 @@ namespace ProjectThesis.Controllers
             _context.SaveChanges();
             TempData["Success"] = "Temat został pomyślnie zmieniony";
 
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction(nameof(Theses));
         }
 
         public IActionResult CreateThesis(string thesisSubjectCreate, int specialityType, int degreeCycle)
