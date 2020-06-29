@@ -167,7 +167,7 @@ namespace ProjectThesis.Controllers
             return Json(theses);
         }
 
-        public IActionResult newThesis(int supersId, string thesisSubject)
+        public IActionResult CreateThesis(int supersId, string thesisSubject)
         {
             if (!AuthenticationController.IsUserAuthorized(HttpContext, AuthenticationController.UserRole.Student))
             {
@@ -183,20 +183,6 @@ namespace ProjectThesis.Controllers
             _context.Add(thesis);
             _context.SaveChanges();
             return RedirectToAction("Index", "StudentHome");
-        }
-
-        private static string GetSha256FromString(string strData)
-        {
-            byte[] strBytes = Encoding.UTF8.GetBytes(strData);
-            var sha = new SHA256Managed();
-            var hash = new StringBuilder();
-
-            byte[] hashBytes = sha.ComputeHash(strBytes);
-            foreach (byte hashByte in hashBytes)
-            {
-                hash.Append($"{hashByte:x2}");
-            }
-            return hash.ToString();
         }
     }
 }

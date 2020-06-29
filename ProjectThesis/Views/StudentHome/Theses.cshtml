@@ -44,7 +44,7 @@
     </div>
 </div>
 
-<form asp-controller="StudentHome" asp-action="newThesis" id="newThesForm" style="display: none; text-align: center; left: 25%; width: 50%; height: 100%; top: 35%; position: fixed; background: white;">
+<form asp-controller="StudentHome" asp-action="CreateThesis" id="newThesForm" style="display: none; text-align: center; left: 25%; width: 50%; height: 100%; top: 35%; position: fixed; background: white;">
     <div class="d-flex flex-row" style="width: 100%; width: 100%;">
         <div class="form-group" style="width: 100%;">
             <label>Podaj temat</label>
@@ -54,60 +54,61 @@
         </div>
     </div>
 </form>
-<script type="text/javascript">
 
-    function showSupers() {
+@section Scripts
+{
+    <script type="text/javascript">
 
-        $('#newThesForm').hide();
-        $('#supers-div').show();
-    }
+        function showSupers() {
 
-    function newThesis(id) { 
-        $("#newThesButton").attr('value', id);
-        $('#newThesForm').show();
-        $('#supers-div').hide();
-    }
+            $('#newThesForm').hide();
+            $('#supers-div').show();
+        }
 
-    $(document).ready(function () {
-        $('#confirm-reservation').on('shown.bs.modal',
-            function (e) {
-                console.log("WORKING");
-                $(this).find('#thesis-title').html($(e.relatedTarget).html());
-                $(this).find('#btn-confirm-reservation').attr('href', $(e.relatedTarget).data('href'));
-            });
-    });
+        function newThesis(id) {
+            $("#newThesButton").attr('value', id);
+            $('#newThesForm').show();
+            $('#supers-div').hide();
+        }
 
-    function ShowThesisList(supervisorId) {
-        var $supervisorContainer = $("#supervisor-container-" + supervisorId);
+        $(document).ready(function() {
+            $('#confirm-reservation').on('shown.bs.modal',
+                function(e) {
+                    $(this).find('#thesis-title').html($(e.relatedTarget).html());
+                    $(this).find('#btn-confirm-reservation').attr('href', $(e.relatedTarget).data('href'));
+                });
+        });
 
-        var $supervisorButton = $supervisorContainer.find("button");
-        var $thesisList = $supervisorContainer.find("ul");
+        function ShowThesisList(supervisorId) {
+            var $supervisorContainer = $("#supervisor-container-" + supervisorId);
 
-        if ($supervisorButton.html() === "+") {
-            $supervisorButton.html("-");
+            var $supervisorButton = $supervisorContainer.find("button");
+            var $thesisList = $supervisorContainer.find("ul");
 
-            $.ajax({
-                method: "GET",
-                url: "@Url.Action("GetSupervisorTheses", "StudentHome")",
-                data: { "supervisorId": supervisorId, "specialtyId": "@Model.SpecialtyId", "degreeCycle": "@Model.DegreeCycle" },
-                contentType: "application/json; charset=utf-8",
-                dataType: "json",
-                success: function (theses) {
-                    theses.forEach(function (thesis) {
-                        var action =
+            if ($supervisorButton.html() === "+") {
+                $supervisorButton.html("-");
+
+                $.ajax({
+                    method: "GET",
+                    url: "/StudentHome/GetSupervisorTheses",
+                    data: { "supervisorId": supervisorId, "specialtyId": "@Model.SpecialtyId", "degreeCycle": "@Model.DegreeCycle" },
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: function(theses) {
+                        theses.forEach(function(thesis) {
                             $thesisList.append(
                                 $('<a class="list-group-item list-group-item-action" data-toggle="modal" data-target="#confirm-reservation"></a>').attr("data-href", `/StudentHome/ReserveThesis?thesisId=${thesis.id}`).html(thesis.subject)
                             );
-                    });
-                    $thesisList.append(
-                        $('<a href="#" id="' + supervisorId + '"onclick="newThesis(this.id)" class="list-group-item list-group-item-action active"></a>').html("Zaproponuj własny temat")
-                    );
-                }
-            });
+                        });
+                        $thesisList.append(
+                            $('<a href="#" id="' + supervisorId + '"onclick="newThesis(this.id)" class="list-group-item list-group-item-action active"></a>').html("Zaproponuj własny temat")
+                        );
+                    }
+                });
+            } else {
+                $supervisorButton.html("+");
+                $thesisList.empty();
+            }
         }
-        else {
-            $supervisorButton.html("+");
-            $thesisList.empty();
-        }
-    }
-</script>
+    </script>
+}
