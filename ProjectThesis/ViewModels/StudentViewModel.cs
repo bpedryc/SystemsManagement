@@ -10,9 +10,6 @@ namespace ProjectThesis.ViewModels
     public class StudentViewModel
     {
         public Student Student { get; set; }
-        //public User User { get; set; }
-        //public IEnumerable<Faculty> Faculties { get; set; }
-        //public IEnumerable<Specialty> Specialties { get; set; }
         public string UserPassword { get { return Student.User.Password; } }
 
         [Compare("UserPassword", ErrorMessage = "Wpisane zostało inne hasło")]

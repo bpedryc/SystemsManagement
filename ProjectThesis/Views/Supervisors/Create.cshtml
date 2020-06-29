@@ -8,22 +8,22 @@
         <div class="col">
             <label asp-for="User.Email">E-mail</label>
             <input required type="text" asp-for="User.Email" class="form-control" maxlength="50">
-            <div class="text-danger">@Html.ValidationMessage("Student.User.Email")</div>
+            <div class="text-danger">@Html.ValidationMessage("User.Email")</div>
 
             <label asp-for="User.Password">Hasło</label>
             <input required type="password" asp-for="User.Password" class="form-control" aria-describedby="passwordHelp" maxlength="30">
-            <div class="text-danger">@Html.ValidationMessage("Student.User.Password")</div>
+            <div class="text-danger">@Html.ValidationMessage("User.Password")</div>
 
             <label>Powtórz hasło</label>
             <input required type="password" name="ConfirmPassword" class="form-control" aria-describedby="passwordHelp" maxlength="30">
 
             <label asp-for="User.FirstName">Imię</label>
             <input required type="text" asp-for="User.FirstName" class="form-control" maxlength="30">
-            <div class="text-danger">@Html.ValidationMessage("Student.User.FirstName")</div>
+            <div class="text-danger">@Html.ValidationMessage("User.FirstName")</div>
 
             <label asp-for="User.LastName">Nazwisko</label>
             <input required type="text" asp-for="User.LastName" class="form-control" maxlength="30">
-            <div class="text-danger">@Html.ValidationMessage("Student.User.LastName")</div>
+            <div class="text-danger">@Html.ValidationMessage("User.LastName")</div>
         </div>
         <div class="col">
             <label asp-for="FacultyId">Wydział</label>

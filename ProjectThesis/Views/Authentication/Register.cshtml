@@ -1,8 +1,6 @@
 ﻿@model ProjectThesis.ViewModels.RegisterStudentViewModel;
 @{ Layout = (string)ViewData["Layout"] ?? "_AuthenticationLayout"; }
 
-<script type="text/javascript" src="~/js/studentCreation.js"></script>
-
 <p>Utwórz konto, by mieć możliwość rezerwacji tematu pracy</p>
 <form asp-controller="Authentication" asp-action="Register">
 
@@ -60,3 +58,7 @@
     Masz już konto?
     <a asp-controller="Authentication" asp-action="Login"> Zaloguj się</a>
 </p>
+
+@section Scripts {
+    <script type="text/javascript" src="~/js/studentCreation.js"></script>
+}

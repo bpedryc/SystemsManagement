@@ -137,23 +137,24 @@
         </div>
     </div>
 
+@section Scripts {
     <script type="text/javascript">
 
-        $('#changeThesButton').click(function () {
+        $('#changeThesButton').click(function() {
             $('#thesis-title').text($('input[name="thesisSubject"]').val());
         });
 
-        $('#confirmChangeButton').click(function () {
+        $('#confirmChangeButton').click(function() {
             $('input[name="thesisSubject"]').css('color', 'white');
             $('input[name="thesisSubject"]').val($("#changeThesButton").attr('value') + " " + $('input[name="thesisSubject"]').val());
             $('#changeThesForm').submit();
         });
 
-        $('#create-thesis-button').click(function () {
+        $('#create-thesis-button').click(function() {
             $('#thesis-title-create').text($('input[name="thesisSubjectCreate"]').val());
         });
 
-        $('#confirmCreateButton').click(function () {
+        $('#confirmCreateButton').click(function() {
             $('#createThesisForm').submit();
         });
 
@@ -162,10 +163,8 @@
 
         }
 
-        $('#confirmRemoveButton').click(function () {
-            console.log('elo');
-            $('#RemoveThesisForm').append('<input type="hidden" id="additional-input" name="thesisId" value="'
-                + $(this).attr('value') + '" /> ');
+        $('#confirmRemoveButton').click(function() {
+            $('#RemoveThesisForm').append('<input type="hidden" id="additional-input" name="thesisId" value="' + $(this).attr('value') + '" /> ');
             $('#RemoveThesisForm').submit();
         });
 
@@ -194,5 +193,5 @@
             $('#createThesisForm').show();
 
         }
-
     </script>
+}

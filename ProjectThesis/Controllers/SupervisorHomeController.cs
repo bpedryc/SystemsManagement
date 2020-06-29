@@ -87,7 +87,6 @@ namespace ProjectThesis.Controllers
                 return RedirectToAction("NotAuthorized", "Authentication");
             }
 
-            Debug.WriteLine("eleo");
             var thes = _context.Theses.FirstOrDefault(t => t.Id == thesisId);
             _context.Theses.Remove(thes);
             _context.SaveChanges();
