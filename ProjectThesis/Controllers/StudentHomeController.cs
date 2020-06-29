@@ -140,9 +140,9 @@ namespace ProjectThesis.Controllers
 
             var supervisor = _context.Supervisors
                 .FirstOrDefault(s => s.Id == chosenThesis.SuperId);
-            var supervisorThesesCount = _context.Theses
-                .Count(t => t.SuperId == chosenThesis.SuperId);
-            if (supervisorThesesCount >= supervisor.StudentLimit)
+            var supervisorThesesWithStudentsCount = _context.Theses
+                .Count(t => t.SuperId == chosenThesis.SuperId && t.StudentId != null);
+            if (supervisorThesesWithStudentsCount >= supervisor.StudentLimit)
             {
                 TempData["Error"] = "Ten promotor ma już maksymalną ilość studentów";
                 return RedirectToAction("Index");
