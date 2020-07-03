@@ -2,6 +2,8 @@
 <h2>Thesis Reservation Project</h2>
 <a href="https://pkprojectthesis.azurewebsites.net/">Website</a>
 
+appsettings.json is not present in the repository because of security reasons.
+
 <h3>Authentication policy</h3>
 <ul>
     <li>Supervisors should all be registered on "pk.edu.pl" domain. For example: krzysztof.kielbasa@pk.edu.pl</li>
